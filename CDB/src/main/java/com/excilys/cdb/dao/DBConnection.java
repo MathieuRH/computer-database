@@ -36,7 +36,7 @@ public class DBConnection {
     	  
 	      if (connection != null) {
 	          connection.close();
-	          System.out.println("Database connection teminated.");
+	          System.out.println("Database connection terminated.");
 	      }
       } catch (Exception e) {
       }

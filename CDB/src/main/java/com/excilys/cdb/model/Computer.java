@@ -37,9 +37,9 @@ public class Computer {
 		}
 	}
 	public void setDiscontinuedDate(LocalDate discontinuedDate) {
-		if (discontinuedDate != null && discontinuedDate.isAfter(discontinuedDate)) {
+		if (discontinuedDate != null && discontinuedDate.isAfter(introducedDate)) {
 			this.discontinuedDate = discontinuedDate;
-		}
+		} else {System.out.println("Warning : Discontinued date can't be null or after introduced date");}
 	}
 	
 	@Override

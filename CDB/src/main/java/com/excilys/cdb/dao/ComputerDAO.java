@@ -19,7 +19,11 @@ public class ComputerDAO {
 	private static final String GET_COMPANY = "SELECT id, name FROM company WHERE id=?;";
 	private static final String ONE_COMPUTER_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE id=?;";
 	private static final String CREATE_ONE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
-	private static final String UPDATE_ONE = "UPDATE computer SET ?=? WHERE id=?;";
+	//private static final String UPDATE_ONE = "UPDATE computer SET ?=? WHERE id=?;";
+	private static final String UPDATE_ONE_NAME = "UPDATE computer SET name=? WHERE id=?;";
+	private static final String UPDATE_ONE_INTRODUCED = "UPDATE computer SET introduced=? WHERE id=?;";
+	private static final String UPDATE_ONE_DISCONTINUED = "UPDATE computer SET discontinued=? WHERE id=?;";
+	private static final String UPDATE_ONE_COMPANY_ID = "UPDATE computer SET company_id=? WHERE id=?;";
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
 	
 	public ComputerDAO() {
@@ -147,7 +151,7 @@ public class ComputerDAO {
 				if (introduced!=null) {
 					statement.setDate(2, Date.valueOf(introduced));
 				} else {statement.setNull(2, 0);}
-				if (discontinued!=null) {
+				if (discontinued!=null && discontinued.isAfter(introduced)) {
 					statement.setDate(3, Date.valueOf(discontinued));
 				} else {statement.setNull(3, 0);}
 				if (id_company!=0) {
@@ -179,10 +183,10 @@ public class ComputerDAO {
 			PreparedStatement statement = null;
 			try {
 				connection = DBConnection.getInstance();
-				statement = connection.prepareStatement(UPDATE_ONE);
-				statement.setString(1, "name");
-				statement.setString(2, (String)value);
-				statement.setInt(3, id_computer);
+				statement = connection.prepareStatement(UPDATE_ONE_NAME);
+				//statement.setString(1, "name");
+				statement.setString(1, (String)value);
+				statement.setInt(2, id_computer);
 				statement.executeUpdate();
 				System.out.println("Computer successfully modified !");
 			
@@ -199,13 +203,15 @@ public class ComputerDAO {
 		else if (field == 2 || field==3) {
 			ResultSet rs = null;
 			PreparedStatement statement = null;
-			String type = (field == 2) ? "introduced" : "discontinued";
+			//String type = (field == 2) ? "introduced" : "discontinued";
 			try {
 				connection = DBConnection.getInstance();
-				statement = connection.prepareStatement(UPDATE_ONE);
-				statement.setString(1, type);
-				statement.setDate(2, Date.valueOf((LocalDate) value));
-				statement.setInt(3, id_computer);
+				if (field == 2) {
+					statement = connection.prepareStatement(UPDATE_ONE_INTRODUCED);
+				} else {statement = connection.prepareStatement(UPDATE_ONE_DISCONTINUED);}
+				//statement.setString(1, type);
+				statement.setDate(1, Date.valueOf((LocalDate) value));
+				statement.setInt(2, id_computer);
 				statement.executeUpdate();
 				System.out.println("Computer successfully modified !");
 			} catch (SQLException e) {
@@ -223,10 +229,10 @@ public class ComputerDAO {
 			PreparedStatement statement = null;
 			try {
 				connection = DBConnection.getInstance();
-				statement = connection.prepareStatement(UPDATE_ONE);
-				statement.setString(1, "company_id");
-				statement.setInt(2, (int) value);
-				statement.setInt(3, id_computer);
+				statement = connection.prepareStatement(UPDATE_ONE_COMPANY_ID);
+				//statement.setString(1, "company_id");
+				statement.setInt(1, (int) value);
+				statement.setInt(2, id_computer);
 				statement.executeUpdate();
 				System.out.println("Computer successfully modified !");
 			} catch (SQLException e) {

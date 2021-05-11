@@ -13,10 +13,12 @@ public class Main {
 		
 		ComputerDAO c = new ComputerDAO();
 		//c.getOneComputer(1);
-		//LocalDate d = null;
+		LocalDate d = LocalDate.of(2020,05,30);
 		//c.createOne("Itouch 54", d, d, 0);
-		c.getListComputers();
+		
 		//c.deleteOne(577);
+		//c.updateOne(578, 4, 35);
+		c.getListComputers();
 		
 		//CompanyDAO d = new CompanyDAO();
 		//d.getListCompanies();
