@@ -8,7 +8,7 @@ public class DBConnection {
 
 	private static Connection connection;
 	
-	//TO-DO fichier externe
+	//TO-DO fichier properties
 	private String url="jdbc:mysql://localhost/computer-database-db";
 	private String user="admincdb";
 	private String pwd="qwerty1234";

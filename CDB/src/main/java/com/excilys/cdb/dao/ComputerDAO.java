@@ -178,73 +178,75 @@ public class ComputerDAO {
 	 * @param value new value for the modified field
 	 */
 	public void updateOne(int id_computer, int field, Object value) {
-		if (field == 1 && (String)value != null) {
-			ResultSet rs = null;
-			PreparedStatement statement = null;
-			try {
-				connection = DBConnection.getInstance();
-				statement = connection.prepareStatement(UPDATE_ONE_NAME);
-				//statement.setString(1, "name");
-				statement.setString(1, (String)value);
-				statement.setInt(2, id_computer);
-				statement.executeUpdate();
-				System.out.println("Computer successfully modified !");
-			
-			} catch (SQLException e) {
-				e.getMessage();
-				e.printStackTrace();
-			} 
-			finally {
-				closeSetStatement(rs, statement);
-				DBConnection.close();
-				connection = null;
+		if (id_computer !=0) {
+			if (field == 1 && (String)value != null) {
+				ResultSet rs = null;
+				PreparedStatement statement = null;
+				try {
+					connection = DBConnection.getInstance();
+					statement = connection.prepareStatement(UPDATE_ONE_NAME);
+					//statement.setString(1, "name");
+					statement.setString(1, (String)value);
+					statement.setInt(2, id_computer);
+					statement.executeUpdate();
+					System.out.println("Computer successfully modified !");
+				
+				} catch (SQLException e) {
+					e.getMessage();
+					e.printStackTrace();
+				} 
+				finally {
+					closeSetStatement(rs, statement);
+					DBConnection.close();
+					connection = null;
+				}
 			}
+			else if (field == 2 || field==3) {
+				ResultSet rs = null;
+				PreparedStatement statement = null;
+				//String type = (field == 2) ? "introduced" : "discontinued";
+				try {
+					connection = DBConnection.getInstance();
+					if (field == 2) {
+						statement = connection.prepareStatement(UPDATE_ONE_INTRODUCED);
+					} else {statement = connection.prepareStatement(UPDATE_ONE_DISCONTINUED);}
+					//statement.setString(1, type);
+					statement.setDate(1, Date.valueOf((LocalDate) value));
+					statement.setInt(2, id_computer);
+					statement.executeUpdate();
+					System.out.println("Computer successfully modified !");
+				} catch (SQLException e) {
+					e.getMessage();
+					e.printStackTrace();
+				} 
+				finally {
+					closeSetStatement(rs, statement);
+					DBConnection.close();
+					connection = null;
+				}
+			} 
+			else if (field == 4) {
+				ResultSet rs = null;
+				PreparedStatement statement = null;
+				try {
+					connection = DBConnection.getInstance();
+					statement = connection.prepareStatement(UPDATE_ONE_COMPANY_ID);
+					//statement.setString(1, "company_id");
+					statement.setInt(1, (int) value);
+					statement.setInt(2, id_computer);
+					statement.executeUpdate();
+					System.out.println("Computer successfully modified !");
+				} catch (SQLException e) {
+					e.getMessage();
+					e.printStackTrace();
+				} 
+				finally {
+					closeSetStatement(rs, statement);
+					DBConnection.close();
+					connection = null;
+				}
+			} else {System.out.println("Wrong data entry types.");}
 		}
-		else if (field == 2 || field==3) {
-			ResultSet rs = null;
-			PreparedStatement statement = null;
-			//String type = (field == 2) ? "introduced" : "discontinued";
-			try {
-				connection = DBConnection.getInstance();
-				if (field == 2) {
-					statement = connection.prepareStatement(UPDATE_ONE_INTRODUCED);
-				} else {statement = connection.prepareStatement(UPDATE_ONE_DISCONTINUED);}
-				//statement.setString(1, type);
-				statement.setDate(1, Date.valueOf((LocalDate) value));
-				statement.setInt(2, id_computer);
-				statement.executeUpdate();
-				System.out.println("Computer successfully modified !");
-			} catch (SQLException e) {
-				e.getMessage();
-				e.printStackTrace();
-			} 
-			finally {
-				closeSetStatement(rs, statement);
-				DBConnection.close();
-				connection = null;
-			}
-		} 
-		else if (field == 4) {
-			ResultSet rs = null;
-			PreparedStatement statement = null;
-			try {
-				connection = DBConnection.getInstance();
-				statement = connection.prepareStatement(UPDATE_ONE_COMPANY_ID);
-				//statement.setString(1, "company_id");
-				statement.setInt(1, (int) value);
-				statement.setInt(2, id_computer);
-				statement.executeUpdate();
-				System.out.println("Computer successfully modified !");
-			} catch (SQLException e) {
-				e.getMessage();
-				e.printStackTrace();
-			} 
-			finally {
-				closeSetStatement(rs, statement);
-				DBConnection.close();
-				connection = null;
-			}
-		} else {System.out.println("Wrong data entry types.");}
 	}
 	
 	/**
@@ -252,22 +254,24 @@ public class ComputerDAO {
 	 * @param id_computer
 	 */
 	public void deleteOne(int id_computer) {
-		ResultSet rs = null;
-		PreparedStatement statement = null;
-		try {
-			connection = DBConnection.getInstance();
-			statement = connection.prepareStatement(DELETE_ONE);
-			statement.setInt(1, id_computer);
-			statement.executeUpdate();
-			System.out.println("Computer successfully deleted !");
-		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
-		} 
-		finally {
-			closeSetStatement(rs, statement);
-			DBConnection.close();
-			connection = null;
+		if (id_computer !=0) {
+			ResultSet rs = null;
+			PreparedStatement statement = null;
+			try {
+				connection = DBConnection.getInstance();
+				statement = connection.prepareStatement(DELETE_ONE);
+				statement.setInt(1, id_computer);
+				statement.executeUpdate();
+				System.out.println("Computer successfully deleted !");
+			} catch (SQLException e) {
+				e.getMessage();
+				e.printStackTrace();
+			} 
+			finally {
+				closeSetStatement(rs, statement);
+				DBConnection.close();
+				connection = null;
+			}
 		}
 	}
 	
