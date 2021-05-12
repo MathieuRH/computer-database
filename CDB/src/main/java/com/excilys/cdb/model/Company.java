@@ -1,5 +1,10 @@
 package com.excilys.cdb.model;
 
+/**
+ * Company definition.
+ * @author Mathieu_RH
+ *
+ */
 public class Company {
 
 	private String name;

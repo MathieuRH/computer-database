@@ -4,6 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Database connection class 
+ * @author Mathieu_RH
+ *
+ */
 public class DBConnection {
 
 	private static Connection connection;

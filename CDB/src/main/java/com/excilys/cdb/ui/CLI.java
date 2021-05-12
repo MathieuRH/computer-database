@@ -7,8 +7,14 @@ import java.util.Scanner;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 import com.excilys.cdb.model.Company;
 
+/**
+ * Interaction class for the user
+ * @author Mathieu_RH
+ *
+ */
 public class CLI {
 	
 	Scanner sc = new Scanner(System.in);
@@ -21,10 +27,12 @@ public class CLI {
 												"5 :  Update a computer" + System.lineSeparator() +
 												"6 :  Delete a computer" ;
 	private static final String LIST_PARAMETERS_MODIFICATION = System.lineSeparator() + "List of available actions : " + System.lineSeparator() +
-			"1 :  Change name" + System.lineSeparator() +
-			"2 :  Change introduction date" + System.lineSeparator() +
-			"3 :  Change discontinuation date" + System.lineSeparator() +
-			"4 :  Change company" ;
+																"1 :  Change name" + System.lineSeparator() +
+																"2 :  Change introduction date" + System.lineSeparator() +
+																"3 :  Change discontinuation date" + System.lineSeparator() +
+																"4 :  Change company" ;
+	private static final String LIST_PAGE_ACTIONS = "p : previous / n : next / page_number ?" + System.lineSeparator() +
+													"0 :  Exit computer display";
 	private static final int COND_EXIT = 0;
 	private static final int COND_ONE = 1;
 	private static final int COND_TWO = 2;
@@ -34,10 +42,14 @@ public class CLI {
 	private static final int COND_SIX = 6;
 	private ComputerService computerService;
 	private CompanyService companyService;
+	private Page pagination;
 	
 	public CLI() {
 	}
 	
+	/*
+	 * Choice possibilities for database operations
+	 */
 	public void start() {
 		System.out.println("Access and modifications in computer database.");
 		boolean goOn = true;
@@ -55,10 +67,10 @@ public class CLI {
 						goOn = false;
 						break;
 					case COND_ONE:
-						getListComputers();
+						displayListComputers();
 						break;
 					case COND_TWO: 
-						getListCompanies();
+						displayListCompanies();
 						break;
 					case COND_THREE:
 						getOneComputer();
@@ -74,23 +86,94 @@ public class CLI {
 						break;
 					default :System.out.println("Please enter a correct action...");
 				}
-				
 			}
 		}
 		System.out.println("Session ended.");
 		sc.close();
 	}
 
-	private void getListComputers() {
-		ArrayList <Computer> listComputers = new ArrayList<>();
+
+
+	private void displayListComputers() {
 		computerService = new ComputerService();
-		listComputers = computerService.getListComputers();
-		for (Computer computer : listComputers) {
-			System.out.println(computer);
+		ArrayList <Computer> listAllComputers = computerService.getListComputers();
+		pagination = new Page(listAllComputers.size());
+		ArrayList<Computer> listDisplayComputers;
+		boolean keepDisplaying = true;
+		String immediate_answer;
+		while (keepDisplaying) {
+			listDisplayComputers = pagination.getDisplayListComputer(listAllComputers);
+			displayListComputers(listDisplayComputers);
+			System.out.println("Page " + pagination.getPage() + "/" + pagination.getNbPages() + " | " + LIST_PAGE_ACTIONS);
+			immediate_answer = sc.nextLine();
+			if (immediate_answer.equals("n")){
+				pagination.nextPage();
+			}
+			else if (immediate_answer.equals("p")) {
+				pagination.previousPage();
+			}
+			else {
+				try {
+					int choice = Integer.parseInt(immediate_answer);
+					if (choice == 0){
+						keepDisplaying = false;
+					}
+					else if (choice > 0 && choice <= pagination.getNbPages()){
+						pagination.setPage(choice);
+					}
+				} catch (NumberFormatException e){}
+			}
 		}
-		
 	}
 	
+	private void displayListComputers(ArrayList<Computer> listDisplayComputers) {
+		for (Computer computer : listDisplayComputers) {
+			System.out.println(computer);
+		} 
+	}
+	
+	private void displayListCompanies() {
+		companyService = new CompanyService();
+		ArrayList <Company> listAllCompanies = companyService.getListCompanies();
+		pagination = new Page(listAllCompanies.size());
+		ArrayList<Company> listDisplayCompanies;
+		boolean keepDisplaying = true;
+		String immediate_answer;
+		while (keepDisplaying) {
+			listDisplayCompanies = pagination.getDisplayListCompanies(listAllCompanies);
+			displayListCompanies(listDisplayCompanies);
+			System.out.println("Page " + pagination.getPage() + "/" + pagination.getNbPages() + " | " + LIST_PAGE_ACTIONS);
+			immediate_answer = sc.nextLine();
+			if (immediate_answer.equals("n")){
+				pagination.nextPage();
+			}
+			else if (immediate_answer.equals("p")) {
+				pagination.previousPage();
+			}
+			else {
+				try {
+					int choice = Integer.parseInt(immediate_answer);
+					if (choice == 0){
+						keepDisplaying = false;
+					}
+					else if (choice > 0 && choice <= pagination.getNbPages()){
+						pagination.setPage(choice);
+					}
+				} catch (NumberFormatException e){}
+			}
+		}
+	}
+
+	private void displayListCompanies(ArrayList<Company> listDisplayCompanies) {
+		for (Company company : listDisplayCompanies) {
+			System.out.println(company);
+		} 
+	}
+	
+	
+	/*
+	 * Display of one computer, selected by id
+	 */
 	private void getOneComputer() {
 		computerService = new ComputerService();
 		System.out.println("Please enter the computer id :");
@@ -99,6 +182,9 @@ public class CLI {
 		System.out.println(computer);
 	}
 	
+	/*
+	 * List of companies display
+	 */
 	private void getListCompanies() {
 		ArrayList <Company> listCompanies = new ArrayList<>();
 		companyService = new CompanyService();
@@ -108,6 +194,10 @@ public class CLI {
 		}
 	}
 	
+	/*
+	 * Creation of one computer.
+	 * Only name is mandatory
+	 */
 	private void createOneComputer() {
 		LocalDate introduced = null;
 		LocalDate discontinued = null;
@@ -153,6 +243,10 @@ public class CLI {
 		computerService.createOne(name, introduced, discontinued, company_id);
 	}
 	
+	/*
+	 * Modification of a computer.
+	 * User must enter the field to be modified (number 1-4) and the new value.
+	 */
 	private void updateOneComputer() {
 		computerService = new ComputerService();
 		int computer_id = 0;
@@ -190,6 +284,9 @@ public class CLI {
 		computerService.updateOne(computer_id, field, value);
 	}
 	
+	/*
+	 * Deletion of a computer from the database.
+	 */
 	private void deleteOneComputer() {
 		computerService = new ComputerService();
 		int computer_id = 0;

@@ -14,6 +14,11 @@ import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
+/**
+ * Data access object for computers.
+ * @author Mathieu_RH
+ *
+ */
 public class ComputerDAO {
 	
 	private static Connection connection;
@@ -31,7 +36,8 @@ public class ComputerDAO {
 	}
 	
 	/**
-	 * Print all the computers
+	 * Query for all computers.
+	 * @return listComputers 
 	 */
 	public ArrayList<Computer> getListComputers() { 
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
@@ -55,7 +61,9 @@ public class ComputerDAO {
 	}
 	
 	/**
-	 * Print one specific computer
+	 * Query for a specific computer
+	 * @param id_computer
+	 * @return computer
 	 */
 	public Computer getOneComputer(int id_computer) {
 		Computer computer = null;

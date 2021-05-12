@@ -2,6 +2,12 @@ package com.excilys.cdb.model;
 
 import java.time.LocalDate;
 
+/**
+ * Computer definition.
+ * Only name is mandatory for a creation.
+ * @author Mathieu_RH
+ *
+ */
 public class Computer {
 	
 	private int id;
@@ -37,9 +43,9 @@ public class Computer {
 		}
 	}
 	public void setDiscontinuedDate(LocalDate discontinuedDate) {
-		if (discontinuedDate != null && discontinuedDate.isAfter(introducedDate)) {
+		if (discontinuedDate != null && discontinuedDate.isAfter(introducedDate) && discontinuedDate.isAfter(LocalDate.of(1970, 1, 1))) {
 			this.discontinuedDate = discontinuedDate;
-		} else {System.out.println("DiscontinuationDate setting failed : Discontinued date can't be after introduced date");}
+		} else {System.out.println("DiscontinuationDate setting failed : Discontinued date can't be after introduced date or before 1970");}
 	}
 	
 	@Override

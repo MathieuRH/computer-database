@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.model.Computer;
 
+/**
+ * Service class for computers.
+ * @author Mathieu_RH
+ *
+ */
 public class ComputerService {
 
 	private ComputerDAO computerDAO;

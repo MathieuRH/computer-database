@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import com.excilys.cdb.mapper.CompanyMapper;
 import com.excilys.cdb.model.Company;
 
+/**
+ * Data access object for computers.
+ * @author Mathieu_RH
+ *
+ */
 public class CompanyDAO {
 
 	private static Connection connection;
@@ -45,6 +50,11 @@ public class CompanyDAO {
 		return listCompanies;
 	}
 	
+	/**
+	 * Query for a specific company
+	 * @param company_id
+	 * @return company
+	 */
 	public Company getOneCompany(int company_id) {
 		Company company = null;
 		ResultSet rs = null;

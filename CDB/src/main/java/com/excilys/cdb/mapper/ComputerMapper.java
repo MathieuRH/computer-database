@@ -8,8 +8,18 @@ import java.util.ArrayList;
 import com.excilys.cdb.dao.CompanyDAO;
 import com.excilys.cdb.model.Computer;
 
+/**
+ * Mapping class for computers
+ * @author Mathieu_RH
+ *	
+ */
 public class ComputerMapper {
 	
+	/**
+	 * Conversion function from query ResultSet to Computer ArrayList
+	 * @param rs ResultSet
+	 * @return listComputers 
+	 */
 	public static ArrayList<Computer> getListComputers(ResultSet rs) {
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		try {
@@ -39,6 +49,11 @@ public class ComputerMapper {
 		return listComputers;
 	}
 	
+	/**
+	 * Conversion function from query ResultSet to single Computer
+	 * @param rs ResultSet
+	 * @return computer
+	 */
 	public static Computer getOneComputer(ResultSet rs) {
 		return getListComputers(rs).get(0);
 	}

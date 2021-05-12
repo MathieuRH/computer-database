@@ -9,9 +9,18 @@ import com.excilys.cdb.dao.CompanyDAO;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
-
+/**
+ * Mapping class for companies
+ * @author Mathieu_RH
+ *	
+ */
 public class CompanyMapper {
 	
+	/**
+	 * Conversion function from query ResultSet to Company ArrayList
+	 * @param rs ResultSet
+	 * @return listCompanies 
+	 */
 	public static ArrayList<Company> getListCompanies(ResultSet rs){
 		ArrayList <Company> listCompanies = new ArrayList<Company>();
 		try {
@@ -28,6 +37,11 @@ public class CompanyMapper {
 		return listCompanies;
 	}
 	
+	/**
+	 * Conversion function from query ResultSet to single Company
+	 * @param rs ResultSet
+	 * @return company
+	 */
 	public static Company getOneCompany(ResultSet rs) throws SQLException {
 		Company company = new Company();
 		rs.next();
