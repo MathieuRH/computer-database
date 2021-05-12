@@ -35,29 +35,12 @@ public class Page {
 		} else {nbPages = nbLignes/size + 1;}
 	}
 
-	
-	public ArrayList<Computer> getDisplayListComputer(ArrayList<Computer> objectList){
-		ArrayList<Computer> returnList = new ArrayList<Computer>();
-		int start = (page-1)*size;
-		int end = Math.min(objectList.size(), start + size);
-		for (int i = start; i<end; i++) {
-			returnList.add(objectList.get(i));
-		}
-		return returnList;
-	}
-	
-	public ArrayList<Company> getDisplayListCompanies(ArrayList<Company> objectList){
-		ArrayList<Company> returnList = new ArrayList<Company>();
-		int start = (page-1)*size;
-		int end = Math.min(objectList.size(), start + size);
-		for (int i = start; i<end; i++) {
-			returnList.add(objectList.get(i));
-		}
-		return returnList;
+	public int getOffset() {
+		return (page-1)*size;
 	}
 	
 	public void nextPage() {
-		page = (page+1)%nbPages;
+		page = (page%nbPages)+1;
 	}
 	
 	public void previousPage() {

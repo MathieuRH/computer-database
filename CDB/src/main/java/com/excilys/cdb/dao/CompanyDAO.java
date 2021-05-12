@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.excilys.cdb.mapper.CompanyMapper;
+import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Company;
 
 /**
@@ -18,24 +19,26 @@ import com.excilys.cdb.model.Company;
 public class CompanyDAO {
 
 	private static Connection connection;
-	private static final String LIST_COMPANIES_QUERY = "SELECT id,name FROM company;";
+	private static final String LIST_COMPANIES_QUERY = "SELECT id,name FROM company LIMIT ? OFFSET ?;";
+	private static final String NUMBER_COMPANIES_QUERY = "SELECT COUNT(id) FROM company;";
 	private static final String GET_COMPANY = "SELECT id, name FROM company WHERE id=?;";
 	
 	public CompanyDAO() {
-		
 	}
 	
 	/**
 	 * DAO function for listCompanies
 	 * @return a list of all companies.
 	 */
-	public ArrayList<Company> getListCompanies() {
+	public ArrayList<Company> getListCompanies(int limit, int offset) {
 		ArrayList<Company> listCompanies= new ArrayList<Company>();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
 			connection = DBConnection.getInstance();
 			statement = connection.prepareStatement(LIST_COMPANIES_QUERY);
+			statement.setInt(1,limit);
+			statement.setInt(2,offset);
 			rs = statement.executeQuery();
 			listCompanies = CompanyMapper.getListCompanies(rs);
 		} catch (SQLException e) {
@@ -75,6 +78,30 @@ public class CompanyDAO {
 		return company;
 	}
 	
+	/**
+	 * Query for company number
+	 */
+	public int getNumberCompanies() {
+		int nbCompanies = 0;
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DBConnection.getInstance();
+			statement = connection.prepareStatement(NUMBER_COMPANIES_QUERY);
+			rs = statement.executeQuery();
+			nbCompanies = CompanyMapper.getNumberCompanies(rs);
+		} catch (SQLException e) {
+			e.getMessage();
+			e.printStackTrace();
+		} 
+		finally {
+			closeSetStatement(rs, statement);
+			DBConnection.close();
+			connection = null;
+		}
+		return nbCompanies;
+	}
+	
 	
 	/**
 	 * Closing function for resultSets and statements
@@ -95,5 +122,4 @@ public class CompanyDAO {
 			e.printStackTrace();
         }
     }
-	
 }

@@ -23,10 +23,13 @@ public class ComputerService {
 		return computerDAO.getOneComputer(id_computer);
 	}
 	
-	public ArrayList<Computer> getListComputers() { 
-		return computerDAO.getListComputers();
+	public ArrayList<Computer> getListComputers(int limit, int offset) { 
+		return computerDAO.getListComputers(limit, offset);
 	}
 	
+	public int getNumberComputers() {
+		return computerDAO.getNumberComputers();
+	}
 	
 	public ComputerDAO getComputerDAO() {
 		return computerDAO;

@@ -96,13 +96,18 @@ public class CLI {
 
 	private void displayListComputers() {
 		computerService = new ComputerService();
-		ArrayList <Computer> listAllComputers = computerService.getListComputers();
-		pagination = new Page(listAllComputers.size());
+		int nbComputers = computerService.getNumberComputers();
+		pagination = new Page(nbComputers);
 		ArrayList<Computer> listDisplayComputers;
+		int limit = pagination.getSize();
+		int offset ;
+		
 		boolean keepDisplaying = true;
 		String immediate_answer;
 		while (keepDisplaying) {
-			listDisplayComputers = pagination.getDisplayListComputer(listAllComputers);
+			offset = pagination.getOffset();
+			limit = (pagination.getPage() == pagination.getNbPages()) ? nbComputers % pagination.getSize() : pagination.getSize();
+			listDisplayComputers = computerService.getListComputers(limit, offset);
 			displayListComputers(listDisplayComputers);
 			System.out.println("Page " + pagination.getPage() + "/" + pagination.getNbPages() + " | " + LIST_PAGE_ACTIONS);
 			immediate_answer = sc.nextLine();
@@ -134,13 +139,18 @@ public class CLI {
 	
 	private void displayListCompanies() {
 		companyService = new CompanyService();
-		ArrayList <Company> listAllCompanies = companyService.getListCompanies();
-		pagination = new Page(listAllCompanies.size());
+		int nbCompanies = companyService.getNumberCompanies();
+		pagination = new Page(nbCompanies);
 		ArrayList<Company> listDisplayCompanies;
+		int limit = pagination.getSize();
+		int offset ;
+		
 		boolean keepDisplaying = true;
 		String immediate_answer;
 		while (keepDisplaying) {
-			listDisplayCompanies = pagination.getDisplayListCompanies(listAllCompanies);
+			offset = pagination.getOffset();
+			limit = (pagination.getPage() == pagination.getNbPages()) ? nbCompanies % pagination.getSize() : pagination.getSize();
+			listDisplayCompanies = companyService.getListCompanies(limit, offset);
 			displayListCompanies(listDisplayCompanies);
 			System.out.println("Page " + pagination.getPage() + "/" + pagination.getNbPages() + " | " + LIST_PAGE_ACTIONS);
 			immediate_answer = sc.nextLine();
@@ -180,18 +190,6 @@ public class CLI {
 		int computer_id = Integer.parseInt(sc.nextLine());
 		Computer computer = computerService.getOneComputer(computer_id);
 		System.out.println(computer);
-	}
-	
-	/*
-	 * List of companies display
-	 */
-	private void getListCompanies() {
-		ArrayList <Company> listCompanies = new ArrayList<>();
-		companyService = new CompanyService();
-		listCompanies = companyService.getListCompanies();
-		for (Company company : listCompanies) {
-			System.out.println(company);
-		}
 	}
 	
 	/*

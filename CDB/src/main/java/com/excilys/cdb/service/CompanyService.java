@@ -26,7 +26,11 @@ public class CompanyService {
 		this.companyDAO = companyDAO;
 	}
 
-	public ArrayList<Company> getListCompanies() {
-		return companyDAO.getListCompanies();
+	public int getNumberCompanies() {
+		return companyDAO.getNumberCompanies();
+	}
+
+	public ArrayList<Company> getListCompanies(int limit, int offset) {
+		return companyDAO.getListCompanies(limit, offset);
 	}
 }

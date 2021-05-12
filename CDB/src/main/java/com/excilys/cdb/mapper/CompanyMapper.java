@@ -51,5 +51,17 @@ public class CompanyMapper {
         company.setName(name);
         return company;
 	}
+
+	public static int getNumberCompanies(ResultSet rs) {
+		int nbCompanies = 0;
+		try {
+			if (rs.next()) {
+				nbCompanies = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nbCompanies;
+	}
 	
 }

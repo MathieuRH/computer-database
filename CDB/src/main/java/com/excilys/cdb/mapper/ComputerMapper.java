@@ -57,6 +57,18 @@ public class ComputerMapper {
 	public static Computer getOneComputer(ResultSet rs) {
 		return getListComputers(rs).get(0);
 	}
+
+	public static int getNumberComputers(ResultSet rs) {
+		int nbComputers = 0;
+		try {
+			if (rs.next()) {
+				nbComputers = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nbComputers;
+	}
 	
 }
 

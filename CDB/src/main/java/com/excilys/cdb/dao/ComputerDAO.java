@@ -22,7 +22,8 @@ import com.excilys.cdb.model.Computer;
 public class ComputerDAO {
 	
 	private static Connection connection;
-	private static final String LIST_COMPUTERS_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer;";
+	private static final String LIST_COMPUTERS_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer LIMIT ? OFFSET ?;";
+	private static final String NUMBER_COMPUTERS_QUERY = "SELECT COUNT(id) FROM computer;";
 	private static final String ONE_COMPUTER_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE id=?;";
 	private static final String CREATE_ONE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
 	//private static final String UPDATE_ONE = "UPDATE computer SET ?=? WHERE id=?;";
@@ -39,13 +40,15 @@ public class ComputerDAO {
 	 * Query for all computers.
 	 * @return listComputers 
 	 */
-	public ArrayList<Computer> getListComputers() { 
+	public ArrayList<Computer> getListComputers(int limit, int offset) { 
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
 			connection = DBConnection.getInstance();
 			statement = connection.prepareStatement(LIST_COMPUTERS_QUERY);
+			statement.setInt(1,limit);
+			statement.setInt(2,offset);
 			rs = statement.executeQuery();
 			listComputers = ComputerMapper.getListComputers(rs);
 		} catch (SQLException e) {
@@ -113,7 +116,6 @@ public class ComputerDAO {
 					statement.setInt(4, id_company);
 				} else {statement.setNull(4, 0);}
 				statement.executeUpdate();
-				System.out.println("Computer successfully added !");
 			} catch (SQLException e) {
 				e.getMessage();
 				e.printStackTrace();
@@ -144,7 +146,6 @@ public class ComputerDAO {
 					statement.setString(1, (String)value);
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
-					System.out.println("Computer successfully modified !");
 				
 				} catch (SQLException e) {
 					e.getMessage();
@@ -169,7 +170,6 @@ public class ComputerDAO {
 					statement.setDate(1, Date.valueOf((LocalDate) value));
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
-					System.out.println("Computer successfully modified !");
 				} catch (SQLException e) {
 					e.getMessage();
 					e.printStackTrace();
@@ -190,7 +190,6 @@ public class ComputerDAO {
 					statement.setInt(1, (int) value);
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
-					System.out.println("Computer successfully modified !");
 				} catch (SQLException e) {
 					e.getMessage();
 					e.printStackTrace();
@@ -217,7 +216,6 @@ public class ComputerDAO {
 				statement = connection.prepareStatement(DELETE_ONE);
 				statement.setInt(1, id_computer);
 				statement.executeUpdate();
-				System.out.println("Computer successfully deleted !");
 			} catch (SQLException e) {
 				e.getMessage();
 				e.printStackTrace();
@@ -230,6 +228,29 @@ public class ComputerDAO {
 		}
 	}
 	
+	/**
+	 * Query for computer number
+	 */
+	public int getNumberComputers() {
+		int nbComputers = 0;
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DBConnection.getInstance();
+			statement = connection.prepareStatement(NUMBER_COMPUTERS_QUERY);
+			rs = statement.executeQuery();
+			nbComputers = ComputerMapper.getNumberComputers(rs);
+		} catch (SQLException e) {
+			e.getMessage();
+			e.printStackTrace();
+		} 
+		finally {
+			closeSetStatement(rs, statement);
+			DBConnection.close();
+			connection = null;
+		}
+		return nbComputers;
+	}
 	
 	/**
 	 * Closing function for resultSets and statements
