@@ -7,8 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import com.excilys.cdb.dao.DBConnection;
+import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
@@ -16,7 +18,6 @@ public class ComputerDAO {
 	
 	private static Connection connection;
 	private static final String LIST_COMPUTERS_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer;";
-	private static final String GET_COMPANY = "SELECT id, name FROM company WHERE id=?;";
 	private static final String ONE_COMPUTER_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE id=?;";
 	private static final String CREATE_ONE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
 	//private static final String UPDATE_ONE = "UPDATE computer SET ?=? WHERE id=?;";
@@ -32,37 +33,15 @@ public class ComputerDAO {
 	/**
 	 * Print all the computers
 	 */
-	public void getListComputers() {
-		ResultSet res = null;
-		PreparedStatement statement = null;
-		try {
-			connection = DBConnection.getInstance();
-			statement = connection.prepareStatement(LIST_COMPUTERS_QUERY);
-			res = statement.executeQuery();
-			writeListComputers(res);
-		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
-		} 
-		finally {
-			closeSetStatement(res, statement);
-			DBConnection.close();
-			connection = null;
-		}
-	}
-	
-	/**
-	 * Print one specific computer
-	 */
-	public void getOneComputer(int id_computer) {
+	public ArrayList<Computer> getListComputers() { 
+		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
 			connection = DBConnection.getInstance();
-			statement = connection.prepareStatement(ONE_COMPUTER_QUERY);
-			statement.setInt(1, id_computer);
+			statement = connection.prepareStatement(LIST_COMPUTERS_QUERY);
 			rs = statement.executeQuery();
-			writeListComputers(rs);
+			listComputers = ComputerMapper.getListComputers(rs);
 		} catch (SQLException e) {
 			e.getMessage();
 			e.printStackTrace();
@@ -72,66 +51,34 @@ public class ComputerDAO {
 			DBConnection.close();
 			connection = null;
 		}
+		return listComputers;
 	}
 	
-	
 	/**
-	 * Prints the result of the @getListComputers function
-	 * @param resultSet
-	 * @throws SQLException
+	 * Print one specific computer
 	 */
-	private void writeListComputers(ResultSet resultSet) throws SQLException {
-        // ResultSet is initially before the first data set
-        while (resultSet.next()) {
-            // It is possible to get the columns via name
-            // also possible to get the columns via the column number
-            // which starts at 1
-            // e.g. resultSet.getSTring(2);
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            Date dateInt = resultSet.getDate("introduced");
-            Date dateDis = resultSet.getDate("discontinued");
-            int company_id = resultSet.getInt("company_id");
-            Computer comp = new Computer(id, name);
-            if (dateInt != null) {
-            	comp.setIntroducedDate(dateInt.toLocalDate());
-            }
-            if (dateDis != null) {
-            	comp.setDiscontinuedDate(dateDis.toLocalDate());
-            }
-            if (company_id != 0) {
-            	comp.setCompany(getCompany(company_id));
-            }
-            System.out.println(comp);
-        }
-    }
-	
-
-	/**
-	 * Get a company from its id
-	 */
-	public Company getCompany(int company_id) {
-		Company company = new Company();
-		ResultSet res = null;
+	public Computer getOneComputer(int id_computer) {
+		Computer computer = null;
+		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
-			statement = connection.prepareStatement(GET_COMPANY);
-			statement.setInt(1, company_id);
-			res = statement.executeQuery();
-			res.next();
-            int id = res.getInt("id");
-            String name = res.getString("name");
-            company.setId(id);
-            company.setName(name);
+			connection = DBConnection.getInstance();
+			statement = connection.prepareStatement(ONE_COMPUTER_QUERY);
+			statement.setInt(1, id_computer);
+			rs = statement.executeQuery();
+			computer = ComputerMapper.getOneComputer(rs);
 		} catch (SQLException e) {
 			e.getMessage();
 			e.printStackTrace();
 		} 
 		finally {
-			closeSetStatement(res, statement);
+			closeSetStatement(rs, statement);
+			DBConnection.close();
+			connection = null;
 		}
-		return company;
+		return computer;
 	}
+	
 	
 	/**
 	 * Creation of a computer.

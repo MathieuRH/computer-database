@@ -1,10 +1,13 @@
 package com.excilys.cdb.ui;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-import com.excilys.cdb.dao.CompanyDAO;
-import com.excilys.cdb.dao.ComputerDAO;
+import com.excilys.cdb.service.CompanyService;
+import com.excilys.cdb.service.ComputerService;
+import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Company;
 
 public class CLI {
 	
@@ -22,16 +25,23 @@ public class CLI {
 			"2 :  Change introduction date" + System.lineSeparator() +
 			"3 :  Change discontinuation date" + System.lineSeparator() +
 			"4 :  Change company" ;
-	private ComputerDAO computerDAO;
-	private CompanyDAO companyDAO;
+	private static final int COND_EXIT = 0;
+	private static final int COND_ONE = 1;
+	private static final int COND_TWO = 2;
+	private static final int COND_THREE = 3;
+	private static final int COND_FOUR = 4;
+	private static final int COND_FIVE = 5;
+	private static final int COND_SIX = 6;
+	private ComputerService computerService;
+	private CompanyService companyService;
 	
 	public CLI() {
 	}
 	
 	public void start() {
 		System.out.println("Access and modifications in computer database.");
-		boolean cond = true;
-		while (cond) {
+		boolean goOn = true;
+		while (goOn) {
 			int action = -1;
 			while (action < 0 || action > 6) {
 				System.out.println(LIST_ACTIONS);
@@ -41,25 +51,25 @@ public class CLI {
 					action = Integer.parseInt(sc.nextLine());
 				} catch (NumberFormatException e){}
 				switch (action) {
-					case 0:
-						cond = false;
+					case COND_EXIT:
+						goOn = false;
 						break;
-					case 1:
+					case COND_ONE:
 						getListComputers();
 						break;
-					case 2: 
+					case COND_TWO: 
 						getListCompanies();
 						break;
-					case 3:
+					case COND_THREE:
 						getOneComputer();
 						break;
-					case 4:
+					case COND_FOUR:
 						createOneComputer();
 						break;
-					case 5:
+					case COND_FIVE:
 						updateOneComputer();
 						break;
-					case 6:
+					case COND_SIX:
 						deleteOneComputer();
 						break;
 					default :System.out.println("Please enter a correct action...");
@@ -72,20 +82,30 @@ public class CLI {
 	}
 
 	private void getListComputers() {
-		computerDAO = new ComputerDAO();
-		computerDAO.getListComputers();
+		ArrayList <Computer> listComputers = new ArrayList<>();
+		computerService = new ComputerService();
+		listComputers = computerService.getListComputers();
+		for (Computer computer : listComputers) {
+			System.out.println(computer);
+		}
+		
 	}
 	
 	private void getOneComputer() {
-		computerDAO = new ComputerDAO();
+		computerService = new ComputerService();
 		System.out.println("Please enter the computer id :");
 		int computer_id = Integer.parseInt(sc.nextLine());
-		computerDAO.getOneComputer(computer_id);
+		Computer computer = computerService.getOneComputer(computer_id);
+		System.out.println(computer);
 	}
 	
 	private void getListCompanies() {
-		companyDAO = new CompanyDAO();
-		companyDAO.getListCompanies();
+		ArrayList <Company> listCompanies = new ArrayList<>();
+		companyService = new CompanyService();
+		listCompanies = companyService.getListCompanies();
+		for (Company company : listCompanies) {
+			System.out.println(company);
+		}
 	}
 	
 	private void createOneComputer() {
@@ -93,7 +113,7 @@ public class CLI {
 		LocalDate discontinued = null;
 		int company_id = 0;
 		String immediate_answer = null;
-		computerDAO = new ComputerDAO();
+		computerService = new ComputerService();
 		System.out.println("Please enter the computer name :");
 		String name = sc.nextLine();
 		try {
@@ -130,11 +150,11 @@ public class CLI {
 				company_id = Integer.parseInt(sc.nextLine());
 			}
 		} catch (NumberFormatException e){}
-		computerDAO.createOne(name, introduced, discontinued, company_id);
+		computerService.createOne(name, introduced, discontinued, company_id);
 	}
 	
 	private void updateOneComputer() {
-		computerDAO = new ComputerDAO();
+		computerService = new ComputerService();
 		int computer_id = 0;
 		int field = 0;
 		Object value = null;
@@ -147,12 +167,12 @@ public class CLI {
 		try {
 			field = Integer.parseInt(sc.nextLine());
 			switch (field){
-			case 1:
+			case COND_ONE:
 				System.out.println("New name ? ");
 				value = sc.nextLine();
 				break;
-			case 2:
-			case 3:
+			case COND_TWO:
+			case COND_THREE:
 				System.out.println("Year ? ");
 				int y = Integer.parseInt(sc.nextLine());
 				System.out.println("Month ? ");
@@ -161,23 +181,23 @@ public class CLI {
 				int d = Integer.parseInt(sc.nextLine());
 				value = LocalDate.of(y, m, d);
 				break;
-			case 4:
+			case COND_FOUR:
 				System.out.println("New company ? ");
 				value = Integer.parseInt(sc.nextLine());
 				break;
 			}
 		} catch (NumberFormatException e){}
-		computerDAO.updateOne(computer_id, field, value);
+		computerService.updateOne(computer_id, field, value);
 	}
 	
 	private void deleteOneComputer() {
-		computerDAO = new ComputerDAO();
+		computerService = new ComputerService();
 		int computer_id = 0;
 		System.out.println("Please enter the computer id :");
 		try {
 			computer_id = Integer.parseInt(sc.nextLine());
 		} catch (NumberFormatException e){}
-		computerDAO.deleteOne(computer_id);
+		computerService.deleteOne(computer_id);
 	}
 	
 }

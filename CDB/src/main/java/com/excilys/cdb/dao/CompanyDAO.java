@@ -5,53 +5,66 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
+import com.excilys.cdb.mapper.CompanyMapper;
 import com.excilys.cdb.model.Company;
 
 public class CompanyDAO {
 
 	private static Connection connection;
 	private static final String LIST_COMPANIES_QUERY = "SELECT id,name FROM company;";
+	private static final String GET_COMPANY = "SELECT id, name FROM company WHERE id=?;";
 	
 	public CompanyDAO() {
 		
 	}
 	
 	/**
-	 * Print all the companies
+	 * DAO function for listCompanies
+	 * @return a list of all companies.
 	 */
-	public void getListCompanies() {
-		ResultSet res = null;
+	public ArrayList<Company> getListCompanies() {
+		ArrayList<Company> listCompanies= new ArrayList<Company>();
+		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
 			connection = DBConnection.getInstance();
 			statement = connection.prepareStatement(LIST_COMPANIES_QUERY);
-			res = statement.executeQuery();
-			writeListCompanies(res);
+			rs = statement.executeQuery();
+			listCompanies = CompanyMapper.getListCompanies(rs);
 		} catch (SQLException e) {
 			e.getMessage();
 			e.printStackTrace();
 		} 
 		finally {
-			closeSetStatement(res, statement);
+			closeSetStatement(rs, statement);
 			DBConnection.close();
 			connection = null;
 		}
+		return listCompanies;
 	}
 	
-	/**
-	 * Prints the result of the @getListCompanies function
-	 * @param resultSet
-	 * @throws SQLException
-	 */
-	private void writeListCompanies(ResultSet resultSet) throws SQLException {
-        Company company = new Company();
-		while (resultSet.next()) {
-            company.setId(resultSet.getInt("id"));
-            company.setName(resultSet.getString("name"));
-            System.out.println(company);
-        }
-    }
+	public Company getOneCompany(int company_id) {
+		Company company = null;
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DBConnection.getInstance();
+			statement = connection.prepareStatement(GET_COMPANY);
+			statement.setInt(1, company_id);
+			rs = statement.executeQuery();
+			company = CompanyMapper.getOneCompany(rs);
+		} catch (SQLException e) {
+			e.getMessage();
+			e.printStackTrace();
+		} 
+		finally {
+			closeSetStatement(rs, statement);
+		}
+		return company;
+	}
+	
 	
 	/**
 	 * Closing function for resultSets and statements

@@ -8,6 +8,11 @@ public class Company {
 	public Company() {
 	}
 	
+	public Company(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	
 	@Override
 	public String toString() {
 		return "Company n°" + id +" : " + name;

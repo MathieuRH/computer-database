@@ -17,7 +17,6 @@ public class DBConnection {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			connection = DriverManager.getConnection(url, user, pwd);
-			System.out.println("Database connection successfull !");
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			e.getMessage();
@@ -36,7 +35,6 @@ public class DBConnection {
     	  
 	      if (connection != null) {
 	          connection.close();
-	          System.out.println("Database connection terminated.");
 	      }
       } catch (Exception e) {
       }
