@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.excilys.cdb.mapper.CompanyMapper;
-import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Company;
 
 /**
@@ -18,18 +17,23 @@ import com.excilys.cdb.model.Company;
  */
 public class CompanyDAO {
 
+	private static CompanyDAO instance;
+	
 	private static Connection connection;
 	private static final String LIST_COMPANIES_QUERY = "SELECT id,name FROM company LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPANIES_QUERY = "SELECT COUNT(id) FROM company;";
 	private static final String GET_COMPANY = "SELECT id, name FROM company WHERE id=?;";
 	
-	public CompanyDAO() {
+	private CompanyDAO() {
 	}
 	
-	/**
-	 * DAO function for listCompanies
-	 * @return a list of all companies.
-	 */
+	public static CompanyDAO getInstance(){
+		if (instance == null) {
+			instance = new CompanyDAO();
+		}
+		return instance;
+	}
+	
 	public ArrayList<Company> getListCompanies(int limit, int offset) {
 		ArrayList<Company> listCompanies= new ArrayList<Company>();
 		ResultSet rs = null;
@@ -89,7 +93,7 @@ public class CompanyDAO {
 			connection = DBConnection.getInstance();
 			statement = connection.prepareStatement(NUMBER_COMPANIES_QUERY);
 			rs = statement.executeQuery();
-			nbCompanies = CompanyMapper.getNumberCompanies(rs);
+			nbCompanies = getNumberCompanies(rs);
 		} catch (SQLException e) {
 			e.getMessage();
 			e.printStackTrace();
@@ -102,12 +106,19 @@ public class CompanyDAO {
 		return nbCompanies;
 	}
 	
+	private int getNumberCompanies(ResultSet rs) {
+		int nbCompanies = 0;
+		try {
+			if (rs.next()) {
+				nbCompanies = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nbCompanies;
+	}
 	
-	/**
-	 * Closing function for resultSets and statements
-	 * @param res ResultSet to close
-	 * @param statement Statement to close
-	 */
+	
     private void closeSetStatement(ResultSet res, Statement statement) {
         try {
             if (res != null) {

@@ -1,7 +1,5 @@
 package com.excilys.cdb.model;
 
-import java.util.ArrayList;
-
 /**
  * Pagination class.
  * @author Mathieu_RH

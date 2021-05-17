@@ -6,7 +6,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		CLI dialogue = new CLI();
+		CLI dialogue = CLI.getInstance();
 		dialogue.start();
 		
 	}

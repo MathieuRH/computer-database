@@ -10,42 +10,18 @@ import java.time.LocalDate;
  */
 public class Computer {
 	
-	private int id;
-	private String name;
-	private LocalDate introducedDate;
-	private LocalDate discontinuedDate;
-	private Company company;
+	private final int id;
+	private final String name;
+	private final LocalDate introducedDate;
+	private final LocalDate discontinuedDate;
+	private final Company company;
 	
-	public Computer (int id, String name) {
-		this.id = id;
-		this.name = name;
-	}
-	
-	public Computer (int id, String name, Company company) {
-		this(id, name);
-		this.company = company;
-	}
-	
-	public Computer(int id, String name, Company company, LocalDate introducedDate) {
-		this(id, name, company);
-		this.introducedDate = introducedDate;
-	}
-	
-	public Computer(int id, String name, Company company, LocalDate introducedDate, LocalDate discontinuedDate) {
-		this(id, name, company, introducedDate);
-		this.discontinuedDate = discontinuedDate;
-	}
-	
-
-	public void setIntroducedDate(LocalDate introducedDate) {
-		if (introducedDate != null) {
-			this.introducedDate = introducedDate;
-		}
-	}
-	public void setDiscontinuedDate(LocalDate discontinuedDate) {
-		if (discontinuedDate != null && discontinuedDate.isAfter(introducedDate) && discontinuedDate.isAfter(LocalDate.of(1970, 1, 1))) {
-			this.discontinuedDate = discontinuedDate;
-		} else {System.out.println("DiscontinuationDate setting failed : Discontinued date can't be after introduced date or before 1970");}
+	private Computer(ComputerBuilder builder) {
+		this.id = builder.id;
+		this.name = builder.name;
+		this.introducedDate = builder.introducedDate;
+		this.discontinuedDate = builder.discontinuedDate;
+		this.company = builder.company;
 	}
 	
 	@Override
@@ -61,20 +37,41 @@ public class Computer {
 		return res;
 	}
 	
+	public static class ComputerBuilder{
+		private int id;
+		private String name;
+		private LocalDate introducedDate;
+		private LocalDate discontinuedDate;
+		private Company company;
+		
+		public ComputerBuilder(int id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+		public ComputerBuilder introducedDate(LocalDate introducedDate) {
+			this.introducedDate = introducedDate;
+			return this;
+		}
+		public ComputerBuilder discontinuedDate(LocalDate discontinuedDate) {
+			this.discontinuedDate = discontinuedDate;
+			return this;
+		}
+		public ComputerBuilder company(Company company) {
+			this.company = company;
+			return this;
+		}
+		
+		public Computer build() {
+			return new Computer(this);
+		}
+	}
 	
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public LocalDate getIntroducedDate() {
 		return introducedDate;
 	}
@@ -84,10 +81,5 @@ public class Computer {
 	public Company getCompany() {
 		return company;
 	}
-	public void setCompany(Company company) {
-		this.company = company;
-	}
-	
-	
-	
+		
 }

@@ -12,10 +12,18 @@ import com.excilys.cdb.model.Company;
  */
 public class CompanyService {
 	
+	private static CompanyService instance;
 	private CompanyDAO companyDAO;
 	
-	public CompanyService() {
-		companyDAO = new CompanyDAO();
+	private CompanyService() {
+		companyDAO = CompanyDAO.getInstance();
+	}
+	
+	public static CompanyService getInstance() {
+		if (instance == null) {
+			instance = new CompanyService();
+		}
+		return instance;
 	}
 
 	public CompanyDAO getComputerDAO() {

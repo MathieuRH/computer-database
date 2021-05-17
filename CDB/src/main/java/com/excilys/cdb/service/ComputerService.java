@@ -13,10 +13,18 @@ import com.excilys.cdb.model.Computer;
  */
 public class ComputerService {
 
+	private static ComputerService instance;
 	private ComputerDAO computerDAO;
 	
-	public ComputerService() {
-		computerDAO = new ComputerDAO();
+	private ComputerService() {
+		computerDAO = ComputerDAO.getInstance();
+	}
+	
+	public static ComputerService getInstance() {
+		if (instance == null) {
+			instance = new ComputerService();
+		}
+		return instance;
 	}
 
 	public Computer getOneComputer(int id_computer) {
