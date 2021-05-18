@@ -1,6 +1,5 @@
 package com.excilys.cdb.dao;
 
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +20,6 @@ public class ComputerDAO {
 	
 	private static ComputerDAO instance;
 	
-	private static Connection connection;
 	private static final String LIST_COMPUTERS_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPUTERS_QUERY = "SELECT COUNT(id) FROM computer;";
 	private static final String ONE_COMPUTER_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE id=?;";
@@ -47,8 +45,8 @@ public class ComputerDAO {
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
-			connection = DBConnection.getInstance();
-			statement = connection.prepareStatement(LIST_COMPUTERS_QUERY);
+			DBConnection.getInstance();
+			statement = DBConnection.getConnection().prepareStatement(LIST_COMPUTERS_QUERY);
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
 			rs = statement.executeQuery();
@@ -60,7 +58,6 @@ public class ComputerDAO {
 		finally {
 			closeSetStatement(rs, statement);
 			DBConnection.close();
-			connection = null;
 		}
 		return listComputers;
 	}
@@ -70,8 +67,8 @@ public class ComputerDAO {
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
-			connection = DBConnection.getInstance();
-			statement = connection.prepareStatement(ONE_COMPUTER_QUERY);
+			DBConnection.getInstance();
+			statement = DBConnection.getConnection().prepareStatement(ONE_COMPUTER_QUERY);
 			statement.setInt(1, id_computer);
 			rs = statement.executeQuery();
 			computer = ComputerMapper.getOneComputer(rs);
@@ -82,7 +79,6 @@ public class ComputerDAO {
 		finally {
 			closeSetStatement(rs, statement);
 			DBConnection.close();
-			connection = null;
 		}
 		return computer;
 	}
@@ -93,8 +89,8 @@ public class ComputerDAO {
 			ResultSet rs = null;
 			PreparedStatement statement = null;
 			try {
-				connection = DBConnection.getInstance();
-				statement = connection.prepareStatement(CREATE_ONE);
+				DBConnection.getInstance();
+				statement = DBConnection.getConnection().prepareStatement(CREATE_ONE);
 				statement.setString(1, name);
 				if (introduced!=null) {
 					statement.setDate(2, Date.valueOf(introduced));
@@ -113,7 +109,6 @@ public class ComputerDAO {
 			finally {
 				closeSetStatement(rs, statement);
 				DBConnection.close();
-				connection = null;
 			}
 		} else {System.out.println("Name can't be null.");}
 	}
@@ -125,8 +120,8 @@ public class ComputerDAO {
 				ResultSet rs = null;
 				PreparedStatement statement = null;
 				try {
-					connection = DBConnection.getInstance();
-					statement = connection.prepareStatement(UPDATE_ONE_NAME);
+					DBConnection.getInstance();
+					statement = DBConnection.getConnection().prepareStatement(UPDATE_ONE_NAME);
 					statement.setString(1, (String)value);
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
@@ -138,17 +133,16 @@ public class ComputerDAO {
 				finally {
 					closeSetStatement(rs, statement);
 					DBConnection.close();
-					connection = null;
 				}
 			}
 			else if (field == 2 || field==3) {
 				ResultSet rs = null;
 				PreparedStatement statement = null;
 				try {
-					connection = DBConnection.getInstance();
+					DBConnection.getInstance();
 					if (field == 2) {
-						statement = connection.prepareStatement(UPDATE_ONE_INTRODUCED);
-					} else {statement = connection.prepareStatement(UPDATE_ONE_DISCONTINUED);}
+						statement = DBConnection.getConnection().prepareStatement(UPDATE_ONE_INTRODUCED);
+					} else {statement = DBConnection.getConnection().prepareStatement(UPDATE_ONE_DISCONTINUED);}
 					statement.setDate(1, Date.valueOf((LocalDate) value));
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
@@ -159,16 +153,15 @@ public class ComputerDAO {
 				finally {
 					closeSetStatement(rs, statement);
 					DBConnection.close();
-					connection = null;
 				}
 			} 
 			else if (field == 4) {
 				ResultSet rs = null;
 				PreparedStatement statement = null;
 				try {
-					connection = DBConnection.getInstance();
-					statement = connection.prepareStatement(UPDATE_ONE_COMPANY_ID);
-					statement.setInt(1, (int) value);
+					DBConnection.getInstance();
+					statement = DBConnection.getConnection().prepareStatement(UPDATE_ONE_COMPANY_ID);
+					statement.setInt(1, (Integer) value);
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
 				} catch (SQLException e) {
@@ -178,7 +171,6 @@ public class ComputerDAO {
 				finally {
 					closeSetStatement(rs, statement);
 					DBConnection.close();
-					connection = null;
 				}
 			} else {System.out.println("Wrong data entry types.");}
 		}
@@ -189,8 +181,8 @@ public class ComputerDAO {
 			ResultSet rs = null;
 			PreparedStatement statement = null;
 			try {
-				connection = DBConnection.getInstance();
-				statement = connection.prepareStatement(DELETE_ONE);
+				DBConnection.getInstance();
+				statement = DBConnection.getConnection().prepareStatement(DELETE_ONE);
 				statement.setInt(1, id_computer);
 				statement.executeUpdate();
 			} catch (SQLException e) {
@@ -200,7 +192,6 @@ public class ComputerDAO {
 			finally {
 				closeSetStatement(rs, statement);
 				DBConnection.close();
-				connection = null;
 			}
 		}
 	}
@@ -211,8 +202,8 @@ public class ComputerDAO {
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
-			connection = DBConnection.getInstance();
-			statement = connection.prepareStatement(NUMBER_COMPUTERS_QUERY);
+			DBConnection.getInstance();
+			statement = DBConnection.getConnection().prepareStatement(NUMBER_COMPUTERS_QUERY);
 			rs = statement.executeQuery();
 			nbComputers = getNumberComputers(rs);
 		} catch (SQLException e) {
@@ -222,7 +213,6 @@ public class ComputerDAO {
 		finally {
 			closeSetStatement(rs, statement);
 			DBConnection.close();
-			connection = null;
 		}
 		return nbComputers;
 	}

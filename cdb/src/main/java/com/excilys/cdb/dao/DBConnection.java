@@ -11,38 +11,41 @@ import java.sql.SQLException;
  */
 public class DBConnection {
 
+	private static DBConnection instance;
 	private static Connection connection;
 	
-	//TO-DO fichier properties
-	private String url="jdbc:mysql://localhost/computer-database-db";
+	//TODO fichier properties
+	private String url="jdbc:mysql://localhost:3306/computer-database-db";
 	private String user="admincdb";
 	private String pwd="qwerty1234";
 	
 	private DBConnection() {
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
 			connection = DriverManager.getConnection(url, user, pwd);
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			e.getMessage();
 		}
 	}
 	
-	public static Connection getInstance() throws SQLException {
-		if (connection == null || connection.isClosed()){
+	public static DBConnection getInstance() throws SQLException {
+		if (instance == null || connection.isClosed()){
 			new DBConnection();
 		}
-		return connection;
+		return instance;
 	}
 	
 	public static void close() {
       try {
-    	  
 	      if (connection != null) {
 	          connection.close();
 	      }
       } catch (Exception e) {
       }
+	}
+
+	public static Connection getConnection() {
+		return connection;
 	}
 	
 }

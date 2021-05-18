@@ -1,6 +1,5 @@
 package com.excilys.cdb.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +18,6 @@ public class CompanyDAO {
 
 	private static CompanyDAO instance;
 	
-	private static Connection connection;
 	private static final String LIST_COMPANIES_QUERY = "SELECT id,name FROM company LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPANIES_QUERY = "SELECT COUNT(id) FROM company;";
 	private static final String GET_COMPANY = "SELECT id, name FROM company WHERE id=?;";
@@ -39,8 +37,8 @@ public class CompanyDAO {
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
-			connection = DBConnection.getInstance();
-			statement = connection.prepareStatement(LIST_COMPANIES_QUERY);
+			DBConnection.getInstance();
+			statement = DBConnection.getConnection().prepareStatement(LIST_COMPANIES_QUERY);
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
 			rs = statement.executeQuery();
@@ -52,7 +50,6 @@ public class CompanyDAO {
 		finally {
 			closeSetStatement(rs, statement);
 			DBConnection.close();
-			connection = null;
 		}
 		return listCompanies;
 	}
@@ -67,8 +64,8 @@ public class CompanyDAO {
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
-			connection = DBConnection.getInstance();
-			statement = connection.prepareStatement(GET_COMPANY);
+			DBConnection.getInstance();
+			statement = DBConnection.getConnection().prepareStatement(GET_COMPANY);
 			statement.setInt(1, company_id);
 			rs = statement.executeQuery();
 			company = CompanyMapper.getOneCompany(rs);
@@ -90,8 +87,8 @@ public class CompanyDAO {
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
-			connection = DBConnection.getInstance();
-			statement = connection.prepareStatement(NUMBER_COMPANIES_QUERY);
+			DBConnection.getInstance();
+			statement = DBConnection.getConnection().prepareStatement(NUMBER_COMPANIES_QUERY);
 			rs = statement.executeQuery();
 			nbCompanies = getNumberCompanies(rs);
 		} catch (SQLException e) {
@@ -101,7 +98,6 @@ public class CompanyDAO {
 		finally {
 			closeSetStatement(rs, statement);
 			DBConnection.close();
-			connection = null;
 		}
 		return nbCompanies;
 	}
