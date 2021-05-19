@@ -52,8 +52,7 @@ public class ComputerMapper {
 		try {
 			return getListComputers(rs).get(0);
 		} catch (IndexOutOfBoundsException e) {
-			//e.printStackTrace();
-			logger.error("{} ", e.toString(), e.getStackTrace());
+			logger.error("Index exception : " + e);
 			throw new ComputerNotFoundException();
 		}
 	}

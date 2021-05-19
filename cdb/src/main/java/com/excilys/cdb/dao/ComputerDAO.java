@@ -60,7 +60,7 @@ public class ComputerDAO {
 			rs = statement.executeQuery();
 			listComputers = ComputerMapper.getListComputers(rs);
 		} catch (SQLException e) {
-			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			logger.error("SQL Exception : " + e);
 		} 
 		finally {
 			closeSetStatement(rs, statement);
@@ -80,7 +80,7 @@ public class ComputerDAO {
 			rs = statement.executeQuery();
 			computer = ComputerMapper.getOneComputer(rs);
 		} catch (SQLException e) {
-			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			logger.error("SQL Exception : " + e);
 		} 
 		finally {
 			closeSetStatement(rs, statement);
@@ -109,7 +109,7 @@ public class ComputerDAO {
 				} else {statement.setNull(4, 0);}
 				statement.executeUpdate();
 			} catch (SQLException e) {
-				logger.error("{} in {}", e.toString(), e.getStackTrace());
+				logger.error("SQL Exception : " + e);
 				throw new QueryException();
 			}
 			finally {
@@ -133,7 +133,7 @@ public class ComputerDAO {
 					statement.executeUpdate();
 				
 				} catch (SQLException e) {
-					logger.error("{} in {}", e.toString(), e.getStackTrace());
+					logger.error("SQL Exception : " + e);
 					throw new QueryException();
 				} 
 				finally {
@@ -150,7 +150,7 @@ public class ComputerDAO {
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
 				} catch (SQLException e) {
-					logger.error("{} in {}", e.toString(), e.getStackTrace());
+					logger.error("SQL Exception : " + e);
 					throw new QueryException();
 				} 
 				finally {
@@ -164,7 +164,7 @@ public class ComputerDAO {
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
 				} catch (SQLException e) {
-					logger.error("{} in {}", e.toString(), e.getStackTrace());
+					logger.error("SQL Exception : " + e);
 					throw new QueryException();
 				} 
 				finally {
@@ -186,7 +186,7 @@ public class ComputerDAO {
 					statement.setInt(1, id_computer);
 					statement.executeUpdate();
 				} catch (SQLException e) {
-					logger.error("{} in {}", e.toString(), e.getStackTrace());
+					logger.error("SQL Exception : " + e);
 					throw new QueryException();
 				} 
 			} catch (SQLException e) {
@@ -212,7 +212,7 @@ public class ComputerDAO {
 			rs = statement.executeQuery();
 			nbComputers = getNumberComputers_processed(rs);
 		} catch (SQLException e) {
-			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			logger.error("SQL Exception : " + e);
 			throw new QueryException();
 		} 
 		finally {
@@ -240,8 +240,8 @@ public class ComputerDAO {
             if (statement != null) {
                 statement.close();
             }
-        } catch (Exception e) {
-        	e.getMessage();
+        } catch (SQLException e) {
+			logger.error("SQL Exception : " + e);
         }
     }
 	

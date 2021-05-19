@@ -36,7 +36,7 @@ public class DBConnection {
 				new DBConnection();
 			}
 		} catch (SQLException e) {
-			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			logger.error("SQL Exception : " + e);
 			throw new ConnectionException();
 		}
 		return instance;
@@ -48,7 +48,7 @@ public class DBConnection {
 	          connection.close();
 	      }
       } catch (SQLException e) {
-			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			logger.error("SQL Exception : " + e);
       }
 	}
 

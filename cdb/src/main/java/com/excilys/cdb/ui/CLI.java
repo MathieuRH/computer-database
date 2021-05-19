@@ -210,26 +210,14 @@ public class CLI {
 			System.out.println("Add an introduction date ? (y/n)");
 			immediate_answer = sc.nextLine();
 			if ("y".equals(immediate_answer)){
-				System.out.println("Year ? ");
-				int y = Integer.parseInt(sc.nextLine());
-				System.out.println("Month ? ");
-				int m = Integer.parseInt(sc.nextLine());
-				System.out.println("Day ? ");
-				int d = Integer.parseInt(sc.nextLine());
-				introduced = LocalDate.of(y, m, d);
+				introduced = askDate();
 			}
 		} catch (Exception e){}
 		System.out.println("Add a discontinuation date ? (y/n)");
 		try {
 			immediate_answer = sc.nextLine();
 			if ("y".equals(immediate_answer)){
-				System.out.println("Year ? ");
-				int y = Integer.parseInt(sc.nextLine());
-				System.out.println("Month ? ");
-				int m = Integer.parseInt(sc.nextLine());
-				System.out.println("Day ? ");
-				int d = Integer.parseInt(sc.nextLine());
-				discontinued = LocalDate.of(y, m, d);
+				discontinued = askDate();
 			}
 		} catch (Exception e){}
 		System.out.println("Add a company id ? (y/n)");
@@ -243,6 +231,16 @@ public class CLI {
 		if (!cliController.createOne(name, introduced, discontinued, company_id)) {
 			System.out.println("Sorry, can't process wrong dates");
 		}
+	}
+	
+	private LocalDate askDate() {
+		System.out.println("Year ? ");
+		int y = Integer.parseInt(sc.nextLine());
+		System.out.println("Month ? ");
+		int m = Integer.parseInt(sc.nextLine());
+		System.out.println("Day ? ");
+		int d = Integer.parseInt(sc.nextLine());
+		return LocalDate.of(y, m, d);
 	}
 
 	private void updateOneComputer() {
@@ -265,13 +263,7 @@ public class CLI {
 						break;
 					case CHANGE_INTRODUCED:
 					case CHANGE_DISCONTINUED:
-						System.out.println("Year ? ");
-						int y = Integer.parseInt(sc.nextLine());
-						System.out.println("Month ? ");
-						int m = Integer.parseInt(sc.nextLine());
-						System.out.println("Day ? ");
-						int d = Integer.parseInt(sc.nextLine());
-						value = LocalDate.of(y, m, d);
+						value = askDate();
 						break;
 					case CHANGE_COMPANY:
 						System.out.println("New company ? ");

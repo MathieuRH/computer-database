@@ -61,9 +61,10 @@ public class CLIController {
 	}
 
 	public boolean createOne(String name, LocalDate introduced, LocalDate discontinued, int company_id) {
+		//TODO : Exception catched from service
 		boolean isCorrect = false;
-		if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)))) {
-			if (discontinued == null || (discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)))) {
+		if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)) && introduced.isBefore(LocalDate.of(2038,01,19)))) {
+			if (discontinued == null || (discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
 				try {
 					computerService.createOne(name, introduced, discontinued, company_id);
 				} catch (ConnectionException | QueryException e) {
@@ -76,6 +77,7 @@ public class CLIController {
 	}
 
 	public boolean updateOne(int computer_id, int field, Object value) {
+		//TODO : Exception catched from service
 		boolean isCorrect = false;
 		try {
 			if (field == 1 || field == 4) {
@@ -84,7 +86,7 @@ public class CLIController {
 			}
 			else if (field == 2){
 				LocalDate introduced = (LocalDate) value;
-				if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)))) {
+				if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)) && introduced.isBefore(LocalDate.of(2038,01,19)))) {
 					computerService.updateOne(computer_id, field, value);
 					isCorrect = true;
 				}
@@ -92,7 +94,7 @@ public class CLIController {
 			else {
 				LocalDate introduced = getOneComputer(computer_id).getIntroducedDate();
 				LocalDate discontinued = (LocalDate) value;
-				if (discontinued == null || (introduced != null && discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)))) {
+				if (discontinued == null || (introduced != null && discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
 					computerService.updateOne(computer_id, field, value);
 					isCorrect = true;
 				}

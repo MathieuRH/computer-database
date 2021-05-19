@@ -53,7 +53,7 @@ public class CompanyDAO {
 			rs = statement.executeQuery();
 			listCompanies = CompanyMapper.getListCompanies(rs);
 		} catch (SQLException e) {
-			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			logger.error("SQL Exception : " + e);
 			throw new QueryException();
 		}
 		finally {
@@ -74,7 +74,7 @@ public class CompanyDAO {
 			rs = statement.executeQuery();
 			company = CompanyMapper.getOneCompany(rs);
 		} catch (SQLException e) {
-			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			logger.error("SQL Exception : " + e);
 		} 
 		finally {
 			closeSetStatement(rs, statement);
@@ -92,7 +92,7 @@ public class CompanyDAO {
 			rs = statement.executeQuery();
 			nbCompanies = getNumberCompanies_processed(rs);
 		} catch (SQLException e) {
-			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			logger.error("SQL Exception : " + e);
 		} 
 		finally {
 			closeSetStatement(rs, statement);
@@ -115,12 +115,11 @@ public class CompanyDAO {
             if (res != null) {
             	res.close();
             }
-
             if (statement != null) {
                 statement.close();
             }
-        } catch (Exception e) {
-			logger.error("{} in {}", e.toString(), e.getStackTrace());
+        } catch (SQLException e) {
+			logger.error("SQL Exception : " + e);
         }
     }
 }
