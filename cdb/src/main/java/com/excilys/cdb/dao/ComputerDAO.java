@@ -8,6 +8,12 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.excilys.cdb.exceptions.ComputerNotFoundException;
+import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Computer;
 
@@ -29,6 +35,8 @@ public class ComputerDAO {
 	private static final String UPDATE_ONE_DISCONTINUED = "UPDATE computer SET discontinued=? WHERE id=?;";
 	private static final String UPDATE_ONE_COMPANY_ID = "UPDATE computer SET company_id=? WHERE id=?;";
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
+
+	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	
 	private ComputerDAO() {
 	}
@@ -40,56 +48,54 @@ public class ComputerDAO {
 		return instance;
 	}
 	
-	public ArrayList<Computer> getListComputers(int limit, int offset) { 
+	public ArrayList<Computer> getListComputers(int limit, int offset) throws ConnectionException, QueryException { 
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
+		DBConnection.getInstance();
 		try {
-			DBConnection.getInstance();
 			statement = DBConnection.getConnection().prepareStatement(LIST_COMPUTERS_QUERY);
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
 			rs = statement.executeQuery();
 			listComputers = ComputerMapper.getListComputers(rs);
 		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
+			logger.error("{} in {}", e.toString(), e.getStackTrace());
 		} 
 		finally {
 			closeSetStatement(rs, statement);
-			DBConnection.close();
 		}
+		DBConnection.close();
 		return listComputers;
 	}
 	
-	public Computer getOneComputer(int id_computer) {
+	public Computer getOneComputer(int id_computer) throws ConnectionException, QueryException, ComputerNotFoundException {
 		Computer computer = null;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
+		DBConnection.getInstance();
 		try {
-			DBConnection.getInstance();
 			statement = DBConnection.getConnection().prepareStatement(ONE_COMPUTER_QUERY);
 			statement.setInt(1, id_computer);
 			rs = statement.executeQuery();
 			computer = ComputerMapper.getOneComputer(rs);
 		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
+			logger.error("{} in {}", e.toString(), e.getStackTrace());
 		} 
 		finally {
 			closeSetStatement(rs, statement);
-			DBConnection.close();
 		}
+		DBConnection.close();
 		return computer;
 	}
 	
 	
-	public void createOne(String name, LocalDate introduced, LocalDate discontinued, int id_company) {
+	public void createOne(String name, LocalDate introduced, LocalDate discontinued, int id_company) throws ConnectionException, QueryException {
 		if (name != null) {
 			ResultSet rs = null;
 			PreparedStatement statement = null;
+			DBConnection.getInstance();
 			try {
-				DBConnection.getInstance();
 				statement = DBConnection.getConnection().prepareStatement(CREATE_ONE);
 				statement.setString(1, name);
 				if (introduced!=null) {
@@ -103,43 +109,40 @@ public class ComputerDAO {
 				} else {statement.setNull(4, 0);}
 				statement.executeUpdate();
 			} catch (SQLException e) {
-				e.getMessage();
-				e.printStackTrace();
-			} 
+				logger.error("{} in {}", e.toString(), e.getStackTrace());
+				throw new QueryException();
+			}
 			finally {
 				closeSetStatement(rs, statement);
-				DBConnection.close();
 			}
+			DBConnection.close();
 		} else {System.out.println("Name can't be null.");}
 	}
 	
 	
-	public void updateOne(int id_computer, int field, Object value) {
+	public void updateOne(int id_computer, int field, Object value) throws ConnectionException, QueryException {
 		if (id_computer !=0) {
+			ResultSet rs = null;
+			PreparedStatement statement = null;
+			DBConnection.getInstance();
 			if (field == 1 && (String)value != null) {
-				ResultSet rs = null;
-				PreparedStatement statement = null;
 				try {
-					DBConnection.getInstance();
 					statement = DBConnection.getConnection().prepareStatement(UPDATE_ONE_NAME);
 					statement.setString(1, (String)value);
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
 				
 				} catch (SQLException e) {
-					e.getMessage();
-					e.printStackTrace();
+					logger.error("{} in {}", e.toString(), e.getStackTrace());
+					throw new QueryException();
 				} 
 				finally {
 					closeSetStatement(rs, statement);
-					DBConnection.close();
 				}
 			}
 			else if (field == 2 || field==3) {
-				ResultSet rs = null;
-				PreparedStatement statement = null;
+				DBConnection.getInstance();
 				try {
-					DBConnection.getInstance();
 					if (field == 2) {
 						statement = DBConnection.getConnection().prepareStatement(UPDATE_ONE_INTRODUCED);
 					} else {statement = DBConnection.getConnection().prepareStatement(UPDATE_ONE_DISCONTINUED);}
@@ -147,47 +150,49 @@ public class ComputerDAO {
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
 				} catch (SQLException e) {
-					e.getMessage();
-					e.printStackTrace();
+					logger.error("{} in {}", e.toString(), e.getStackTrace());
+					throw new QueryException();
 				} 
 				finally {
 					closeSetStatement(rs, statement);
-					DBConnection.close();
 				}
 			} 
 			else if (field == 4) {
-				ResultSet rs = null;
-				PreparedStatement statement = null;
 				try {
-					DBConnection.getInstance();
 					statement = DBConnection.getConnection().prepareStatement(UPDATE_ONE_COMPANY_ID);
 					statement.setInt(1, (Integer) value);
 					statement.setInt(2, id_computer);
 					statement.executeUpdate();
 				} catch (SQLException e) {
-					e.getMessage();
-					e.printStackTrace();
+					logger.error("{} in {}", e.toString(), e.getStackTrace());
+					throw new QueryException();
 				} 
 				finally {
 					closeSetStatement(rs, statement);
-					DBConnection.close();
 				}
-			} else {System.out.println("Wrong data entry types.");}
+			}
+			DBConnection.close();
 		}
 	}
 	
-	public void deleteOne(int id_computer) {
+	public void deleteOne(int id_computer) throws ConnectionException, QueryException {
 		if (id_computer !=0) {
 			ResultSet rs = null;
 			PreparedStatement statement = null;
 			try {
 				DBConnection.getInstance();
 				statement = DBConnection.getConnection().prepareStatement(DELETE_ONE);
-				statement.setInt(1, id_computer);
-				statement.executeUpdate();
+				try {
+					statement.setInt(1, id_computer);
+					statement.executeUpdate();
+				} catch (SQLException e) {
+					logger.error("{} in {}", e.toString(), e.getStackTrace());
+					throw new QueryException();
+				} 
 			} catch (SQLException e) {
 				e.getMessage();
 				e.printStackTrace();
+				throw new ConnectionException();
 			} 
 			finally {
 				closeSetStatement(rs, statement);
@@ -197,18 +202,18 @@ public class ComputerDAO {
 	}
 	
 
-	public int getNumberComputers() {
+	public int getNumberComputers() throws ConnectionException, QueryException {
 		int nbComputers = 0;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
+		DBConnection.getInstance();
 		try {
-			DBConnection.getInstance();
 			statement = DBConnection.getConnection().prepareStatement(NUMBER_COMPUTERS_QUERY);
 			rs = statement.executeQuery();
-			nbComputers = getNumberComputers(rs);
+			nbComputers = getNumberComputers_processed(rs);
 		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
+			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			throw new QueryException();
 		} 
 		finally {
 			closeSetStatement(rs, statement);
@@ -218,14 +223,10 @@ public class ComputerDAO {
 	}
 	
 
-	private int getNumberComputers(ResultSet rs) {
+	private int getNumberComputers_processed(ResultSet rs) throws SQLException {
 		int nbComputers = 0;
-		try {
-			if (rs.next()) {
-				nbComputers = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (rs.next()) {
+			nbComputers = rs.getInt(1);
 		}
 		return nbComputers;
 	}

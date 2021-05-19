@@ -3,10 +3,14 @@ package com.excilys.cdb.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.excilys.cdb.exceptions.ComputerNotFoundException;
+import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
+import com.excilys.cdb.ui.CLI;
 
 public class CLIController {
 	
@@ -28,22 +32,43 @@ public class CLIController {
 	}
 	
 	public Computer getOneComputer(int id_computer) {
-		return computerService.getOneComputer(id_computer);
+		//TODO : Return optional ?
+		try {
+			return computerService.getOneComputer(id_computer);
+		} catch (ConnectionException | QueryException | ComputerNotFoundException e) {
+			CLI.writeMessage(e.getMessage());
+			return null;
+		}
 	}
 	
 	public ArrayList<Computer> getListComputers(int limit, int offset) { 
-		return computerService.getListComputers(limit, offset);
+		try {
+			return computerService.getListComputers(limit, offset);
+		} catch (ConnectionException | QueryException e) {
+			CLI.writeMessage(e.getMessage());
+			return new ArrayList<Computer>();
+		}
 	}
 	
 	public int getNumberComputers() {
-		return computerService.getNumberComputers();
+		//TODO : optional ??
+		try {
+			return computerService.getNumberComputers();
+		} catch (ConnectionException | QueryException e) {
+			CLI.writeMessage(e.getMessage());
+			return 0;
+		}
 	}
 
 	public boolean createOne(String name, LocalDate introduced, LocalDate discontinued, int company_id) {
 		boolean isCorrect = false;
 		if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)))) {
 			if (discontinued == null || (discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)))) {
-				computerService.createOne(name, introduced, discontinued, company_id);
+				try {
+					computerService.createOne(name, introduced, discontinued, company_id);
+				} catch (ConnectionException | QueryException e) {
+					CLI.writeMessage(e.getMessage());
+				}
 				isCorrect = true;
 			}
 		}
@@ -52,39 +77,57 @@ public class CLIController {
 
 	public boolean updateOne(int computer_id, int field, Object value) {
 		boolean isCorrect = false;
-		if (field == 1 || field == 4) {
-			computerService.updateOne(computer_id, field, value);
-			isCorrect = true;
-		}
-		else if (field == 2){
-			LocalDate introduced = (LocalDate) value;
-			if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)))) {
+		try {
+			if (field == 1 || field == 4) {
 				computerService.updateOne(computer_id, field, value);
 				isCorrect = true;
 			}
-		}
-		else {
-			LocalDate introduced = getOneComputer(computer_id).getIntroducedDate();
-			LocalDate discontinued = (LocalDate) value;
-			if (discontinued == null || (introduced != null && discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)))) {
-				computerService.updateOne(computer_id, field, value);
-				isCorrect = true;
+			else if (field == 2){
+				LocalDate introduced = (LocalDate) value;
+				if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)))) {
+					computerService.updateOne(computer_id, field, value);
+					isCorrect = true;
+				}
 			}
+			else {
+				LocalDate introduced = getOneComputer(computer_id).getIntroducedDate();
+				LocalDate discontinued = (LocalDate) value;
+				if (discontinued == null || (introduced != null && discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)))) {
+					computerService.updateOne(computer_id, field, value);
+					isCorrect = true;
+				}
+			}
+		} catch (ConnectionException | QueryException e) {
+			CLI.writeMessage(e.getMessage());
 		}
 		return isCorrect;
 	}
 
 
 	public void deleteOne(int computer_id) {
-		computerService.deleteOne(computer_id);
+		try {
+			computerService.deleteOne(computer_id);
+		} catch (ConnectionException | QueryException e) {
+			CLI.writeMessage(e.getMessage());
+		}
 	}
 	
 	public int getNumberCompanies() {
-		return companyService.getNumberCompanies();
+		try {
+			return companyService.getNumberCompanies();
+		} catch (ConnectionException | QueryException e) {
+			CLI.writeMessage(e.getMessage());
+			return 0;
+		}
 	}
 
 	public ArrayList<Company> getListCompanies(int limit, int offset) {
-		return companyService.getListCompanies(limit, offset);
+		try {
+			return companyService.getListCompanies(limit, offset);
+		} catch (ConnectionException | QueryException e) {
+			CLI.writeMessage(e.getMessage());
+			return new ArrayList<Company>();
+		} 
 	}
 	
 }

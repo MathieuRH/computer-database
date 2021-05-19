@@ -4,6 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.excilys.cdb.exceptions.ConnectionException;
+
 /**
  * Database connection class 
  * @author Mathieu_RH
@@ -18,19 +23,21 @@ public class DBConnection {
 	private String url="jdbc:mysql://localhost:3306/computer-database-db";
 	private String user="admincdb";
 	private String pwd="qwerty1234";
+
+	private static Logger logger = LoggerFactory.getLogger(DBConnection.class);
 	
-	private DBConnection() {
-		try {
-			connection = DriverManager.getConnection(url, user, pwd);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			e.getMessage();
-		}
+	private DBConnection() throws SQLException {
+		connection = DriverManager.getConnection(url, user, pwd);
 	}
 	
-	public static DBConnection getInstance() throws SQLException {
-		if (instance == null || connection.isClosed()){
-			new DBConnection();
+	public static DBConnection getInstance() throws ConnectionException {
+		try {
+			if (instance == null || connection.isClosed()){
+				new DBConnection();
+			}
+		} catch (SQLException e) {
+			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			throw new ConnectionException();
 		}
 		return instance;
 	}
@@ -40,7 +47,8 @@ public class DBConnection {
 	      if (connection != null) {
 	          connection.close();
 	      }
-      } catch (Exception e) {
+      } catch (SQLException e) {
+			logger.error("{} in {}", e.toString(), e.getStackTrace());
       }
 	}
 

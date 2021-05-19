@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -31,24 +34,13 @@ public class CLI {
 																"4 :  Change company" ;
 	private static final String LIST_PAGE_ACTIONS = "p : previous / n : next / page_number ?" + System.lineSeparator() +
 													"0 :  Exit display";
-	private static final int EXIT = 0;
-	
-	private static final int GET_LIST_COMPUTERS = 1;
-	private static final int GET_LIST_COMPANIES = 2;
-	private static final int GET_ONE_COMPUTER = 3;
-	private static final int CREATE_COMPUTER = 4;
-	private static final int UPDATE_COMPUTER = 5;
-	private static final int DELETE_COMPUTER = 6;
-	
-	private static final int CHANGE_NAME = 1;
-	private static final int CHANGE_INTRODUCED = 2;
-	private static final int CHANGE_DISCONTINUED = 3;
-	private static final int CHANGE_COMPANY = 4;
-	
+
 	private Scanner sc = new Scanner(System.in);
 	private static CLI instance;
 	private CLIController cliController;
 	private Page pagination;
+
+	private static Logger logger = LoggerFactory.getLogger(CLI.class);
 	
 	private CLI() {
 		cliController = CLIController.getInstance();
@@ -60,12 +52,16 @@ public class CLI {
 		}
 		return instance;
 	}
+	
+	public static void writeMessage(String message) {
+		System.out.println(message);
+	}
 
 	public void start() {
 		System.out.println("Access and modifications in computer database.");
 		boolean goOn = true;
 		while (goOn) {
-			int action = -1;
+			int action = -1 ;
 			while (action < 0 || action > 6) {
 				System.out.println(LIST_ACTIONS);
 				
@@ -73,29 +69,34 @@ public class CLI {
 				try {
 					action = Integer.parseInt(sc.nextLine());
 				} catch (NumberFormatException e){}
-				switch (action) {
-					case EXIT:
-						goOn = false;
-						break;
-					case GET_LIST_COMPUTERS:
-						displayListComputers();
-						break;
-					case GET_LIST_COMPANIES: 
-						displayListCompanies();
-						break;
-					case GET_ONE_COMPUTER:
-						getOneComputer();
-						break;
-					case CREATE_COMPUTER:
-						createOneComputer();
-						break;
-					case UPDATE_COMPUTER:
-						updateOneComputer();
-						break;
-					case DELETE_COMPUTER:
-						deleteOneComputer();
-						break;
-					default :System.out.println("Please enter a correct action...");
+				try {
+					switch (DisplayValues.fromPropertyName(action)) {
+						case EXIT:
+							goOn = false;
+							break;
+						case GET_LIST_COMPUTERS:
+							displayListComputers();
+							break;
+						case GET_LIST_COMPANIES: 
+							displayListCompanies();
+							break;
+						case GET_ONE_COMPUTER:
+							getOneComputer();
+							break;
+						case CREATE_COMPUTER:
+							createOneComputer();
+							break;
+						case UPDATE_COMPUTER:
+							updateOneComputer();
+							break;
+						case DELETE_COMPUTER:
+							deleteOneComputer();
+							break;
+						default :System.out.println("Please enter a correct action...");
+					}
+				} catch (Exception e) {
+					logger.error("{} in {}", e.getMessage(), e.getStackTrace());
+					System.out.println("Choice out of scope");
 				}
 			}
 		}
@@ -194,7 +195,7 @@ public class CLI {
 		System.out.println("Please enter the computer id :");
 		int computer_id = Integer.parseInt(sc.nextLine());
 		Computer computer = cliController.getOneComputer(computer_id);
-		System.out.println(computer);
+		if (computer != null) {System.out.println(computer);}
 	}
 	
 
@@ -256,25 +257,30 @@ public class CLI {
 		System.out.println("What field is to be modified ? ");
 		try {
 			field = Integer.parseInt(sc.nextLine());
-			switch (field){
-			case CHANGE_NAME:
-				System.out.println("New name ? ");
-				value = sc.nextLine();
-				break;
-			case CHANGE_INTRODUCED:
-			case CHANGE_DISCONTINUED:
-				System.out.println("Year ? ");
-				int y = Integer.parseInt(sc.nextLine());
-				System.out.println("Month ? ");
-				int m = Integer.parseInt(sc.nextLine());
-				System.out.println("Day ? ");
-				int d = Integer.parseInt(sc.nextLine());
-				value = LocalDate.of(y, m, d);
-				break;
-			case CHANGE_COMPANY:
-				System.out.println("New company ? ");
-				value = Integer.parseInt(sc.nextLine());
-				break;
+			try {
+				switch (UpdateChoice.fromPropertyName(field)) {
+					case CHANGE_NAME:
+						System.out.println("New name ? ");
+						value = sc.nextLine();
+						break;
+					case CHANGE_INTRODUCED:
+					case CHANGE_DISCONTINUED:
+						System.out.println("Year ? ");
+						int y = Integer.parseInt(sc.nextLine());
+						System.out.println("Month ? ");
+						int m = Integer.parseInt(sc.nextLine());
+						System.out.println("Day ? ");
+						int d = Integer.parseInt(sc.nextLine());
+						value = LocalDate.of(y, m, d);
+						break;
+					case CHANGE_COMPANY:
+						System.out.println("New company ? ");
+						value = Integer.parseInt(sc.nextLine());
+						break;
+				}
+			} catch (Exception e) {
+				logger.error("{} in {}", e.toString(), e.getStackTrace());
+				System.out.println("Choice out of scope");
 			}
 		} catch (NumberFormatException e){}
 		if (!cliController.updateOne(computer_id, field, value)) {

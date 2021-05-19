@@ -5,7 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.dao.CompanyDAO;
+import com.excilys.cdb.exceptions.ComputerNotFoundException;
+import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Computer.ComputerBuilder;
 
@@ -15,8 +21,10 @@ import com.excilys.cdb.model.Computer.ComputerBuilder;
  *	
  */
 public class ComputerMapper {
+
+	private static Logger logger = LoggerFactory.getLogger(ComputerMapper.class);
 	
-	public static ArrayList<Computer> getListComputers(ResultSet rs) throws SQLException {
+	public static ArrayList<Computer> getListComputers(ResultSet rs) throws SQLException, ConnectionException, QueryException {
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		while (rs.next()) {
 		    int id = rs.getInt("id");
@@ -40,8 +48,14 @@ public class ComputerMapper {
 		return listComputers;
 	}
 	
-	public static Computer getOneComputer(ResultSet rs) throws SQLException {
-		return getListComputers(rs).get(0);
-	}	
+	public static Computer getOneComputer(ResultSet rs) throws SQLException, ConnectionException, QueryException, ComputerNotFoundException {
+		try {
+			return getListComputers(rs).get(0);
+		} catch (IndexOutOfBoundsException e) {
+			//e.printStackTrace();
+			logger.error("{} ", e.toString(), e.getStackTrace());
+			throw new ComputerNotFoundException();
+		}
+	}
 }
 

@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.excilys.cdb.dao.ComputerDAO;
+import com.excilys.cdb.exceptions.ComputerNotFoundException;
+import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Computer;
 
 /**
@@ -27,15 +30,15 @@ public class ComputerService {
 		return instance;
 	}
 
-	public Computer getOneComputer(int id_computer) {
+	public Computer getOneComputer(int id_computer) throws ConnectionException, QueryException, ComputerNotFoundException {
 		return computerDAO.getOneComputer(id_computer);
 	}
 	
-	public ArrayList<Computer> getListComputers(int limit, int offset) { 
+	public ArrayList<Computer> getListComputers(int limit, int offset) throws ConnectionException, QueryException { 
 		return computerDAO.getListComputers(limit, offset);
 	}
 	
-	public int getNumberComputers() {
+	public int getNumberComputers() throws ConnectionException, QueryException {
 		return computerDAO.getNumberComputers();
 	}
 	
@@ -47,15 +50,15 @@ public class ComputerService {
 		this.computerDAO = computerDAO;
 	}
 
-	public void createOne(String name, LocalDate introduced, LocalDate discontinued, int company_id) {
+	public void createOne(String name, LocalDate introduced, LocalDate discontinued, int company_id) throws ConnectionException, QueryException {
 		computerDAO.createOne(name, introduced, discontinued, company_id);
 	}
 
-	public void updateOne(int computer_id, int field, Object value) {
+	public void updateOne(int computer_id, int field, Object value) throws ConnectionException, QueryException {
 		computerDAO.updateOne(computer_id, field, value);
 	}
 
-	public void deleteOne(int computer_id) {
+	public void deleteOne(int computer_id) throws ConnectionException, QueryException {
 		computerDAO.deleteOne(computer_id);
 	}
 }

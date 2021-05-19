@@ -3,6 +3,8 @@ package com.excilys.cdb.service;
 import java.util.ArrayList;
 
 import com.excilys.cdb.dao.CompanyDAO;
+import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 
 /**
@@ -34,11 +36,11 @@ public class CompanyService {
 		this.companyDAO = companyDAO;
 	}
 
-	public int getNumberCompanies() {
+	public int getNumberCompanies() throws ConnectionException, QueryException {
 		return companyDAO.getNumberCompanies();
 	}
 
-	public ArrayList<Company> getListCompanies(int limit, int offset) {
+	public ArrayList<Company> getListCompanies(int limit, int offset) throws ConnectionException, QueryException {
 		return companyDAO.getListCompanies(limit, offset);
 	}
 }

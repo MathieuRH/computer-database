@@ -6,8 +6,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.CompanyMapper;
 import com.excilys.cdb.model.Company;
+
+// import logger
 
 /**
  * Data access object for computers.
@@ -22,6 +29,8 @@ public class CompanyDAO {
 	private static final String NUMBER_COMPANIES_QUERY = "SELECT COUNT(id) FROM company;";
 	private static final String GET_COMPANY = "SELECT id, name FROM company WHERE id=?;";
 	
+	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
+	
 	private CompanyDAO() {
 	}
 	
@@ -32,21 +41,21 @@ public class CompanyDAO {
 		return instance;
 	}
 	
-	public ArrayList<Company> getListCompanies(int limit, int offset) {
+	public ArrayList<Company> getListCompanies(int limit, int offset) throws ConnectionException, QueryException {
 		ArrayList<Company> listCompanies= new ArrayList<Company>();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
+		DBConnection.getInstance();
 		try {
-			DBConnection.getInstance();
 			statement = DBConnection.getConnection().prepareStatement(LIST_COMPANIES_QUERY);
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
 			rs = statement.executeQuery();
 			listCompanies = CompanyMapper.getListCompanies(rs);
 		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
-		} 
+			logger.error("{} in {}", e.toString(), e.getStackTrace());
+			throw new QueryException();
+		}
 		finally {
 			closeSetStatement(rs, statement);
 			DBConnection.close();
@@ -54,24 +63,18 @@ public class CompanyDAO {
 		return listCompanies;
 	}
 	
-	/**
-	 * Query for a specific company
-	 * @param company_id
-	 * @return company
-	 */
-	public Company getOneCompany(int company_id) {
+	public Company getOneCompany(int company_id) throws ConnectionException, QueryException {
 		Company company = null;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
+		DBConnection.getInstance();
 		try {
-			DBConnection.getInstance();
 			statement = DBConnection.getConnection().prepareStatement(GET_COMPANY);
 			statement.setInt(1, company_id);
 			rs = statement.executeQuery();
 			company = CompanyMapper.getOneCompany(rs);
 		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
+			logger.error("{} in {}", e.toString(), e.getStackTrace());
 		} 
 		finally {
 			closeSetStatement(rs, statement);
@@ -79,21 +82,17 @@ public class CompanyDAO {
 		return company;
 	}
 	
-	/**
-	 * Query for company number
-	 */
-	public int getNumberCompanies() {
+	public int getNumberCompanies() throws ConnectionException, QueryException {
 		int nbCompanies = 0;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
+		DBConnection.getInstance();
 		try {
-			DBConnection.getInstance();
 			statement = DBConnection.getConnection().prepareStatement(NUMBER_COMPANIES_QUERY);
 			rs = statement.executeQuery();
-			nbCompanies = getNumberCompanies(rs);
+			nbCompanies = getNumberCompanies_processed(rs);
 		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
+			logger.error("{} in {}", e.toString(), e.getStackTrace());
 		} 
 		finally {
 			closeSetStatement(rs, statement);
@@ -102,14 +101,10 @@ public class CompanyDAO {
 		return nbCompanies;
 	}
 	
-	private int getNumberCompanies(ResultSet rs) {
+	private int getNumberCompanies_processed(ResultSet rs) throws SQLException {
 		int nbCompanies = 0;
-		try {
-			if (rs.next()) {
-				nbCompanies = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (rs.next()) {
+			nbCompanies = rs.getInt(1);
 		}
 		return nbCompanies;
 	}
@@ -125,8 +120,7 @@ public class CompanyDAO {
                 statement.close();
             }
         } catch (Exception e) {
-        	e.getMessage();
-			e.printStackTrace();
+			logger.error("{} in {}", e.toString(), e.getStackTrace());
         }
     }
 }

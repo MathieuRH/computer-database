@@ -26,12 +26,6 @@ public class CompanyMapper {
 	
 
 	public static Company getOneCompany(ResultSet rs) throws SQLException {
-		Company company = new Company();
-		rs.next();
-        int id = rs.getInt("id");
-        String name = rs.getString("name");
-        company.setId(id);
-        company.setName(name);
-        return company;
+        return getListCompanies(rs).get(0);
 	}
 }
