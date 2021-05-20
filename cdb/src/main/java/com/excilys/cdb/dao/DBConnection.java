@@ -27,6 +27,11 @@ public class DBConnection {
 	private static Logger logger = LoggerFactory.getLogger(DBConnection.class);
 	
 	private DBConnection() throws SQLException {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			logger.error("SQL Exception : " + e);
+		}
 		connection = DriverManager.getConnection(url, user, pwd);
 	}
 	
