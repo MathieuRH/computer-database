@@ -33,4 +33,9 @@ public class MyServlet extends HttpServlet {
 		this.getServletContext().getRequestDispatcher( "/WEB-INF/views/dashboard.jsp" ).forward( request, response );
 	}
 	
+	public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException{
+
+		this.getServletContext().getRequestDispatcher( "/WEB-INF/views/addComputer.jsp" ).forward( request, response );
+	}
+	
 }

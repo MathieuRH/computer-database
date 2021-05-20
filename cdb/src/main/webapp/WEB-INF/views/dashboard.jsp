@@ -1,5 +1,4 @@
 <%@ page pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,9 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
-<link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="/css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="/css/main.css" rel="stylesheet" media="screen">
+<link rel="stylesheet" href="<c:url value='/resources/css/bootstrap.min.css'/>" media="screen"/> 
+<link rel="stylesheet" href="<c:url value='/resources/css/font-awesome.css'/>" media="screen"/> 
+<link rel="stylesheet" href="<c:url value='/resources/css/main.css'/>" media="screen"/> 
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
@@ -33,7 +32,7 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer.jsp">Add Computer</a> 
+                    <a class="btn btn-success" id="addComputer" href="<c:url value='/addComputer.jsp'/>">Add Computer</a> 
                     <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
@@ -75,18 +74,6 @@
                 </thead>
                 <!-- Browse attribute computers -->
                 <tbody id="results">
-                    <tr>
-                        <td class="editMode">
-                            <input type="checkbox" name="cb" class="cb" value="0">
-                        </td>
-                        <td>
-                            <a href="editComputer.jsp" onclick="">Connection Machine</a>
-                        </td>
-                        <td>1987-01-01</td>
-                        <td></td>
-                        <td>Thinking Machines</td>
-
-                    </tr>
                <c:forEach items="${listComputers}" var="computer"> 
                     <tr>
                         <td class="editMode">
@@ -98,7 +85,6 @@
                         <td>${computer.introducedDate}</td>
                         <td>${computer.discontinuedDate}</td>
                         <td>${computer.company.name}</td>
-
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -110,7 +96,7 @@
         <div class="container text-center">
             <ul class="pagination">
                 <li>
-                    <a href="#" aria-label="Previous">
+                    <a action="MyFirstServlet" method="post" aria-label="Previous">
                       <span aria-hidden="true">&laquo;</span>
                   </a>
 	              </li>
