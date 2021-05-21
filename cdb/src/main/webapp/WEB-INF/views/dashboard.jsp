@@ -13,7 +13,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard.jsp"> Application - Computer Database </a>
+            <a class="navbar-brand" href="dashboard"> Application - Computer Database </a>
         </div>
     </header>
 
@@ -32,10 +32,10 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="<c:url value='/addComputer.jsp'/>">Add Computer</a> 
+                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a>
                     <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
-                </div>
-            </div>
+		        </div>
+            </div> 
         </div>
 
         <form id="deleteForm" action="#" method="POST">
@@ -96,7 +96,7 @@
         <div class="container text-center">
             <ul class="pagination">
                 <li>
-                    <a action="MyFirstServlet" method="post" aria-label="Previous">
+                  <a href="#" aria-label="Previous">
                       <span aria-hidden="true">&laquo;</span>
                   </a>
 	              </li>
@@ -119,9 +119,9 @@
 	        </div>
 		</div>
     </footer>
-<script src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/dashboard.js"></script>
+<script src="<c:url value='/resources/js/jquery.min.js'/>"></script>
+<script src="<c:url value='/resources/js/bootstrap.min.js'/>"></script>
+<script src="<c:url value='/resources/js/dashboard.js'/>"></script>
 
 </body>
 </html>

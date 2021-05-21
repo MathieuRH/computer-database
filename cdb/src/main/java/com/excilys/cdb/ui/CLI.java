@@ -117,7 +117,7 @@ public class CLI {
 		String immediate_answer;
 		while (keepDisplaying) {
 			offset = pagination.getOffset();
-			limit = (pagination.getPage() == pagination.getNbPages()) ? nbComputers % pagination.getSize() : pagination.getSize();
+			limit = (pagination.getPage() == pagination.getNbPages()) ? (nbComputers+1 % pagination.getSize()) : pagination.getSize();
 			listDisplayComputers = cliController.getListComputers(limit, offset);
 			displayListComputers(listDisplayComputers);
 			System.out.println("Page " + pagination.getPage() + "/" + pagination.getNbPages() + " | " + LIST_PAGE_ACTIONS);
