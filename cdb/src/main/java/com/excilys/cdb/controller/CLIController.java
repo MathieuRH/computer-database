@@ -3,6 +3,7 @@ package com.excilys.cdb.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -61,16 +62,38 @@ public class CLIController {
 	}
 
 	public boolean createOne(String name, LocalDate introduced, LocalDate discontinued, int company_id) {
-		//TODO : Exception catched from service
 		boolean isCorrect = false;
 		if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)) && introduced.isBefore(LocalDate.of(2038,01,19)))) {
 			if (discontinued == null || (discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
 				try {
 					computerService.createOne(name, introduced, discontinued, company_id);
+					isCorrect = true;
 				} catch (ConnectionException | QueryException e) {
 					CLI.writeMessage(e.getMessage());
 				}
-				isCorrect = true;
+			}
+		}
+		return isCorrect;
+	}
+	
+	public boolean createOne(ComputerDTO computerDTO) {
+		boolean isCorrect = false;
+		LocalDate introduced = null;
+		LocalDate discontinued = null;
+		if (! "".equals(computerDTO.getIntroduced())) {
+			introduced = LocalDate.parse(computerDTO.getIntroduced());
+		} else {computerDTO.setIntroduced(null);}
+		if (! "".equals(computerDTO.getDiscontinued())) {
+			discontinued = LocalDate.parse(computerDTO.getDiscontinued());
+		} else {computerDTO.setDiscontinued(null);}
+		if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)) && introduced.isBefore(LocalDate.of(2038,01,19)))) {
+			if (discontinued == null || (discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
+				try {
+					computerService.createOne(computerDTO);
+					isCorrect = true;
+				} catch (ConnectionException | QueryException e) {
+					CLI.writeMessage(e.getMessage());
+				}
 			}
 		}
 		return isCorrect;

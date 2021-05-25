@@ -61,9 +61,17 @@ public class DashboardServlet extends HttpServlet {
 	private void setPageAttributes(HttpServletRequest request, HttpServletResponse response, int nbComputers) {
 		int page = FIRST_PAGE;
 		pagination = new Page(page, DEFAULT_SIZE, nbComputers);
-		if (request.getParameter(PAGE_REQUEST) != null) {
-			page = Integer.parseInt(request.getParameter(PAGE_REQUEST));
-			pagination.setPage(page);
+		String page_request = request.getParameter(PAGE_REQUEST);
+//		System.out.println("page request : " + page_request);
+		if (page_request != null) {
+			if ("last".equals(page_request)) {
+				pagination.setPage(pagination.getNbPages());
+				//TODO : sort last page pb
+				//System.out.println("check last");
+			} else {
+				page = Integer.parseInt(page_request);
+				pagination.setPage(page);
+			}
 		}
 		request.setAttribute(CURRENT_PAGE, page);
 		request.setAttribute(PAGE_MAX, pagination.getNbPages());
