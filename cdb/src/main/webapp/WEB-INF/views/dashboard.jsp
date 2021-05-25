@@ -95,27 +95,30 @@
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
             <ul class="pagination">
-                <li>
-                  <a href="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                  </a>
-	              </li>
-	              <li><a href="#">1</a></li>
-	              <li><a href="#">2</a></li>
-	              <li><a href="#">3</a></li>
-	              <li><a href="#">4</a></li>
-	              <li><a href="#">5</a></li>
-	              <li>
-	                <a href="#" aria-label="Next">
-	                    <span aria-hidden="true">&raquo;</span>
-	                </a>
-	            </li>
+              <li>
+               	<a href="<c:url value="dashboard"> <c:param name="page_request" value="${page>1 ? page-1 : page}"/></c:url>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+               	</a>
+              </li>
+              
+              <c:forEach var="i" begin="${page>1 ? page-1 : page}" end="${page<page_max ? page+1 : page}" step="1">
+	              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="${i}"/></c:url>">${i}</a></li>
+              </c:forEach>              
+              
+              <li>
+                <a href="<c:url value="dashboard"> <c:param name="page_request" value="${page<page_max ? page+1 : page}"/></c:url>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+           	  </li>
 	        </ul>
-	
+		            
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
-	            <button type="button" class="btn btn-default">10</button>
-	            <button type="button" class="btn btn-default">50</button>
-	            <button type="button" class="btn btn-default">100</button>
+	        	<fmt:parseNumber var="page_mid" integerOnly="true" type="number" value="${page_max/2}"/>
+	        	<form action=dashboard method=POST>
+		            <button type="submit" name="page_request" value=1 class="btn btn-default">1</button>
+		            <button type="submit" name="page_request" value="${page_mid}" class="btn btn-default" >${page_mid}</button>
+		            <button type="submit" name="page_request" value="${page_max}" class="btn btn-default">${page_max}</button>
+	            </form>
 	        </div>
 		</div>
     </footer>

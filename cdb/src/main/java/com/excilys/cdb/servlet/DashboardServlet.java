@@ -19,11 +19,16 @@ import com.excilys.cdb.model.Page;
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final String VIEW = "/WEB-INF/views/dashboard.jsp";
 	
 	private static final int DEFAULT_SIZE = 10;
 	private static final int FIRST_PAGE = 1;
+	private static final String PAGE_REQUEST = "page_request";
+	private static final String CURRENT_PAGE = "page";
+	private static final String PAGE_MAX="page_max";
 	
-	private Page pagination = new Page(FIRST_PAGE, DEFAULT_SIZE);
+	
+	private Page pagination;
        
     public DashboardServlet() {
         super();
@@ -35,22 +40,33 @@ public class DashboardServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		//TODO : deleteSelected(request);
+		this.handleRequest(request, response);
 	}
 	
 	private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		CLIController cli = CLIController.getInstance();
+		int nbComputers = cli.getNumberComputers();
+		setPageAttributes(request, response, nbComputers);		
 		int offset = pagination.getOffset();
 		int limit = pagination.getSize();
-		CLIController cli = CLIController.getInstance();
 		ArrayList<Computer> listComputers = cli.getListComputers(limit, offset);
-		int nbComputers = cli.getNumberComputers();
 
 		request.setAttribute( "listComputers", listComputers );
 		request.setAttribute("nbComputers", nbComputers);
 		
-		this.getServletContext().getRequestDispatcher( "/WEB-INF/views/dashboard.jsp" ).forward( request, response );
+		this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
+	}
+
+	private void setPageAttributes(HttpServletRequest request, HttpServletResponse response, int nbComputers) {
+		int page = FIRST_PAGE;
+		pagination = new Page(page, DEFAULT_SIZE, nbComputers);
+		if (request.getParameter(PAGE_REQUEST) != null) {
+			page = Integer.parseInt(request.getParameter(PAGE_REQUEST));
+			pagination.setPage(page);
+		}
+		request.setAttribute(CURRENT_PAGE, page);
+		request.setAttribute(PAGE_MAX, pagination.getNbPages());
 	}
 
 }

@@ -8,7 +8,7 @@ package com.excilys.cdb.model;
 public class Page {
 
 	private static final int DEFAULT_PAGE_NUMBER = 1;
-	private static final int DEFAULT_PAGE_SIZE = 15;
+	private static final int DEFAULT_PAGE_SIZE = 10;
 	private static final int DEFAULT_NUMBER_PAGES = 1;
 	
 	private int page;
@@ -28,6 +28,13 @@ public class Page {
 	
 	public Page(int nbLignes) {
 		this(DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE);
+		if 	(nbLignes%size == 0) {
+			nbPages = nbLignes/size;
+		} else {nbPages = nbLignes/size + 1;}
+	}
+	
+	public Page(int page, int size, int nbLignes) {
+		this(page, size);
 		if 	(nbLignes%size == 0) {
 			nbPages = nbLignes/size;
 		} else {nbPages = nbLignes/size + 1;}
