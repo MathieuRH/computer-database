@@ -101,7 +101,8 @@
                	</a>
               </li>
               
-              <c:forEach var="i" begin="${page>1 ? page-1 : page}" end="${page<page_max ? page+1 : page}" step="1">
+              <c:forEach var="i" begin="${page>2 ? page-2 : page>1 ? page-1 : page}" 
+              	end="${page<page_max-1 ? page+2 : page<page_max ? page+1 : page}" step="1">
 	              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="${i}"/></c:url>">${i}</a></li>
               </c:forEach>              
               

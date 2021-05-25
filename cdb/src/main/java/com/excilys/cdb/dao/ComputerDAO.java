@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -102,6 +103,39 @@ public class ComputerDAO {
 					statement.setDate(2, Date.valueOf(introduced));
 				} else {statement.setNull(2, 0);}
 				if (discontinued!=null) {
+					statement.setDate(3, Date.valueOf(discontinued));
+				} else {statement.setNull(3, 0);}
+				if (id_company!=0) {
+					statement.setInt(4, id_company);
+				} else {statement.setNull(4, 0);}
+				statement.executeUpdate();
+			} catch (SQLException e) {
+				logger.error("SQL Exception : " + e);
+				throw new QueryException();
+			}
+			finally {
+				closeSetStatement(rs, statement);
+			}
+			DBConnection.close();
+		} else {System.out.println("Name can't be null.");}
+	}
+	
+	public void createOne(ComputerDTO computerDTO) throws ConnectionException, QueryException {
+		String name = computerDTO.getName();
+		int id_company = Integer.parseInt(computerDTO.getCompanyId());
+		if (name != null) {
+			ResultSet rs = null;
+			PreparedStatement statement = null;
+			DBConnection.getInstance();
+			try {
+				statement = DBConnection.getConnection().prepareStatement(CREATE_ONE);
+				statement.setString(1, name);
+				if (computerDTO.getIntroduced()!=null) {
+					LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced());
+					statement.setDate(2, Date.valueOf(introduced));
+				} else {statement.setNull(2, 0);}
+				if (computerDTO.getDiscontinued()!=null) {
+					LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued());
 					statement.setDate(3, Date.valueOf(discontinued));
 				} else {statement.setNull(3, 0);}
 				if (id_company!=0) {

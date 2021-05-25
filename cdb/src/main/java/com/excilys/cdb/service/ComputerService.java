@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.excilys.cdb.dao.ComputerDAO;
+import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -52,6 +53,10 @@ public class ComputerService {
 
 	public void createOne(String name, LocalDate introduced, LocalDate discontinued, int company_id) throws ConnectionException, QueryException {
 		computerDAO.createOne(name, introduced, discontinued, company_id);
+	}
+	
+	public void createOne(ComputerDTO computerDTO) throws ConnectionException, QueryException {
+		computerDAO.createOne(computerDTO);
 	}
 
 	public void updateOne(int computer_id, int field, Object value) throws ConnectionException, QueryException {
