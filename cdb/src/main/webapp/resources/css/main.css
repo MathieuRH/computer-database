@@ -27,3 +27,9 @@ input[type='checkbox'] {
     border-radius: 5px;
     white-space: nowrap;
 }
+
+addComputerForm.error {
+    border: 5px dashed red;
+    font-weight: 300;
+    color: red;
+}

@@ -87,7 +87,7 @@ public class CLIController {
 			discontinued = LocalDate.parse(computerDTO.getDiscontinued());
 		} else {computerDTO.setDiscontinued(null);}
 		if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)) && introduced.isBefore(LocalDate.of(2038,01,19)))) {
-			if (discontinued == null || (discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
+			if (discontinued == null || (introduced != null && discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
 				try {
 					computerService.createOne(computerDTO);
 					isCorrect = true;

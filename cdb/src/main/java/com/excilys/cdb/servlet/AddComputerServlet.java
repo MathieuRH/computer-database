@@ -19,7 +19,7 @@ public class AddComputerServlet extends HttpServlet {
 	private static final String VIEW = "/WEB-INF/views/addComputer.jsp";
 	private static final String RETURN_VIEW = "dashboard";
 	private static final String INFORMATION = "information_msg";
-	private static final String WRONG_ENTRIES_MESSAGE = "Please enter valid data";
+	private static final String WRONG_ENTRIES_MESSAGE = "Back : Please enter valid data";
 
 	private static final String PAGE_REQUEST = "page_request";
 	private static final int OFFSET_COMPANIES = 0;

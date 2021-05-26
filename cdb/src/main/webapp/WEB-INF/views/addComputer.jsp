@@ -20,23 +20,23 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Add Computer</h1>
-                    <form action="addComputer" method="POST">
+                    <form name="addComputerForm" action="addComputer" method="POST">
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" name="computerName" placeholder="Computer name" required>
+                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" required>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" name="introduced" placeholder="Introduced date">
+                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" name="discontinued" placeholder="Discontinued date">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
-                                <select class="form-control" name="companyId" >
+                                <select class="form-control" id="companyId" name="companyId" >
                                 	<option value=0>--</option>
                                 	<c:forEach items="${listCompanies}" var="company">
                                     	<option value="${company.id}">${company.name}</option>
@@ -50,12 +50,14 @@
                             <a href="dashboard" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
+                    ${information_msg}
                 </div>
             </div>
-	        <div class="alert alert-danger" role="alert">
-	  			${information_msg}
-			</div>
         </div>
     </section>
+<script src="<c:url value='/resources/js/jquery.min.js'/>"></script>
+<script src="<c:url value='/resources/js/jquery.validate.min.js'/>"></script>
+<script src="<c:url value='/resources/js/form-validation.js'/>"></script>
+
 </body>
 </html>
