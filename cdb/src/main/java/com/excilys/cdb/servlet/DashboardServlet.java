@@ -30,6 +30,8 @@ public class DashboardServlet extends HttpServlet {
 	
 	
 	private Page pagination;
+	int page = FIRST_PAGE;
+	int size = DEFAULT_SIZE;
        
     public DashboardServlet() {
         super();
@@ -60,8 +62,6 @@ public class DashboardServlet extends HttpServlet {
 	}
 
 	private void setPageAttributes(HttpServletRequest request, HttpServletResponse response, int nbComputers) {
-		int page = FIRST_PAGE;
-		int size = DEFAULT_SIZE;
 		pagination = new Page(page, size, nbComputers);
 		String page_request = request.getParameter(PAGE_REQUEST);
 		String page_nb_comp = request.getParameter(PAGE_NB_COMPUTERS);
@@ -76,8 +76,10 @@ public class DashboardServlet extends HttpServlet {
 			}
 		}
 		if (page_nb_comp != null) {
+			page = 1 ;
 			size = Integer.parseInt(page_nb_comp);
-			pagination.setSize(size, nbComputers);		
+			pagination.setSize(size, nbComputers);
+			pagination.setPage(page);				
 		}
 		
 		request.setAttribute(CURRENT_PAGE, page);

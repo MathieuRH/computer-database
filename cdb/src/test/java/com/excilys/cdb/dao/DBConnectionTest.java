@@ -2,25 +2,41 @@ package com.excilys.cdb.dao;
 
 import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.junit.Test;
 
-public class DBConnectionTest {
+import com.excilys.cdb.exceptions.ConnectionException;
 
-	@Before
-	public void setUp() {
-	}
-	 
-	@After
-	   public void tearDown() {
+public class DBConnectionTest {
+	
+	@Test
+	public void testGetInstance() {
+		try {
+			DBConnection.getInstance();
+			DBConnection.getConnection();
+		} catch (ConnectionException e) {
+			fail("Connection throw SQL exception:" + e.getMessage());
+		}
 	}
 	
-	@Ignore
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testClose() {
+		Connection c = null;
+		
+		try {
+			DBConnection.getInstance();
+			c = DBConnection.getConnection();
+		} catch (ConnectionException e) {
+			fail("Connection throw SQL exception:" + e.getMessage());
+		}
+		
+		try {
+			c.close();
+		} catch (SQLException e) {
+			fail("Failed to close connection");
+		}
 	}
 
 }

@@ -62,7 +62,7 @@ public class ComputerDAO {
 			listComputers = ComputerMapper.getListComputers(rs);
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
-		} 
+		}
 		finally {
 			closeSetStatement(rs, statement);
 		}
