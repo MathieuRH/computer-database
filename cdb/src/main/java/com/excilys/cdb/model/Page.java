@@ -28,16 +28,12 @@ public class Page {
 	
 	public Page(int nbLignes) {
 		this(DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE);
-		if 	(nbLignes%size == 0) {
-			nbPages = nbLignes/size;
-		} else {nbPages = nbLignes/size + 1;}
+		nbPages = deduceNbPages(size, nbLignes);
 	}
 	
 	public Page(int page, int size, int nbLignes) {
 		this(page, size);
-		if 	(nbLignes%size == 0) {
-			nbPages = nbLignes/size;
-		} else {nbPages = nbLignes/size + 1;}
+		nbPages = deduceNbPages(size, nbLignes);
 	}
 
 	public int getOffset() {
@@ -55,6 +51,15 @@ public class Page {
 		}
 	}
 	
+	private int deduceNbPages(int size, int nbLignes) {
+		if 	(nbLignes%size == 0) {
+			return nbLignes/size;
+		} else {return nbLignes/size + 1;}
+	}
+
+	private void refreshNbPages(int nbLignes) {
+		this.nbPages = deduceNbPages(this.size, nbLignes);
+	}
 	
 	
 	public int getNbPages() {
@@ -77,7 +82,13 @@ public class Page {
 		return size;
 	}
 
+	//Does not refresh nbPages
 	public void setSize(int size) {
 		this.size = size;
+	}
+
+	public void setSize(int size, int nbLignes) {
+		this.size = size;
+		refreshNbPages(nbLignes);
 	}
 }

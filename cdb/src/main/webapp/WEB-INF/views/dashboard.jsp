@@ -100,12 +100,16 @@
                   <span aria-hidden="true">&laquo;</span>
                	</a>
               </li>
-              
-              <c:forEach var="i" begin="${page>2 ? page-2 : page>1 ? page-1 : page}" 
-              	end="${page<page_max-1 ? page+2 : page<page_max ? page+1 : page}" step="1">
+              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="1"/></c:url>">1</a></li>
+              <c:if test="${page>4}"><li><a href=#>...</a></li></c:if>
+    
+              <c:forEach var="i" begin="${page>3 ? page-2 : page>2 ? page-1 :  page>1 ? page : page+1}" 
+              	end="${page<page_max-2 ? page+2 : page<page_max-1 ? page+1 : page<page_max ? page : page-1}" step="1">
 	              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="${i}"/></c:url>">${i}</a></li>
-              </c:forEach>              
+              </c:forEach>         
               
+              <c:if test="${page<page_max-3}"><li><a href=#>...</a></li></c:if>
+              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="${page_max}"/></c:url>">${page_max}</a></li>
               <li>
                 <a href="<c:url value="dashboard"> <c:param name="page_request" value="${page<page_max ? page+1 : page}"/></c:url>" aria-label="Next">
                   <span aria-hidden="true">&raquo;</span>
@@ -114,11 +118,10 @@
 	        </ul>
 		            
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
-	        	<fmt:parseNumber var="page_mid" integerOnly="true" type="number" value="${page_max/2}"/>
 	        	<form action=dashboard method=POST>
-		            <button type="submit" name="page_request" value=1 class="btn btn-default">1</button>
-		            <button type="submit" name="page_request" value="${page_mid}" class="btn btn-default" >${page_mid}</button>
-		            <button type="submit" name="page_request" value="${page_max}" class="btn btn-default">${page_max}</button>
+		            <button type="submit" name="page_nb_comp" value=1 class="btn btn-default">1</button>
+		            <button type="submit" name="page_nb_comp" value=10 class="btn btn-default" >10</button>
+		            <button type="submit" name="page_nb_comp" value=100 class="btn btn-default">100</button>
 	            </form>
 	        </div>
 		</div>
