@@ -28,8 +28,10 @@ input[type='checkbox'] {
     white-space: nowrap;
 }
 
-addComputerForm.error {
-    border: 5px dashed red;
-    font-weight: 300;
-    color: red;
+input.error,
+select.error,
+textarea.error,
+computerName.error {
+    border: 2px dashed red;
+    font-weight: 100;
 }

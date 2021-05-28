@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Add Computer</h1>
-                    <form name="addComputerForm" action="addComputer" method="POST">
+                    <form name="addComputerForm" id="addComputerForm" action="addComputer" method="POST">
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
@@ -38,8 +38,8 @@
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId" >
                                 	<option value=0>--</option>
-                                	<c:forEach items="${listCompanies}" var="company">
-                                    	<option value="${company.id}">${company.name}</option>
+                                	<c:forEach items="${listCompanyDTO}" var="companyDTO">
+                                    	<option value="${companyDTO.id}">${companyDTO.name}</option>
                                     </c:forEach>
                                 </select>
                             </div>                  
@@ -50,7 +50,6 @@
                             <a href="dashboard" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
-                    ${information_msg}
                 </div>
             </div>
         </div>

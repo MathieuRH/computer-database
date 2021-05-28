@@ -74,17 +74,17 @@
                 </thead>
                 <!-- Browse attribute computers -->
                 <tbody id="results">
-               <c:forEach items="${listComputers}" var="computer"> 
+               <c:forEach items="${listComputersDTO}" var="computerDTO"> 
                     <tr>
                         <td class="editMode">
-                            <input type="checkbox" name="cb" class="cb" value="${computer.id}">
+                            <input type="checkbox" name="cb" class="cb" value="${computerDTO.id}">
                         </td>
                         <td>
-                            <a href="editComputer.jsp" onclick="">${computer.name}</a>
+                            <a href="editComputer.jsp" onclick="">${computerDTO.name}</a>
                         </td>
-                        <td>${computer.introducedDate}</td>
-                        <td>${computer.discontinuedDate}</td>
-                        <td>${computer.company.name}</td>
+                        <td>${computerDTO.introduced}</td>
+                        <td>${computerDTO.discontinued}</td>
+                        <td>${computerDTO.companyName}</td>
                     </tr>
                 </c:forEach>
                 </tbody>

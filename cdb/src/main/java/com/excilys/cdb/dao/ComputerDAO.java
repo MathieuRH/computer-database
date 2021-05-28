@@ -123,7 +123,7 @@ public class ComputerDAO {
 	public void createOne(ComputerDTO computerDTO) throws ConnectionException, QueryException {
 		String name = computerDTO.getName();
 		int id_company = Integer.parseInt(computerDTO.getCompanyId());
-		if (name != null) {
+		if (name != "") {
 			ResultSet rs = null;
 			PreparedStatement statement = null;
 			DBConnection.getInstance();
@@ -150,7 +150,7 @@ public class ComputerDAO {
 				closeSetStatement(rs, statement);
 			}
 			DBConnection.close();
-		} else {System.out.println("Name can't be null.");}
+		} 
 	}
 	
 	

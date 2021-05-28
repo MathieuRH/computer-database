@@ -3,10 +3,13 @@ package com.excilys.cdb.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
+import com.excilys.cdb.mapper.CompanyDTOMapper;
+import com.excilys.cdb.mapper.ComputerDTOMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
@@ -32,22 +35,24 @@ public class CLIController {
 		return instance;
 	}
 	
-	public Computer getOneComputer(int id_computer) {
+	public ComputerDTO getOneComputer(int id_computer) {
 		//TODO : Return optional ?
 		try {
-			return computerService.getOneComputer(id_computer);
+			Computer computer = computerService.getOneComputer(id_computer);
+			return ComputerDTOMapper.computerToDTO(computer);
 		} catch (ConnectionException | QueryException | ComputerNotFoundException e) {
 			CLI.writeMessage(e.getMessage());
 			return null;
 		}
 	}
 	
-	public ArrayList<Computer> getListComputers(int limit, int offset) { 
+	public ArrayList<ComputerDTO> getListComputers(int limit, int offset) { 
 		try {
-			return computerService.getListComputers(limit, offset);
+			ArrayList<Computer> listComputers = computerService.getListComputers(limit, offset);
+			return ComputerDTOMapper.listComputersToDTO(listComputers);
 		} catch (ConnectionException | QueryException e) {
 			CLI.writeMessage(e.getMessage());
-			return new ArrayList<Computer>();
+			return new ArrayList<ComputerDTO>();
 		}
 	}
 	
@@ -99,6 +104,7 @@ public class CLIController {
 		return isCorrect;
 	}
 
+	/*
 	public boolean updateOne(int computer_id, int field, Object value) {
 		//TODO : Exception catched from service
 		boolean isCorrect = false;
@@ -127,6 +133,7 @@ public class CLIController {
 		}
 		return isCorrect;
 	}
+	*/
 
 
 	public void deleteOne(int computer_id) {
@@ -146,12 +153,13 @@ public class CLIController {
 		}
 	}
 
-	public ArrayList<Company> getListCompanies(int limit, int offset) {
+	public ArrayList<CompanyDTO> getListCompanies(int limit, int offset) {
 		try {
-			return companyService.getListCompanies(limit, offset);
+			ArrayList<Company> listCompanies = companyService.getListCompanies(limit, offset);
+			return CompanyDTOMapper.listCompaniesToDTO(listCompanies);
 		} catch (ConnectionException | QueryException e) {
 			CLI.writeMessage(e.getMessage());
-			return new ArrayList<Company>();
+			return new ArrayList<CompanyDTO>();
 		} 
 	}
 	

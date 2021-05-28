@@ -9,7 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.controller.CLIController;
+import com.excilys.cdb.dao.ComputerDAO;
+import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.model.Company;
 
@@ -18,12 +23,13 @@ public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String VIEW = "/WEB-INF/views/addComputer.jsp";
 	private static final String RETURN_VIEW = "dashboard";
-	private static final String INFORMATION = "information_msg";
-	private static final String WRONG_ENTRIES_MESSAGE = "Back : Please enter valid data";
+	private static final String WRONG_ENTRIES_MESSAGE = "Computer creation failed";
 
 	private static final String PAGE_REQUEST = "page_request";
 	private static final int OFFSET_COMPANIES = 0;
 
+	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
+	
     public AddComputerServlet() {
         super();
         // TODO Auto-generated constructor stub
@@ -36,9 +42,9 @@ public class AddComputerServlet extends HttpServlet {
 	private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		CLIController cli = CLIController.getInstance();
 		int nbCompanies = cli.getNumberCompanies();
-		ArrayList<Company> listCompanies = cli.getListCompanies(nbCompanies, OFFSET_COMPANIES);
+		ArrayList<CompanyDTO> listCompanyDTO = cli.getListCompanies(nbCompanies, OFFSET_COMPANIES);
 		
-		request.setAttribute( "listCompanies", listCompanies );
+		request.setAttribute( "listCompanyDTO", listCompanyDTO );
 		
 		this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
 	}
@@ -48,15 +54,17 @@ public class AddComputerServlet extends HttpServlet {
 	}
 	
 	private void handlePOSTRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id = "";
 		String name = request.getParameter("computerName");
 		String introduced = request.getParameter("introduced");
 		String discontinued = request.getParameter("discontinued");
 		String companyId = request.getParameter("companyId");
+		String companyName = request.getParameter("companyName");
 		System.out.println(name + "_" + introduced + "_" +  discontinued + companyId);
 		
-		ComputerDTO computerDTO = new ComputerDTO(name, introduced, discontinued, companyId);
-		CLIController cli = CLIController.getInstance();
-		boolean success = cli.createOne(computerDTO);
+		ComputerDTO computerDTO = new ComputerDTO(id, name, introduced, discontinued, companyId, companyName);
+		CLIController controller = CLIController.getInstance();
+		boolean success = controller.createOne(computerDTO);
 		
 		if (success) {
 			//TODO : go to last page
@@ -64,7 +72,7 @@ public class AddComputerServlet extends HttpServlet {
 			
 			request.getRequestDispatcher(RETURN_VIEW).forward(request,response);
 		} else {
-			request.setAttribute(INFORMATION, WRONG_ENTRIES_MESSAGE);
+			logger.error(WRONG_ENTRIES_MESSAGE);
 			request.getRequestDispatcher(VIEW).forward(request,response);
 		}
 	}

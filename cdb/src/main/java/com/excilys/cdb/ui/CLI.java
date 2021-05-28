@@ -11,6 +11,8 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.controller.CLIController;
+import com.excilys.cdb.dto.CompanyDTO;
+import com.excilys.cdb.dto.ComputerDTO;
 
 /**
  * Interaction class for the user
@@ -86,9 +88,9 @@ public class CLI {
 						case CREATE_COMPUTER:
 							createOneComputer();
 							break;
-						case UPDATE_COMPUTER:
-							updateOneComputer();
-							break;
+//						case UPDATE_COMPUTER:
+//							updateOneComputer();
+//							break;
 						case DELETE_COMPUTER:
 							deleteOneComputer();
 							break;
@@ -109,7 +111,7 @@ public class CLI {
 	private void displayListComputers() {
 		int nbComputers = cliController.getNumberComputers();
 		pagination = new Page(nbComputers);
-		ArrayList<Computer> listDisplayComputers;
+		ArrayList<ComputerDTO> listDisplayComputers;
 		int limit = pagination.getSize();
 		int offset ;
 		
@@ -142,16 +144,16 @@ public class CLI {
 		}
 	}
 	
-	private void displayListComputers(ArrayList<Computer> listDisplayComputers) {
-		for (Computer computer : listDisplayComputers) {
-			System.out.println(computer);
+	private void displayListComputers(ArrayList<ComputerDTO> listDisplayComputers) {
+		for (ComputerDTO computerDTO : listDisplayComputers) {
+			System.out.println(computerDTO);
 		} 
 	}
 	
 	private void displayListCompanies() {
 		int nbCompanies = cliController.getNumberCompanies();
 		pagination = new Page(nbCompanies);
-		ArrayList<Company> listDisplayCompanies;
+		ArrayList<CompanyDTO> listDisplayCompanies;
 		int limit = pagination.getSize();
 		int offset ;
 		
@@ -184,9 +186,9 @@ public class CLI {
 		}
 	}
 
-	private void displayListCompanies(ArrayList<Company> listDisplayCompanies) {
-		for (Company company : listDisplayCompanies) {
-			System.out.println(company);
+	private void displayListCompanies(ArrayList<CompanyDTO> listDisplayCompanies) {
+		for (CompanyDTO companyDTO : listDisplayCompanies) {
+			System.out.println(companyDTO);
 		} 
 	}
 	
@@ -194,8 +196,8 @@ public class CLI {
 	private void getOneComputer() {
 		System.out.println("Please enter the computer id :");
 		int computer_id = Integer.parseInt(sc.nextLine());
-		Computer computer = cliController.getOneComputer(computer_id);
-		if (computer != null) {System.out.println(computer);}
+		ComputerDTO computerDTO = cliController.getOneComputer(computer_id);
+		if (computerDTO != null) {System.out.println(computerDTO);}
 	}
 	
 
@@ -243,42 +245,42 @@ public class CLI {
 		return LocalDate.of(y, m, d);
 	}
 
-	private void updateOneComputer() {
-		int computer_id = 0;
-		int field = 0;
-		Object value = null;
-		System.out.println("Please enter the computer id :");
-		try {
-			computer_id = Integer.parseInt(sc.nextLine());
-		} catch (NumberFormatException e){}
-		System.out.println(LIST_PARAMETERS_MODIFICATION);
-		System.out.println("What field is to be modified ? ");
-		try {
-			field = Integer.parseInt(sc.nextLine());
-			try {
-				switch (UpdateChoice.fromPropertyName(field)) {
-					case CHANGE_NAME:
-						System.out.println("New name ? ");
-						value = sc.nextLine();
-						break;
-					case CHANGE_INTRODUCED:
-					case CHANGE_DISCONTINUED:
-						value = askDate();
-						break;
-					case CHANGE_COMPANY:
-						System.out.println("New company ? ");
-						value = Integer.parseInt(sc.nextLine());
-						break;
-				}
-			} catch (Exception e) {
-				logger.error("{} in {}", e.toString(), e.getStackTrace());
-				System.out.println("Choice out of scope");
-			}
-		} catch (NumberFormatException e){}
-		if (!cliController.updateOne(computer_id, field, value)) {
-			System.out.println("Sorry, can't process wrong dates");
-		}
-	}
+//	private void updateOneComputer() {
+//		int computer_id = 0;
+//		int field = 0;
+//		Object value = null;
+//		System.out.println("Please enter the computer id :");
+//		try {
+//			computer_id = Integer.parseInt(sc.nextLine());
+//		} catch (NumberFormatException e){}
+//		System.out.println(LIST_PARAMETERS_MODIFICATION);
+//		System.out.println("What field is to be modified ? ");
+//		try {
+//			field = Integer.parseInt(sc.nextLine());
+//			try {
+//				switch (UpdateChoice.fromPropertyName(field)) {
+//					case CHANGE_NAME:
+//						System.out.println("New name ? ");
+//						value = sc.nextLine();
+//						break;
+//					case CHANGE_INTRODUCED:
+//					case CHANGE_DISCONTINUED:
+//						value = askDate();
+//						break;
+//					case CHANGE_COMPANY:
+//						System.out.println("New company ? ");
+//						value = Integer.parseInt(sc.nextLine());
+//						break;
+//				}
+//			} catch (Exception e) {
+//				logger.error("{} in {}", e.toString(), e.getStackTrace());
+//				System.out.println("Choice out of scope");
+//			}
+//		} catch (NumberFormatException e){}
+//		if (!cliController.updateOne(computer_id, field, value)) {
+//			System.out.println("Sorry, can't process wrong dates");
+//		}
+//	}
 
 	private void deleteOneComputer() {
 		int computer_id = 0;

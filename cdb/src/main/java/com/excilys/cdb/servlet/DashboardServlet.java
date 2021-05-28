@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.cdb.controller.CLIController;
+import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
@@ -53,9 +54,9 @@ public class DashboardServlet extends HttpServlet {
 		setPageAttributes(request, response, nbComputers);		
 		int offset = pagination.getOffset();
 		int limit = pagination.getSize();
-		ArrayList<Computer> listComputers = cli.getListComputers(limit, offset);
+		ArrayList<ComputerDTO> listComputersDTO = cli.getListComputers(limit, offset);
 
-		request.setAttribute( "listComputers", listComputers );
+		request.setAttribute( "listComputersDTO", listComputersDTO );
 		request.setAttribute("nbComputers", nbComputers);
 		
 		this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
