@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.model.Company;
 
-public class CompanyDTOMapper {
+public class CompanyMapperServlet {
 	
 	public static CompanyDTOJsp companyToDTO(Company company){
 		String companyId = Integer.toString(company.getId());

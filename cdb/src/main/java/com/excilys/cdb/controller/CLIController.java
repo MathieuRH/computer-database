@@ -8,8 +8,8 @@ import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
-import com.excilys.cdb.mapper.CompanyDTOMapper;
-import com.excilys.cdb.mapper.ComputerDTOMapper;
+import com.excilys.cdb.mapper.CompanyMapperServlet;
+import com.excilys.cdb.mapper.ComputerMapperServlet;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
@@ -22,12 +22,12 @@ public class CLIController {
 	
 	private CompanyService companyService;
 	private ComputerService computerService;
-	private ComputerDTOMapper computerMapper;
+	private ComputerMapperServlet computerMapper;
 	
 	private CLIController() {
 		computerService = ComputerService.getInstance();
 		companyService = CompanyService.getInstance();
-		computerMapper = ComputerDTOMapper.getInstance();
+		computerMapper = ComputerMapperServlet.getInstance();
 	}
 	
 	public static CLIController getInstance() {
@@ -159,7 +159,7 @@ public class CLIController {
 	public ArrayList<CompanyDTOJsp> getListCompanies(int limit, int offset) {
 		try {
 			ArrayList<Company> listCompanies = companyService.getListCompanies(limit, offset);
-			return CompanyDTOMapper.listCompaniesToDTO(listCompanies);
+			return CompanyMapperServlet.listCompaniesToDTO(listCompanies);
 		} catch (ConnectionException | QueryException e) {
 			CLI.writeMessage(e.getMessage());
 			return new ArrayList<CompanyDTOJsp>();

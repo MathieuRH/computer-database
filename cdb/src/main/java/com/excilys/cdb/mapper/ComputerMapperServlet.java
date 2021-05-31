@@ -9,17 +9,17 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Computer.ComputerBuilder;
 
-public class ComputerDTOMapper {
+public class ComputerMapperServlet {
 	
-	private static ComputerDTOMapper instance;
+	private static ComputerMapperServlet instance;
 	
-	private ComputerDTOMapper() {
+	private ComputerMapperServlet() {
 		
 	}
 	
-	public static ComputerDTOMapper getInstance() {
+	public static ComputerMapperServlet getInstance() {
 		if (instance == null) {
-			instance = new ComputerDTOMapper();
+			instance = new ComputerMapperServlet();
 		}
 		return instance;
 	}
@@ -41,7 +41,7 @@ public class ComputerDTOMapper {
 		}
 		if (computer.getDiscontinuedDate()!=null) {
 			discontinued = computer.getDiscontinuedDate().toString();
-			builder.introduced(discontinued);
+			builder.discontinued(discontinued);
 		}
 		if (computer.getCompany() != null) {
 			companyId = Integer.toString(computer.getCompany().getId());
@@ -61,16 +61,15 @@ public class ComputerDTOMapper {
 	}
 
 	public Computer toComputer(ComputerDTOJsp computerDTO) {
-		int id = Integer.parseInt(computerDTO.getId());
 		String name = computerDTO.getName();
-		ComputerBuilder builder = new Computer.ComputerBuilder(id, name);
+		ComputerBuilder builder = new Computer.ComputerBuilder(name);
 		if (computerDTO.getIntroduced() != "") {
 			LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced()); 
 			builder.introducedDate(introduced);
 		}
 		if (computerDTO.getDiscontinued() != "") {
 			LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued()); 
-			builder.introducedDate(discontinued);
+			builder.discontinuedDate(discontinued);
 		}
 		if (computerDTO.getCompanyId() != "") {
 			Company company = new Company(Integer.parseInt(computerDTO.getCompanyId()), computerDTO.getCompanyName());

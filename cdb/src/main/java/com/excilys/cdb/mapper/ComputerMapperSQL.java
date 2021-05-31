@@ -91,7 +91,7 @@ public class ComputerMapperSQL {
 		}
 		if (computerDTO.getDiscontinued() != "") {
 			LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued()); 
-			builder.introducedDate(discontinued);
+			builder.discontinuedDate(discontinued);
 		}
 		if (computerDTO.getCompanyId() != "") {
 			Company company = new Company(Integer.parseInt(computerDTO.getCompanyId()), computerDTO.getCompanyName());

@@ -17,17 +17,18 @@ import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.InputException;
 import com.excilys.cdb.exceptions.QueryException;
-import com.excilys.cdb.mapper.ComputerDTOMapper;
-import com.excilys.cdb.model.Company;
+import com.excilys.cdb.mapper.ComputerMapperServlet;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.ComputerService;
+import com.excilys.cdb.verification.Verificator;
 
 @WebServlet("/addComputer")
 public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String VIEW = "/WEB-INF/views/addComputer.jsp";
-	private static final String RETURN_VIEW = "dashboard";
+	private static final String DASHBOARD_VIEW = "dashboard";
 	private static final String WRONG_ENTRIES_MESSAGE = "Computer creation failed";
 
 	private static final String PAGE_REQUEST = "page_request";
@@ -35,11 +36,11 @@ public class AddComputerServlet extends HttpServlet {
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	private ComputerService computerService = ComputerService.getInstance();
-	private ComputerDTOMapper computerMapper = ComputerDTOMapper.getInstance();
+	private ComputerMapperServlet computerMapper = ComputerMapperServlet.getInstance();
+	private Verificator verificator = Verificator.getInstance();
 	
     public AddComputerServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -71,26 +72,30 @@ public class AddComputerServlet extends HttpServlet {
 		
 		ComputerDTOJsp computerDTO = new ComputerDTOJsp.ComputerDTOJspBuilder(id, name).introduced(introduced)
 				.discontinued(discontinued).companyId(companyId).companyName(companyName).build();
-		//TODO : verificator
-		Computer computer = computerMapper.toComputer(computerDTO);
-		boolean success = false;
-		try {
-			computerService.createOne(computer);
-			success = true;
-		} catch (ConnectionException | QueryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		if (success) {
-			//TODO : go to last page
-			request.setAttribute(PAGE_REQUEST, "last");
+		try {
+			verificator.verifyComputer(computerDTO);
+			Computer computer = computerMapper.toComputer(computerDTO);
+			boolean success = false;
+			try {
+				computerService.createOne(computer);
+				success = true;
+			} catch (ConnectionException | QueryException e) {
+				logger.error(e.getMessage());
+			}
 			
-			request.getRequestDispatcher(RETURN_VIEW).forward(request,response);
-		} else {
-			logger.error(WRONG_ENTRIES_MESSAGE);
-			request.getRequestDispatcher(VIEW).forward(request,response);
+			if (success) {
+				//TODO : go to last page
+				request.setAttribute(PAGE_REQUEST, "last");
+				request.getRequestDispatcher(DASHBOARD_VIEW).forward(request,response);
+			} else {
+				logger.error(WRONG_ENTRIES_MESSAGE);
+				request.getRequestDispatcher(VIEW).forward(request,response);
+			}
+		} catch (InputException e) {
+			logger.error(e.getMessage());
 		}
+		request.getRequestDispatcher(VIEW).forward(request,response);
 	}
 
 }

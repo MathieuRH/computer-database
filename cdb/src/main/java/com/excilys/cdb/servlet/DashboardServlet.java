@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
-import com.excilys.cdb.mapper.ComputerDTOMapper;
+import com.excilys.cdb.mapper.ComputerMapperServlet;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.ComputerService;
@@ -38,7 +38,7 @@ public class DashboardServlet extends HttpServlet {
 	int size = DEFAULT_SIZE;
 
 	private ComputerService computerService = ComputerService.getInstance();
-	private ComputerDTOMapper computerMapper = ComputerDTOMapper.getInstance();
+	private ComputerMapperServlet computerMapper = ComputerMapperServlet.getInstance();
 	
     public DashboardServlet() {
         super();

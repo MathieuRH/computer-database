@@ -42,7 +42,7 @@
                                     	<option value="${companyDTO.id}">${companyDTO.name}</option>
                                     </c:forEach>
                                 </select>
-                            </div>                  
+                            </div> 
                         </fieldset>
                         <div class="actions pull-right">
                             <input type="submit" value="Add" class="btn btn-primary">
