@@ -3,8 +3,8 @@ package com.excilys.cdb.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import com.excilys.cdb.dto.CompanyDTO;
-import com.excilys.cdb.dto.ComputerDTO;
+import com.excilys.cdb.dto.CompanyDTOJsp;
+import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -22,10 +22,12 @@ public class CLIController {
 	
 	private CompanyService companyService;
 	private ComputerService computerService;
+	private ComputerDTOMapper computerMapper;
 	
 	private CLIController() {
 		computerService = ComputerService.getInstance();
 		companyService = CompanyService.getInstance();
+		computerMapper = ComputerDTOMapper.getInstance();
 	}
 	
 	public static CLIController getInstance() {
@@ -35,24 +37,24 @@ public class CLIController {
 		return instance;
 	}
 	
-	public ComputerDTO getOneComputer(int id_computer) {
+	public ComputerDTOJsp getOneComputer(int id_computer) {
 		//TODO : Return optional ?
 		try {
 			Computer computer = computerService.getOneComputer(id_computer);
-			return ComputerDTOMapper.computerToDTO(computer);
+			return computerMapper.toDTO(computer);
 		} catch (ConnectionException | QueryException | ComputerNotFoundException e) {
 			CLI.writeMessage(e.getMessage());
 			return null;
 		}
 	}
 	
-	public ArrayList<ComputerDTO> getListComputers(int limit, int offset) { 
+	public ArrayList<ComputerDTOJsp> getListComputers(int limit, int offset) { 
 		try {
 			ArrayList<Computer> listComputers = computerService.getListComputers(limit, offset);
-			return ComputerDTOMapper.listComputersToDTO(listComputers);
+			return computerMapper.listToDTO(listComputers);
 		} catch (ConnectionException | QueryException e) {
 			CLI.writeMessage(e.getMessage());
-			return new ArrayList<ComputerDTO>();
+			return new ArrayList<ComputerDTOJsp>();
 		}
 	}
 	
@@ -81,20 +83,21 @@ public class CLIController {
 		return isCorrect;
 	}
 	
-	public boolean createOne(ComputerDTO computerDTO) {
+	public boolean createOne(ComputerDTOJsp computerDTO) {
 		boolean isCorrect = false;
 		LocalDate introduced = null;
 		LocalDate discontinued = null;
 		if (! "".equals(computerDTO.getIntroduced())) {
 			introduced = LocalDate.parse(computerDTO.getIntroduced());
-		} else {computerDTO.setIntroduced(null);}
+		} else {computerDTO.setIntroduced("");}
 		if (! "".equals(computerDTO.getDiscontinued())) {
 			discontinued = LocalDate.parse(computerDTO.getDiscontinued());
 		} else {computerDTO.setDiscontinued(null);}
 		if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)) && introduced.isBefore(LocalDate.of(2038,01,19)))) {
 			if (discontinued == null || (introduced != null && discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
 				try {
-					computerService.createOne(computerDTO);
+					Computer computer = computerMapper.toComputer(computerDTO);
+					computerService.createOne(computer);
 					isCorrect = true;
 				} catch (ConnectionException | QueryException e) {
 					CLI.writeMessage(e.getMessage());
@@ -153,13 +156,13 @@ public class CLIController {
 		}
 	}
 
-	public ArrayList<CompanyDTO> getListCompanies(int limit, int offset) {
+	public ArrayList<CompanyDTOJsp> getListCompanies(int limit, int offset) {
 		try {
 			ArrayList<Company> listCompanies = companyService.getListCompanies(limit, offset);
 			return CompanyDTOMapper.listCompaniesToDTO(listCompanies);
 		} catch (ConnectionException | QueryException e) {
 			CLI.writeMessage(e.getMessage());
-			return new ArrayList<CompanyDTO>();
+			return new ArrayList<CompanyDTOJsp>();
 		} 
 	}
 	

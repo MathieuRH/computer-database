@@ -11,8 +11,8 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.controller.CLIController;
-import com.excilys.cdb.dto.CompanyDTO;
-import com.excilys.cdb.dto.ComputerDTO;
+import com.excilys.cdb.dto.CompanyDTOJsp;
+import com.excilys.cdb.dto.ComputerDTOJsp;
 
 /**
  * Interaction class for the user
@@ -111,7 +111,7 @@ public class CLI {
 	private void displayListComputers() {
 		int nbComputers = cliController.getNumberComputers();
 		pagination = new Page(nbComputers);
-		ArrayList<ComputerDTO> listDisplayComputers;
+		ArrayList<ComputerDTOJsp> listDisplayComputers;
 		int limit = pagination.getSize();
 		int offset ;
 		
@@ -144,8 +144,8 @@ public class CLI {
 		}
 	}
 	
-	private void displayListComputers(ArrayList<ComputerDTO> listDisplayComputers) {
-		for (ComputerDTO computerDTO : listDisplayComputers) {
+	private void displayListComputers(ArrayList<ComputerDTOJsp> listDisplayComputers) {
+		for (ComputerDTOJsp computerDTO : listDisplayComputers) {
 			System.out.println(computerDTO);
 		} 
 	}
@@ -153,7 +153,7 @@ public class CLI {
 	private void displayListCompanies() {
 		int nbCompanies = cliController.getNumberCompanies();
 		pagination = new Page(nbCompanies);
-		ArrayList<CompanyDTO> listDisplayCompanies;
+		ArrayList<CompanyDTOJsp> listDisplayCompanies;
 		int limit = pagination.getSize();
 		int offset ;
 		
@@ -186,8 +186,8 @@ public class CLI {
 		}
 	}
 
-	private void displayListCompanies(ArrayList<CompanyDTO> listDisplayCompanies) {
-		for (CompanyDTO companyDTO : listDisplayCompanies) {
+	private void displayListCompanies(ArrayList<CompanyDTOJsp> listDisplayCompanies) {
+		for (CompanyDTOJsp companyDTO : listDisplayCompanies) {
 			System.out.println(companyDTO);
 		} 
 	}
@@ -196,7 +196,7 @@ public class CLI {
 	private void getOneComputer() {
 		System.out.println("Please enter the computer id :");
 		int computer_id = Integer.parseInt(sc.nextLine());
-		ComputerDTO computerDTO = cliController.getOneComputer(computer_id);
+		ComputerDTOJsp computerDTO = cliController.getOneComputer(computer_id);
 		if (computerDTO != null) {System.out.println(computerDTO);}
 	}
 	

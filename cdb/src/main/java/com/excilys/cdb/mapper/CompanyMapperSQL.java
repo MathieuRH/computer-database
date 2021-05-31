@@ -11,7 +11,7 @@ import com.excilys.cdb.model.Company;
  * @author Mathieu_RH
  *	
  */
-public class CompanyMapper {
+public class CompanyMapperSQL {
 	
 	public static ArrayList<Company> getListCompanies(ResultSet rs) throws SQLException {
 		ArrayList <Company> listCompanies = new ArrayList<Company>();

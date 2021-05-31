@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.cdb.controller.CLIController;
-import com.excilys.cdb.dto.ComputerDTO;
+import com.excilys.cdb.dto.ComputerDTOJsp;
+import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.QueryException;
+import com.excilys.cdb.mapper.ComputerDTOMapper;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
+import com.excilys.cdb.service.ComputerService;
 
 /**
  * Servlet implementation class DashboardServlet
@@ -29,11 +32,14 @@ public class DashboardServlet extends HttpServlet {
 	private static final String CURRENT_PAGE = "page";
 	private static final String PAGE_MAX="page_max";
 	
-	
+	//TODO : Put page in session
 	private Page pagination;
 	int page = FIRST_PAGE;
 	int size = DEFAULT_SIZE;
-       
+
+	private ComputerService computerService = ComputerService.getInstance();
+	private ComputerDTOMapper computerMapper = ComputerDTOMapper.getInstance();
+	
     public DashboardServlet() {
         super();
         // TODO Auto-generated constructor stub
@@ -49,12 +55,24 @@ public class DashboardServlet extends HttpServlet {
 	}
 	
 	private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		CLIController cli = CLIController.getInstance();
-		int nbComputers = cli.getNumberComputers();
+		int nbComputers = 0;
+		try {
+			nbComputers = computerService.getNumberComputers();
+		} catch (ConnectionException | QueryException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		setPageAttributes(request, response, nbComputers);		
 		int offset = pagination.getOffset();
 		int limit = pagination.getSize();
-		ArrayList<ComputerDTO> listComputersDTO = cli.getListComputers(limit, offset);
+		ArrayList<Computer> listComputers = new ArrayList<>();
+		try {
+			listComputers = computerService.getListComputers(limit, offset);
+		} catch (ConnectionException | QueryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ArrayList<ComputerDTOJsp> listComputersDTO = computerMapper.listToDTO(listComputers);
 
 		request.setAttribute( "listComputersDTO", listComputersDTO );
 		request.setAttribute("nbComputers", nbComputers);

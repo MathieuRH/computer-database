@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.dto.ComputerDTO;
+import com.excilys.cdb.dto.ComputerDTOSQL;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
-import com.excilys.cdb.mapper.ComputerMapper;
+import com.excilys.cdb.mapper.ComputerMapperSQL;
 import com.excilys.cdb.model.Computer;
 
 /**
@@ -26,6 +26,7 @@ import com.excilys.cdb.model.Computer;
 public class ComputerDAO {
 	
 	private static ComputerDAO instance;
+	private ComputerMapperSQL computerMapperSQL;
 	
 	private static final String LIST_COMPUTERS_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPUTERS_QUERY = "SELECT COUNT(id) FROM computer;";
@@ -40,6 +41,7 @@ public class ComputerDAO {
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	
 	private ComputerDAO() {
+		computerMapperSQL = ComputerMapperSQL.getInstance();
 	}
 	
 	public static ComputerDAO getInstance() {
@@ -59,7 +61,7 @@ public class ComputerDAO {
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
 			rs = statement.executeQuery();
-			listComputers = ComputerMapper.getListComputers(rs);
+			listComputers = computerMapperSQL.getListComputers(rs);
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 		}
@@ -79,7 +81,7 @@ public class ComputerDAO {
 			statement = DBConnection.getConnection().prepareStatement(ONE_COMPUTER_QUERY);
 			statement.setInt(1, id_computer);
 			rs = statement.executeQuery();
-			computer = ComputerMapper.getOneComputer(rs);
+			computer = computerMapperSQL.getOneComputer(rs);
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 		} 
@@ -90,7 +92,7 @@ public class ComputerDAO {
 		return computer;
 	}
 	
-	
+	//TODO : get rid of
 	public void createOne(String name, LocalDate introduced, LocalDate discontinued, int id_company) throws ConnectionException, QueryException {
 		if (name != null) {
 			ResultSet rs = null;
@@ -120,7 +122,8 @@ public class ComputerDAO {
 		} else {System.out.println("Name can't be null.");}
 	}
 	
-	public void createOne(ComputerDTO computerDTO) throws ConnectionException, QueryException {
+	public void createOne(Computer computer) throws ConnectionException, QueryException {
+		ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
 		String name = computerDTO.getName();
 		int id_company = Integer.parseInt(computerDTO.getCompanyId());
 		if (name != "") {

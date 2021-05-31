@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
-import com.excilys.cdb.mapper.CompanyMapper;
+import com.excilys.cdb.mapper.CompanyMapperSQL;
 import com.excilys.cdb.model.Company;
 
 // import logger
@@ -51,7 +51,7 @@ public class CompanyDAO {
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
 			rs = statement.executeQuery();
-			listCompanies = CompanyMapper.getListCompanies(rs);
+			listCompanies = CompanyMapperSQL.getListCompanies(rs);
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 			throw new QueryException();
@@ -72,7 +72,7 @@ public class CompanyDAO {
 			statement = DBConnection.getConnection().prepareStatement(GET_COMPANY);
 			statement.setInt(1, company_id);
 			rs = statement.executeQuery();
-			company = CompanyMapper.getOneCompany(rs);
+			company = CompanyMapperSQL.getOneCompany(rs);
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 		} 

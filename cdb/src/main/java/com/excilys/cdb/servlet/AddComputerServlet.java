@@ -14,9 +14,14 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.controller.CLIController;
 import com.excilys.cdb.dao.ComputerDAO;
-import com.excilys.cdb.dto.CompanyDTO;
-import com.excilys.cdb.dto.ComputerDTO;
+import com.excilys.cdb.dto.CompanyDTOJsp;
+import com.excilys.cdb.dto.ComputerDTOJsp;
+import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.QueryException;
+import com.excilys.cdb.mapper.ComputerDTOMapper;
 import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.service.ComputerService;
 
 @WebServlet("/addComputer")
 public class AddComputerServlet extends HttpServlet {
@@ -29,6 +34,8 @@ public class AddComputerServlet extends HttpServlet {
 	private static final int OFFSET_COMPANIES = 0;
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
+	private ComputerService computerService = ComputerService.getInstance();
+	private ComputerDTOMapper computerMapper = ComputerDTOMapper.getInstance();
 	
     public AddComputerServlet() {
         super();
@@ -42,7 +49,7 @@ public class AddComputerServlet extends HttpServlet {
 	private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		CLIController cli = CLIController.getInstance();
 		int nbCompanies = cli.getNumberCompanies();
-		ArrayList<CompanyDTO> listCompanyDTO = cli.getListCompanies(nbCompanies, OFFSET_COMPANIES);
+		ArrayList<CompanyDTOJsp> listCompanyDTO = cli.getListCompanies(nbCompanies, OFFSET_COMPANIES);
 		
 		request.setAttribute( "listCompanyDTO", listCompanyDTO );
 		
@@ -62,9 +69,18 @@ public class AddComputerServlet extends HttpServlet {
 		String companyName = request.getParameter("companyName");
 		System.out.println(name + "_" + introduced + "_" +  discontinued + companyId);
 		
-		ComputerDTO computerDTO = new ComputerDTO(id, name, introduced, discontinued, companyId, companyName);
-		CLIController controller = CLIController.getInstance();
-		boolean success = controller.createOne(computerDTO);
+		ComputerDTOJsp computerDTO = new ComputerDTOJsp.ComputerDTOJspBuilder(id, name).introduced(introduced)
+				.discontinued(discontinued).companyId(companyId).companyName(companyName).build();
+		//TODO : verificator
+		Computer computer = computerMapper.toComputer(computerDTO);
+		boolean success = false;
+		try {
+			computerService.createOne(computer);
+			success = true;
+		} catch (ConnectionException | QueryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if (success) {
 			//TODO : go to last page

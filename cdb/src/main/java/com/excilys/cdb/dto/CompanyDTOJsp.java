@@ -1,10 +1,10 @@
 package com.excilys.cdb.dto;
 
-public class CompanyDTO {
+public class CompanyDTOJsp {
 	private String id;
 	private String name;
 	
-	public CompanyDTO(String id, String name) {
+	public CompanyDTOJsp(String id, String name) {
 		this.id = id;
 		this.name = name;
 	}
