@@ -2,7 +2,6 @@ package com.excilys.cdb.dao;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -10,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.exceptions.ConnectionException;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * Database connection class 
@@ -19,17 +20,19 @@ import com.excilys.cdb.exceptions.ConnectionException;
 public class DBConnection {
 
 	private static DBConnection instance;
-	private static Connection connection;
 	
 	private static final String DATABASE_PROPERTIES_FILE_PATH = "/database.properties";
 	private static final String DATABASE_PROPERTY_NAME_DRIVER = "jdbc.driver";
 	private static final String DATABASE_PROPERTY_NAME_URL = "jdbc.url";
 	private static final String DATABASE_PROPERTY_NAME_LOGIN = "jdbc.username";
 	private static final String DATABASE_PROPERTY_NAME_PASSWORD = "jdbc.password";
-	private static String connectionDriver = null;
-	private static String connectionUrl = null;
-	private static String connectionLogin = null;
-	private static String connectionPassword = null;
+	private static String connectionDriver;
+	private static String connectionUrl;
+	private static String connectionLogin;
+	private static String connectionPassword;
+	
+	private static HikariConfig config ;
+	private static HikariDataSource ds;
 	
 	private static Logger logger = LoggerFactory.getLogger(DBConnection.class);
 	
@@ -38,18 +41,24 @@ public class DBConnection {
 			loadProperties();
 			Class.forName(connectionDriver);
 		} catch (IOException e) {
-			logger.error("Database properties: {} in {}", e, e.getStackTrace());
 			throw new SQLException("Error, cannot load database properties");
 		} catch (ClassNotFoundException e) {
 			logger.error("SQL Exception : " + e);
 		}
-		connection = DriverManager.getConnection(connectionUrl, connectionLogin, connectionPassword);
+		config = new HikariConfig();
+		config.setJdbcUrl( connectionUrl );
+        config.setUsername( connectionLogin );
+        config.setPassword( connectionPassword );
+        config.addDataSourceProperty( "cachePrepStmts" , "true" );
+        config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
+        config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+        ds = new HikariDataSource( config );
 	}
 	
 	public static DBConnection getInstance() throws ConnectionException {
 		try {
-			if (instance == null || connection.isClosed()){
-				new DBConnection();
+			if (instance == null || ds.isClosed()){
+				instance = new DBConnection();
 			}
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
@@ -57,25 +66,12 @@ public class DBConnection {
 		}
 		return instance;
 	}
-	
-	public static void close() {
-      try {
-	      if (connection != null) {
-	          connection.close();
-	      }
-      } catch (SQLException e) {
-			logger.error("SQL Exception : " + e);
-      }
+
+
+	public static Connection getConnection() throws SQLException {
+		return ds.getConnection();
 	}
 
-	public static Connection getConnection() {
-		return connection;
-	}
-	
-	/**
-	 * Load database properties from the properties file.
-	 * @throws IOException 
-	 */
 	private void loadProperties() throws IOException {
 		Properties properties = new Properties();
 		properties.load(DBConnection.class.getResourceAsStream(DATABASE_PROPERTIES_FILE_PATH));
@@ -85,4 +81,13 @@ public class DBConnection {
 		connectionPassword = properties.getProperty(DATABASE_PROPERTY_NAME_PASSWORD);
 	}
 	
+	public static void close() {
+      try {
+	      if (ds.getConnection() != null) {
+	          ds.close();
+	      }
+      } catch (SQLException e) {
+			logger.error("SQL Exception : " + e);
+      }
+	}
 }

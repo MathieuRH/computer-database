@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -37,12 +41,12 @@ public class DashboardServlet extends HttpServlet {
 	int page = FIRST_PAGE;
 	int size = DEFAULT_SIZE;
 
+	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	private ComputerService computerService = ComputerService.getInstance();
 	private ComputerMapperServlet computerMapper = ComputerMapperServlet.getInstance();
 	
     public DashboardServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,9 +62,8 @@ public class DashboardServlet extends HttpServlet {
 		int nbComputers = 0;
 		try {
 			nbComputers = computerService.getNumberComputers();
-		} catch (ConnectionException | QueryException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (ConnectionException | QueryException e) {
+			logger.error(e.getMessage());
 		}
 		setPageAttributes(request, response, nbComputers);		
 		int offset = pagination.getOffset();
@@ -69,8 +72,7 @@ public class DashboardServlet extends HttpServlet {
 		try {
 			listComputers = computerService.getListComputers(limit, offset);
 		} catch (ConnectionException | QueryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		ArrayList<ComputerDTOJsp> listComputersDTO = computerMapper.listToDTO(listComputers);
 
