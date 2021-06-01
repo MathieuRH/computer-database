@@ -13,7 +13,20 @@ import com.excilys.cdb.model.Company;
  */
 public class CompanyMapperSQL {
 	
-	public static ArrayList<Company> getListCompanies(ResultSet rs) throws SQLException {
+	private static CompanyMapperSQL instance;
+	
+	private CompanyMapperSQL() {
+		
+	}
+	
+	public static CompanyMapperSQL getInstance() {
+		if (instance == null) {
+			instance = new CompanyMapperSQL();
+		}
+		return instance;
+	}
+	
+	public ArrayList<Company> getListCompanies(ResultSet rs) throws SQLException {
 		ArrayList <Company> listCompanies = new ArrayList<Company>();
 		while (rs.next()) {
 		    int id = rs.getInt("id");
@@ -25,7 +38,7 @@ public class CompanyMapperSQL {
 	}
 	
 
-	public static Company getOneCompany(ResultSet rs) throws SQLException {
+	public Company getOneCompany(ResultSet rs) throws SQLException {
         return getListCompanies(rs).get(0);
 	}
 }

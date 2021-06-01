@@ -24,11 +24,9 @@
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
-                    <form id="searchForm" action="#" method="GET" class="form-inline">
-
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
-                        <input type="submit" id="searchsubmit" value="Filter by name"
-                        class="btn btn-primary" />
+                    <form id="searchForm" action=dashboard method="GET" class="form-inline">
+                        <input type="search" id="searchbox" name="computer_name_request" class="form-control" placeholder="Search name" />
+                        <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
                     </form>
                 </div>
                 <div class="pull-right">
@@ -38,7 +36,7 @@
             </div> 
         </div>
 
-        <form id="deleteForm" action="#" method="POST">
+        <form id="deleteForm" action="dashboard" method="POST">
             <input type="hidden" name="selection" value="">
         </form>
 
@@ -46,9 +44,6 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <!-- Variable declarations for passing labels as parameters -->
-                        <!-- Table header for Computer Name -->
-
                         <th class="editMode" style="width: 60px; height: 22px;">
                             <input type="checkbox" id="selectall" /> 
                             <span style="vertical-align: top;">
@@ -57,19 +52,10 @@
                                     </a>
                             </span>
                         </th>
-                        <th>
-                            Computer name
-                        </th>
-                        <th>
-                            Introduced date
-                        </th>
-                        <th>
-                            Discontinued date
-                        </th>
-                        <th>
-                            Company
-                        </th>
-
+                        <th> Computer name</th>
+                        <th>Introduced date</th>
+                        <th>Discontinued date</th>
+                        <th>Company</th>
                     </tr>
                 </thead>
                 <!-- Browse attribute computers -->
@@ -80,7 +66,7 @@
                             <input type="checkbox" name="cb" class="cb" value="${computerDTO.id}">
                         </td>
                         <td>
-                            <a href="editComputer.jsp" onclick="">${computerDTO.name}</a>
+                            <a href="<c:url value="editComputer"> <c:param name="computerId" value="${computerDTO.id}"/></c:url>" id="useless" onclick="">${computerDTO.name}</a>
                         </td>
                         <td>${computerDTO.introduced}</td>
                         <td>${computerDTO.discontinued}</td>
@@ -92,10 +78,11 @@
         </div>
     </section>
 
+
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
             <ul class="pagination">
-              <li>
+              <li ${page=page_session.page } ${page_max=page_session.nbPages }>
                	<a href="<c:url value="dashboard"> <c:param name="page_request" value="${page>1 ? page-1 : page}"/></c:url>" aria-label="Previous">
                   <span aria-hidden="true">&laquo;</span>
                	</a>

@@ -60,11 +60,15 @@ public class ComputerService {
 		computerDAO.createOne(computer);
 	}
 
-	public void updateOne(int computer_id, int field, Object value) throws ConnectionException, QueryException {
-		computerDAO.updateOne(computer_id, field, value);
+	public void updateOne(Computer computer) throws ConnectionException, QueryException {
+		computerDAO.updateOne(computer);
 	}
 
 	public void deleteOne(int computer_id) throws ConnectionException, QueryException {
 		computerDAO.deleteOne(computer_id);
+	}
+
+	public ArrayList<Computer> getListByName(int limit, int offset, String name) throws ConnectionException, QueryException, ComputerNotFoundException {
+		return computerDAO.getListByName(limit, offset, name);
 	}
 }

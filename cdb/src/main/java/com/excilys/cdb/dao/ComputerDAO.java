@@ -33,13 +33,15 @@ public class ComputerDAO {
 	private static final String LIST_COMPUTERS_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
 			+ "FROM computer C LEFT JOIN company Y on C.company_id = Y.id "
 			+ "LIMIT ? OFFSET ?;";
+	private static final String LIST_COMPUTERS_BY_NAME = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
+			+ "FROM computer C LEFT JOIN company Y on C.company_id = Y.id "
+			+ "WHERE C.name LIKE ? "
+			+ "LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPUTERS_QUERY = "SELECT COUNT(id) FROM computer;";
-	private static final String ONE_COMPUTER_QUERY = "SELECT id,name,introduced,discontinued,company_id FROM computer WHERE id=?;";
+	private static final String ONE_COMPUTER_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
+			+ "FROM computer C LEFT JOIN company Y on C.company_id = Y.id WHERE C.id=?;";
 	private static final String CREATE_ONE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
-	private static final String UPDATE_ONE_NAME = "UPDATE computer SET name=? WHERE id=?;";
-	private static final String UPDATE_ONE_INTRODUCED = "UPDATE computer SET introduced=? WHERE id=?;";
-	private static final String UPDATE_ONE_DISCONTINUED = "UPDATE computer SET discontinued=? WHERE id=?;";
-	private static final String UPDATE_ONE_COMPANY_ID = "UPDATE computer SET company_id=? WHERE id=?;";
+	private static final String UPDATE_ONE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
@@ -64,6 +66,28 @@ public class ComputerDAO {
 			statement = dbConnection.getConnection().prepareStatement(LIST_COMPUTERS_QUERY);
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
+			rs = statement.executeQuery();
+			listComputers = computerMapperSQL.getListComputers(rs);
+		} catch (SQLException e) {
+			logger.error("SQL Exception : " + e);
+		}
+		finally {
+			closeSetStatement(rs, statement);
+		}
+		dbConnection.close();
+		return listComputers;
+	}
+
+	public ArrayList<Computer> getListByName(int limit, int offset, String name) throws ConnectionException, QueryException, ComputerNotFoundException {
+		ArrayList<Computer> listComputers = new ArrayList<Computer>();
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		dbConnection = DBConnection.getInstance();
+		try {
+			statement = dbConnection.getConnection().prepareStatement(LIST_COMPUTERS_BY_NAME);
+			statement.setString(1,"%" + name + "%");
+			statement.setInt(2,limit);
+			statement.setInt(3,offset);
 			rs = statement.executeQuery();
 			listComputers = computerMapperSQL.getListComputers(rs);
 		} catch (SQLException e) {
@@ -129,90 +153,66 @@ public class ComputerDAO {
 	public void createOne(Computer computer) throws ConnectionException, QueryException {
 		ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
 		String name = computerDTO.getName();
-		int id_company = Integer.parseInt(computerDTO.getCompanyId());
-		if (name != "") {
-			ResultSet rs = null;
-			PreparedStatement statement = null;
-			dbConnection = DBConnection.getInstance();
-			try {
-				statement = dbConnection.getConnection().prepareStatement(CREATE_ONE);
-				statement.setString(1, name);
-				if (computerDTO.getIntroduced()!=null) {
-					LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced());
-					statement.setDate(2, Date.valueOf(introduced));
-				} else {statement.setNull(2, 0);}
-				if (computerDTO.getDiscontinued()!=null) {
-					LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued());
-					statement.setDate(3, Date.valueOf(discontinued));
-				} else {statement.setNull(3, 0);}
-				if (id_company!=0) {
-					statement.setInt(4, id_company);
-				} else {statement.setNull(4, 0);}
-				statement.executeUpdate();
-			} catch (SQLException e) {
-				logger.error("SQL Exception : " + e);
-				throw new QueryException();
-			}
-			finally {
-				closeSetStatement(rs, statement);
-			}
-			dbConnection.close();
-		} 
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		dbConnection = DBConnection.getInstance();
+		try {
+			statement = dbConnection.getConnection().prepareStatement(CREATE_ONE);
+			statement.setString(1, name);
+			if (computerDTO.getIntroduced()!=null) {
+				LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced());
+				statement.setDate(2, Date.valueOf(introduced));
+			} else {statement.setNull(2, 0);}
+			if (computerDTO.getDiscontinued()!=null) {
+				LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued());
+				statement.setDate(3, Date.valueOf(discontinued));
+			} else {statement.setNull(3, 0);}
+			int id_company = Integer.parseInt(computerDTO.getCompanyId());
+			if (id_company!=0) {
+				statement.setInt(4, id_company);
+			} else {statement.setNull(4, 0);}
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.error("SQL Exception : " + e);
+			throw new QueryException();
+		}
+		finally {
+			closeSetStatement(rs, statement);
+		}
+		dbConnection.close();
 	}
 	
 	
-	public void updateOne(int id_computer, int field, Object value) throws ConnectionException, QueryException {
-		if (id_computer !=0) {
-			ResultSet rs = null;
-			PreparedStatement statement = null;
-			dbConnection = DBConnection.getInstance();
-			if (field == 1 && (String)value != null) {
-				try {
-					statement = dbConnection.getConnection().prepareStatement(UPDATE_ONE_NAME);
-					statement.setString(1, (String)value);
-					statement.setInt(2, id_computer);
-					statement.executeUpdate();
-				
-				} catch (SQLException e) {
-					logger.error("SQL Exception : " + e);
-					throw new QueryException();
-				} 
-				finally {
-					closeSetStatement(rs, statement);
-				}
-			}
-			else if (field == 2 || field==3) {
-				try {
-					if (field == 2) {
-						statement = dbConnection.getConnection().prepareStatement(UPDATE_ONE_INTRODUCED);
-					} else {statement = dbConnection.getConnection().prepareStatement(UPDATE_ONE_DISCONTINUED);}
-					statement.setDate(1, Date.valueOf((LocalDate) value));
-					statement.setInt(2, id_computer);
-					statement.executeUpdate();
-				} catch (SQLException e) {
-					logger.error("SQL Exception : " + e);
-					throw new QueryException();
-				} 
-				finally {
-					closeSetStatement(rs, statement);
-				}
-			} 
-			else if (field == 4) {
-				try {
-					statement = dbConnection.getConnection().prepareStatement(UPDATE_ONE_COMPANY_ID);
-					statement.setInt(1, (Integer) value);
-					statement.setInt(2, id_computer);
-					statement.executeUpdate();
-				} catch (SQLException e) {
-					logger.error("SQL Exception : " + e);
-					throw new QueryException();
-				} 
-				finally {
-					closeSetStatement(rs, statement);
-				}
-			}
-			dbConnection.close();
+	public void updateOne(Computer computer) throws ConnectionException, QueryException {
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		dbConnection = DBConnection.getInstance();
+		ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
+		try {
+			statement = dbConnection.getConnection().prepareStatement(UPDATE_ONE);
+			statement.setString(1, computer.getName());
+			if (computerDTO.getIntroduced()!=null) {
+				LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced());
+				statement.setDate(2, Date.valueOf(introduced));
+			} else {statement.setNull(2, 0);}
+			if (computerDTO.getDiscontinued()!=null) {
+				LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued());
+				statement.setDate(3, Date.valueOf(discontinued));
+			} else {statement.setNull(3, 0);}
+			int id_company = Integer.parseInt(computerDTO.getCompanyId());
+			if (id_company!=0) {
+				statement.setInt(4, id_company);
+			} else {statement.setNull(4, 0);}
+			statement.setInt(5, computer.getId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.error("SQL Exception : " + e);
+			throw new QueryException();
+		} 
+		finally {
+			closeSetStatement(rs, statement);
 		}
+		dbConnection.close();
 	}
 	
 	public void deleteOne(int id_computer) throws ConnectionException, QueryException {

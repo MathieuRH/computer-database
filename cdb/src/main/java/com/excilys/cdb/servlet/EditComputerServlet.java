@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.controller.CLIController;
 import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
+import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.InputException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -27,12 +27,12 @@ import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.verification.Verificator;
 
-@WebServlet("/addComputer")
-public class AddComputerServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private static final String VIEW = "/WEB-INF/views/addComputer.jsp";
+@WebServlet("/editComputer")
+public class EditComputerServlet extends HttpServlet {
+	
+	private static final String VIEW = "/WEB-INF/views/editComputer.jsp";
 	private static final String DASHBOARD_VIEW = "dashboard";
-	private static final String WRONG_ENTRIES_MESSAGE = "Computer creation failed";
+	private static final String WRONG_ENTRIES_MESSAGE = "Computer update failed";
 
 	private static final String PAGE_REQUEST = "page_request";
 	private static final int OFFSET_COMPANIES = 0;
@@ -44,7 +44,9 @@ public class AddComputerServlet extends HttpServlet {
 	private CompanyMapperServlet companyMapper = CompanyMapperServlet.getInstance();
 	private Verificator verificator = Verificator.getInstance();
 	
-    public AddComputerServlet() {
+	private static final long serialVersionUID = 1L;
+
+    public EditComputerServlet() {
         super();
     }
 
@@ -54,26 +56,41 @@ public class AddComputerServlet extends HttpServlet {
 
 	private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<CompanyDTOJsp> listCompanyDTO = new ArrayList<>();
+		ComputerDTOJsp computerDTO = null;
 		try {
-			int nbCompanies = companyService.getNumberCompanies();
-			ArrayList<Company> listCompany;
-			listCompany = companyService.getListCompanies(nbCompanies, OFFSET_COMPANIES);
-			listCompanyDTO = companyMapper.listCompaniesToDTO(listCompany);
-		} catch (ConnectionException | QueryException e) {
+			int id = Integer.parseInt(request.getParameter("computerId"));
+			Computer computer = computerService.getOneComputer(id);
+			computerDTO = computerMapper.toDTO(computer);
+			try {
+				int nbCompanies = companyService.getNumberCompanies();
+				ArrayList<Company> listCompany;
+				listCompany = companyService.getListCompanies(nbCompanies, OFFSET_COMPANIES);
+				listCompanyDTO = companyMapper.listCompaniesToDTO(listCompany);
+			} catch (ConnectionException | QueryException e) {
+				logger.error(e.getMessage());
+			}
+
+			request.setAttribute("computerDTO", computerDTO);
+			request.setAttribute( "listCompanyDTO", listCompanyDTO );
+			
+			this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
+			
+			
+		} catch (NumberFormatException | ConnectionException | QueryException | ComputerNotFoundException e) {
 			logger.error(e.getMessage());
+			e.printStackTrace();
+			//this.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward( request, response );
+			this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
 		}
 
-		request.setAttribute( "listCompanyDTO", listCompanyDTO );
-		
-		this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
 	}
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.handlePOSTRequest(request, response);
 	}
-	
+
 	private void handlePOSTRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = "";
+		String id = request.getParameter("id");
 		String name = request.getParameter("computerName");
 		String introduced = request.getParameter("introduced");
 		String discontinued = request.getParameter("discontinued");
@@ -88,14 +105,14 @@ public class AddComputerServlet extends HttpServlet {
 			Computer computer = computerMapper.toComputer(computerDTO);
 			boolean success = false;
 			try {
-				computerService.createOne(computer);
+				computerService.updateOne(computer);
 				success = true;
 			} catch (ConnectionException | QueryException e) {
 				logger.error(e.getMessage());
 			}
 			
 			if (success) {
-				//TODO : go to last page
+				//TODO : go to computer page
 				request.setAttribute(PAGE_REQUEST, "last");
 				request.getRequestDispatcher(DASHBOARD_VIEW).forward(request,response);
 			} else {
@@ -107,5 +124,5 @@ public class AddComputerServlet extends HttpServlet {
 			request.getRequestDispatcher(VIEW).forward(request,response);
 		}
 	}
-
+	
 }

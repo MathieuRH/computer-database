@@ -25,6 +25,7 @@ public class CompanyDAO {
 
 	private static CompanyDAO instance;
 	private DBConnection dbConnection;
+	private CompanyMapperSQL companyMapperSQL;
 	
 	private static final String LIST_COMPANIES_QUERY = "SELECT id,name FROM company LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPANIES_QUERY = "SELECT COUNT(id) FROM company;";
@@ -33,6 +34,7 @@ public class CompanyDAO {
 	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	
 	private CompanyDAO() {
+		companyMapperSQL = CompanyMapperSQL.getInstance();
 	}
 	
 	public static CompanyDAO getInstance(){
@@ -52,7 +54,7 @@ public class CompanyDAO {
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
 			rs = statement.executeQuery();
-			listCompanies = CompanyMapperSQL.getListCompanies(rs);
+			listCompanies = companyMapperSQL.getListCompanies(rs);
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 			throw new QueryException();
@@ -73,7 +75,7 @@ public class CompanyDAO {
 			statement = dbConnection.getConnection().prepareStatement(GET_COMPANY);
 			statement.setInt(1, company_id);
 			rs = statement.executeQuery();
-			company = CompanyMapperSQL.getOneCompany(rs);
+			company = companyMapperSQL.getOneCompany(rs);
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 		} 

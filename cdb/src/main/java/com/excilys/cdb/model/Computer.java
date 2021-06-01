@@ -51,6 +51,10 @@ public class Computer {
 		public ComputerBuilder(String name) {
 			this.name = name;
 		}
+		public ComputerBuilder id(int id) {
+			this.id = id;
+			return this;
+		}
 		public ComputerBuilder introducedDate(LocalDate introducedDate) {
 			this.introducedDate = introducedDate;
 			return this;

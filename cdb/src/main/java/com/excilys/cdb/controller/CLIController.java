@@ -23,11 +23,13 @@ public class CLIController {
 	private CompanyService companyService;
 	private ComputerService computerService;
 	private ComputerMapperServlet computerMapper;
+	private CompanyMapperServlet companyMapperServlet;
 	
 	private CLIController() {
 		computerService = ComputerService.getInstance();
 		companyService = CompanyService.getInstance();
 		computerMapper = ComputerMapperServlet.getInstance();
+		companyMapperServlet = CompanyMapperServlet.getInstance();
 	}
 	
 	public static CLIController getInstance() {
@@ -159,7 +161,7 @@ public class CLIController {
 	public ArrayList<CompanyDTOJsp> getListCompanies(int limit, int offset) {
 		try {
 			ArrayList<Company> listCompanies = companyService.getListCompanies(limit, offset);
-			return CompanyMapperServlet.listCompaniesToDTO(listCompanies);
+			return companyMapperServlet.listCompaniesToDTO(listCompanies);
 		} catch (ConnectionException | QueryException e) {
 			CLI.writeMessage(e.getMessage());
 			return new ArrayList<CompanyDTOJsp>();

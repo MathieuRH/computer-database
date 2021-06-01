@@ -63,6 +63,10 @@ public class ComputerMapperServlet {
 	public Computer toComputer(ComputerDTOJsp computerDTO) {
 		String name = computerDTO.getName();
 		ComputerBuilder builder = new Computer.ComputerBuilder(name);
+		if (! "".equals(computerDTO.getId())) {
+			int id = Integer.parseInt(computerDTO.getId());
+			builder.id(id);
+		}
 		if (computerDTO.getIntroduced() != "") {
 			LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced()); 
 			builder.introducedDate(introduced);
