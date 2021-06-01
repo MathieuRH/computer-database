@@ -17,7 +17,7 @@ import com.excilys.cdb.model.Computer;
 
 public class ComputerDAOTest {
 
-ComputerDAO computerDAO;
+	ComputerDAO computerDAO;
 	
 	@Before
 	public void setUp() {
@@ -28,9 +28,9 @@ ComputerDAO computerDAO;
 	   public void tearDown() {
 		computerDAO = null;
 	}
-	
+
 	@Test
-	public void testGetNbCompanies() {
+	public void testGetNbComputers() {
 		int nbComputers;
 		try {
 			nbComputers = computerDAO.getNumberComputers();
@@ -41,7 +41,7 @@ ComputerDAO computerDAO;
 	}
 	
 	@Test
-	public void testGetListCompanies() {
+	public void testGetListComputers() {
 		int nbComputers;
 		try {
 			nbComputers = computerDAO.getNumberComputers();
@@ -51,9 +51,9 @@ ComputerDAO computerDAO;
 			fail("Failed to get Company list :" + e.getMessage());
 		}
 	}
-	
+
 	@Test
-	public void testGetOneCompany() {
+	public void testGetOneComputer() {
 		try {
 			Company company1 = new Company(1,"Apple Inc.");
 			Computer comp1 = new Computer.ComputerBuilder(1, "MacBook Pro 15.4 inch").company(company1).build();

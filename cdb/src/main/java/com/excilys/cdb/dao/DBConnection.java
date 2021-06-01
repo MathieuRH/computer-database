@@ -61,6 +61,7 @@ public class DBConnection {
 				instance = new DBConnection();
 			}
 		} catch (SQLException e) {
+			System.out.println("Catch 1");
 			logger.error("SQL Exception : " + e);
 			throw new ConnectionException();
 		}
@@ -68,8 +69,15 @@ public class DBConnection {
 	}
 
 
-	public static Connection getConnection() throws SQLException {
+	public Connection getConnection() throws SQLException {
 		return ds.getConnection();
+	}
+	
+	public void close() {
+      if (!ds.isClosed()) {
+          ds.close();
+          instance = null;
+      }
 	}
 
 	private void loadProperties() throws IOException {
@@ -79,15 +87,5 @@ public class DBConnection {
 		connectionUrl = properties.getProperty(DATABASE_PROPERTY_NAME_URL);
 		connectionLogin = properties.getProperty(DATABASE_PROPERTY_NAME_LOGIN);
 		connectionPassword = properties.getProperty(DATABASE_PROPERTY_NAME_PASSWORD);
-	}
-	
-	public static void close() {
-      try {
-	      if (ds.getConnection() != null) {
-	          ds.close();
-	      }
-      } catch (SQLException e) {
-			logger.error("SQL Exception : " + e);
-      }
 	}
 }

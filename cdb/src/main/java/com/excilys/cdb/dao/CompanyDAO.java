@@ -24,6 +24,7 @@ import com.excilys.cdb.model.Company;
 public class CompanyDAO {
 
 	private static CompanyDAO instance;
+	private DBConnection dbConnection;
 	
 	private static final String LIST_COMPANIES_QUERY = "SELECT id,name FROM company LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPANIES_QUERY = "SELECT COUNT(id) FROM company;";
@@ -45,9 +46,9 @@ public class CompanyDAO {
 		ArrayList<Company> listCompanies= new ArrayList<Company>();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		DBConnection.getInstance();
+		dbConnection = DBConnection.getInstance();
 		try {
-			statement = DBConnection.getConnection().prepareStatement(LIST_COMPANIES_QUERY);
+			statement = dbConnection.getConnection().prepareStatement(LIST_COMPANIES_QUERY);
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
 			rs = statement.executeQuery();
@@ -58,7 +59,7 @@ public class CompanyDAO {
 		}
 		finally {
 			closeSetStatement(rs, statement);
-			DBConnection.close();
+			dbConnection.close();
 		}
 		return listCompanies;
 	}
@@ -67,9 +68,9 @@ public class CompanyDAO {
 		Company company = null;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		DBConnection.getInstance();
+		dbConnection = DBConnection.getInstance();
 		try {
-			statement = DBConnection.getConnection().prepareStatement(GET_COMPANY);
+			statement = dbConnection.getConnection().prepareStatement(GET_COMPANY);
 			statement.setInt(1, company_id);
 			rs = statement.executeQuery();
 			company = CompanyMapperSQL.getOneCompany(rs);
@@ -78,6 +79,7 @@ public class CompanyDAO {
 		} 
 		finally {
 			closeSetStatement(rs, statement);
+			dbConnection.close();
 		}
 		return company;
 	}
@@ -86,9 +88,9 @@ public class CompanyDAO {
 		int nbCompanies = 0;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		DBConnection.getInstance();
+		dbConnection = DBConnection.getInstance();
 		try {
-			statement = DBConnection.getConnection().prepareStatement(NUMBER_COMPANIES_QUERY);
+			statement = dbConnection.getConnection().prepareStatement(NUMBER_COMPANIES_QUERY);
 			rs = statement.executeQuery();
 			nbCompanies = getNumberCompanies_processed(rs);
 		} catch (SQLException e) {
@@ -96,7 +98,7 @@ public class CompanyDAO {
 		} 
 		finally {
 			closeSetStatement(rs, statement);
-			DBConnection.close();
+			dbConnection.close();
 		}
 		return nbCompanies;
 	}

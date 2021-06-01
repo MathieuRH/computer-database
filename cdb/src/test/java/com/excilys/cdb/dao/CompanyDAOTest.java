@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.excilys.cdb.exceptions.ConnectionException;
@@ -36,7 +37,7 @@ public class CompanyDAOTest {
 			fail("Failed to get number companies :" + e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void testGetListCompanies() {
 		int nbCompanies;

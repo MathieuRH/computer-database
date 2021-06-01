@@ -43,11 +43,12 @@ public class ComputerMapperSQL {
 	public ArrayList<Computer> getListComputers(ResultSet rs) throws SQLException, ConnectionException, QueryException {
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		while (rs.next()) {
-		    int id = rs.getInt("id");
-		    String name = rs.getString("name");
-		    Date dateInt = rs.getDate("introduced");
-		    Date dateDis = rs.getDate("discontinued");
-		    int company_id = rs.getInt("company_id");
+		    int id = rs.getInt("C.id");
+		    String name = rs.getString("C.name");
+		    Date dateInt = rs.getDate("C.introduced");
+		    Date dateDis = rs.getDate("C.discontinued");
+		    int company_id = rs.getInt("Y.id");
+		    String company_name = rs.getString("Y.name");
 		    ComputerBuilder comp = new Computer.ComputerBuilder(id, name);
 		    if (dateInt != null) {
 		    	comp.introducedDate(dateInt.toLocalDate());
@@ -56,8 +57,8 @@ public class ComputerMapperSQL {
 		    	comp.discontinuedDate(dateDis.toLocalDate());
 		    }
 		    if (company_id != 0) {
-		    	CompanyDAO companyDAO = CompanyDAO.getInstance();
-		    	comp.company(companyDAO.getOneCompany(company_id));
+		    	Company company = new Company(company_id, company_name);
+		    	comp.company(company);
 		    }
 		    listComputers.add(comp.build());
 		}
