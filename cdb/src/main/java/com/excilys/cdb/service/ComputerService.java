@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.excilys.cdb.dao.ComputerDAO;
-import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -35,12 +34,16 @@ public class ComputerService {
 		return computerDAO.getOneComputer(id_computer);
 	}
 	
-	public ArrayList<Computer> getListComputers(int limit, int offset) throws ConnectionException, QueryException { 
-		return computerDAO.getListComputers(limit, offset);
+	public ArrayList<Computer> getListComputers(int limit, int offset, String query) throws ConnectionException, QueryException { 
+		return computerDAO.getListComputers(limit, offset, query);
 	}
 	
 	public int getNumberComputers() throws ConnectionException, QueryException {
 		return computerDAO.getNumberComputers();
+	}
+
+	public int getNumberComputersByName(String name) throws ConnectionException, QueryException {
+		return computerDAO.getNumberComputersByName(name);
 	}
 	
 	public ComputerDAO getComputerDAO() {

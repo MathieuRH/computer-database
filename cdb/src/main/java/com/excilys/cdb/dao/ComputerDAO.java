@@ -32,12 +32,14 @@ public class ComputerDAO {
 	
 	private static final String LIST_COMPUTERS_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
 			+ "FROM computer C LEFT JOIN company Y on C.company_id = Y.id "
-			+ "LIMIT ? OFFSET ?;";
+			+ "ORDER BY ";
 	private static final String LIST_COMPUTERS_BY_NAME = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
 			+ "FROM computer C LEFT JOIN company Y on C.company_id = Y.id "
 			+ "WHERE C.name LIKE ? "
 			+ "LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPUTERS_QUERY = "SELECT COUNT(id) FROM computer;";
+	private static final String NUMBER_COMPUTERS_BY_NAME_QUERY = "SELECT COUNT(id) FROM computer "
+			+ "WHERE name LIKE ?;";
 	private static final String ONE_COMPUTER_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
 			+ "FROM computer C LEFT JOIN company Y on C.company_id = Y.id WHERE C.id=?;";
 	private static final String CREATE_ONE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
@@ -57,15 +59,31 @@ public class ComputerDAO {
 		return instance;
 	}
 	
-	public ArrayList<Computer> getListComputers(int limit, int offset) throws ConnectionException, QueryException { 
+	public ArrayList<Computer> getListComputers(int limit, int offset, String query) throws ConnectionException, QueryException { 
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		dbConnection = DBConnection.getInstance();
 		try {
-			statement = dbConnection.getConnection().prepareStatement(LIST_COMPUTERS_QUERY);
+			String orderByType = "C.id";
+			switch (query) {
+				case "orderByName":
+					orderByType = "C.name";
+					break;
+				case "orderByIntroduced":
+					orderByType = "C.introduced IS NULL, C.introduced, C.name";
+					break;
+				case "orderByDiscontinued":
+					orderByType = "C.discontinued IS NULL, C.discontinued, C.introduced IS NULL, C.introduced, C.name";
+					break;
+				case "orderByCompany":
+					orderByType = "Y.name IS NULL, Y.name, C.name";
+					break;
+			}
+			statement = dbConnection.getConnection().prepareStatement(LIST_COMPUTERS_QUERY + orderByType + " LIMIT ? OFFSET ?;");
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
+			System.out.println(statement);
 			rs = statement.executeQuery();
 			listComputers = computerMapperSQL.getListComputers(rs);
 		} catch (SQLException e) {
@@ -249,6 +267,27 @@ public class ComputerDAO {
 		dbConnection = DBConnection.getInstance();
 		try {
 			statement = dbConnection.getConnection().prepareStatement(NUMBER_COMPUTERS_QUERY);
+			rs = statement.executeQuery();
+			nbComputers = getNumberComputers_processed(rs);
+		} catch (SQLException e) {
+			logger.error("SQL Exception : " + e);
+			throw new QueryException();
+		} 
+		finally {
+			closeSetStatement(rs, statement);
+			dbConnection.close();
+		}
+		return nbComputers;
+	}
+
+	public int getNumberComputersByName(String name) throws ConnectionException, QueryException {
+		int nbComputers = 0;
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		dbConnection = DBConnection.getInstance();
+		try {
+			statement = dbConnection.getConnection().prepareStatement(NUMBER_COMPUTERS_BY_NAME_QUERY);
+			statement.setString(1,"%" + name + "%");
 			rs = statement.executeQuery();
 			nbComputers = getNumberComputers_processed(rs);
 		} catch (SQLException e) {

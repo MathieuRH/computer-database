@@ -37,8 +37,12 @@ public class DashboardServlet extends HttpServlet {
 	private static final String PAGE_NB_COMPUTERS_DISPLAY = "page_nb_comp";
 	private static final String QUERY_BY_NAME="computer_name_request";
 	private static final String PAGE_SESSION = "page_session";
+	private static final String REQUEST_SESSION = "request_session";
+	private static final String REQUEST_NAME_SESSION = "request_name_session";
 
 	private Page pagination;
+	private String query;
+	private String name_search;
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	private ComputerService computerService = ComputerService.getInstance();
@@ -51,6 +55,7 @@ public class DashboardServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		this.session = request.getSession();
 		this.handleRequest(request, response);
 	}
 
@@ -59,39 +64,30 @@ public class DashboardServlet extends HttpServlet {
 		if(request.getParameter("selection") != null) {
 			deleteComputers(request.getParameter("selection"));			
 		}
-		doGet(request, response);
 		this.handleRequest(request, response);
 	}
 
 	private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.session = request.getSession();
 		int nbComputers = 0;
-		try {
-			nbComputers = computerService.getNumberComputers();
-		} catch (ConnectionException | QueryException e) {
-			logger.error(e.getMessage());
-		}
-		if (session.getAttribute(PAGE_SESSION) == null) {
-			pagination = new Page(FIRST_PAGE, DEFAULT_SIZE, nbComputers);
-			session.setAttribute(PAGE_SESSION, pagination);
-		}
-		updatePageAttributes(request, response, nbComputers);	
-		int offset = pagination.getOffset();
-		int limit = pagination.getSize();
-		String nameRequestQuery = request.getParameter(QUERY_BY_NAME);
+		this.getRequest(request, response);
+
 		ArrayList<Computer> listComputers = new ArrayList<>();
-		if (!"".equals(nameRequestQuery) && nameRequestQuery!= null){
-			try {
-				listComputers = computerService.getListByName(limit, offset, nameRequestQuery);
-			} catch (ConnectionException | QueryException | ComputerNotFoundException e) {
-				logger.error(e.getMessage());
+		try {
+			if ("getByName".equals(query)) {
+				nbComputers = computerService.getNumberComputersByName(name_search);
+				updatePageAttributes(request, response, nbComputers);	
+				int offset = pagination.getOffset();
+				int limit = pagination.getSize();
+				listComputers = computerService.getListByName(limit, offset, name_search);
+			} else {
+				nbComputers = computerService.getNumberComputers();
+				updatePageAttributes(request, response, nbComputers);	
+				int offset = pagination.getOffset();
+				int limit = pagination.getSize();
+				listComputers = computerService.getListComputers(limit, offset, query);
 			}
-		} else {
-			try {
-				listComputers = computerService.getListComputers(limit, offset);
-			} catch (ConnectionException | QueryException e) {
-				logger.error(e.getMessage());
-			}
+		} catch (ConnectionException | QueryException | ComputerNotFoundException e) {
+			logger.error(e.getMessage());
 		}
 		ArrayList<ComputerDTOJsp> listComputersDTO = computerMapper.listToDTO(listComputers);
 
@@ -100,8 +96,30 @@ public class DashboardServlet extends HttpServlet {
 		
 		this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
 	}
-	
+
+	private void getRequest(HttpServletRequest request, HttpServletResponse response) {
+		if (session.getAttribute(REQUEST_SESSION) == null) {
+			session.setAttribute(REQUEST_SESSION, "orderById");
+		}
+		String queryRequest = request.getParameter(REQUEST_SESSION);
+		if (queryRequest != null) {
+			session.setAttribute(REQUEST_SESSION, queryRequest);
+		}
+		String nameRequestQuery = request.getParameter(QUERY_BY_NAME);
+		if (nameRequestQuery != null && !"".equals(nameRequestQuery)) {
+			name_search = request.getParameter(QUERY_BY_NAME);
+			session.setAttribute(REQUEST_SESSION, "getByName");
+			session.setAttribute(REQUEST_NAME_SESSION, name_search);
+		}		
+		query = (String) session.getAttribute(REQUEST_SESSION);
+		name_search = (String) session.getAttribute(REQUEST_NAME_SESSION);
+	}
+
 	private void updatePageAttributes(HttpServletRequest request, HttpServletResponse response, int nbComputers) {
+		if (session.getAttribute(PAGE_SESSION) == null) {
+			pagination = new Page(FIRST_PAGE, DEFAULT_SIZE, nbComputers);
+			session.setAttribute(PAGE_SESSION, pagination);
+		}
 		String page_request = request.getParameter(PAGE_REQUEST);
 		String page_nb_comp_display = request.getParameter(PAGE_NB_COMPUTERS_DISPLAY);
 		pagination = (Page)session.getAttribute(PAGE_SESSION);
@@ -118,6 +136,7 @@ public class DashboardServlet extends HttpServlet {
 			pagination.setPage(1) ;
 			pagination.setSize(Integer.parseInt(page_nb_comp_display), nbComputers);	
 		}
+		pagination.refreshNbPages(nbComputers);
 	}
 	
 	private void deleteComputers(String selectionToDelete) {

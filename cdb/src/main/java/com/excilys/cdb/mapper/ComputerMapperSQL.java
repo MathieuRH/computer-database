@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.dao.CompanyDAO;
 import com.excilys.cdb.dto.ComputerDTOSQL;
 import com.excilys.cdb.dto.ComputerDTOSQL.ComputerDTOSQLBuilder;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;

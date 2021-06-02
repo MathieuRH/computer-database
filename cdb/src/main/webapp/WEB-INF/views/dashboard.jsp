@@ -52,10 +52,10 @@
                                     </a>
                             </span>
                         </th>
-                        <th> Computer name</th>
-                        <th>Introduced date</th>
-                        <th>Discontinued date</th>
-                        <th>Company</th>
+                        <th><a id="orderByName" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByName"/></c:url>">Computer name</a></th>
+                        <th><a id="orderByIntroduced" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByIntroduced"/></c:url>">Introduced date</a></th>
+                        <th><a id="orderByDiscontinued" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByDiscontinued"/></c:url>">Discontinued date</a></th>
+                        <th><a id="orderByCompany" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByCompany"/></c:url>">Company</a></th>
                     </tr>
                 </thead>
                 <!-- Browse attribute computers -->
@@ -80,6 +80,10 @@
 
 
     <footer class="navbar-fixed-bottom">
+     	<div class="pull-left" >
+        	<a class="btn btn-default" id="orderById" href="<c:url value="dashboard"> <c:param name="request_session" value="orderById"/></c:url>">Order by Id</a>
+        </div>
+        
         <div class="container text-center">
             <ul class="pagination">
               <li ${page=page_session.page } ${page_max=page_session.nbPages }>
@@ -88,15 +92,17 @@
                	</a>
               </li>
               <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="1"/></c:url>">1</a></li>
-              <c:if test="${page>4}"><li><a href=#>...</a></li></c:if>
-    
-              <c:forEach var="i" begin="${page>3 ? page-2 : page>2 ? page-1 :  page>1 ? page : page+1}" 
-              	end="${page<page_max-2 ? page+2 : page<page_max-1 ? page+1 : page<page_max ? page : page-1}" step="1">
-	              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="${i}"/></c:url>">${i}</a></li>
-              </c:forEach>         
-              
-              <c:if test="${page<page_max-3}"><li><a href=#>...</a></li></c:if>
-              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="${page_max}"/></c:url>">${page_max}</a></li>
+              <c:if test="${page_max>1}">
+	              <c:if test="${page>4}"><li><a href=#>...</a></li></c:if>
+	    
+	              <c:forEach var="i" begin="${page>3 ? page-2 : page>2 ? page-1 :  page>1 ? page : page+1}" 
+	              	end="${page<page_max-2 ? page+2 : page<page_max-1 ? page+1 : page<page_max ? page : page-1}" step="1">
+		              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="${i}"/></c:url>">${i}</a></li>
+	              </c:forEach>         
+	              
+	              <c:if test="${page<page_max-3}"><li><a href=#>...</a></li></c:if>
+	              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="${page_max}"/></c:url>">${page_max}</a></li>
+              </c:if>
               <li>
                 <a href="<c:url value="dashboard"> <c:param name="page_request" value="${page<page_max ? page+1 : page}"/></c:url>" aria-label="Next">
                   <span aria-hidden="true">&raquo;</span>

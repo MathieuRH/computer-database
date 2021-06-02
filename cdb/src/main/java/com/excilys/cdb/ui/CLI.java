@@ -27,11 +27,11 @@ public class CLI {
 												"4 :  Create a computer" + System.lineSeparator() +
 												"5 :  Update a computer" + System.lineSeparator() +
 												"6 :  Delete a computer" ;
-	private static final String LIST_PARAMETERS_MODIFICATION = System.lineSeparator() + "List of available actions : " + System.lineSeparator() +
-																"1 :  Change name" + System.lineSeparator() +
-																"2 :  Change introduction date" + System.lineSeparator() +
-																"3 :  Change discontinuation date" + System.lineSeparator() +
-																"4 :  Change company" ;
+//	private static final String LIST_PARAMETERS_MODIFICATION = System.lineSeparator() + "List of available actions : " + System.lineSeparator() +
+//																"1 :  Change name" + System.lineSeparator() +
+//																"2 :  Change introduction date" + System.lineSeparator() +
+//																"3 :  Change discontinuation date" + System.lineSeparator() +
+//																"4 :  Change company" ;
 	private static final String LIST_PAGE_ACTIONS = "p : previous / n : next / page_number ?" + System.lineSeparator() +
 													"0 :  Exit display";
 

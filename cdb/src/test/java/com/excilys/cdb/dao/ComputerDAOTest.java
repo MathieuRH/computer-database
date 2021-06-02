@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
@@ -45,7 +44,7 @@ public class ComputerDAOTest {
 		int nbComputers;
 		try {
 			nbComputers = computerDAO.getNumberComputers();
-			ArrayList<Computer> result = computerDAO.getListComputers(nbComputers, 0);
+			ArrayList<Computer> result = computerDAO.getListComputers(nbComputers, 0, "orderById");
 			assertFalse(result.isEmpty());
 		} catch (ConnectionException | QueryException e) {
 			fail("Failed to get Company list :" + e.getMessage());

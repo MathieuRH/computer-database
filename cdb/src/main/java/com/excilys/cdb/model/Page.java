@@ -57,7 +57,7 @@ public class Page {
 		} else {return nbLignes/size + 1;}
 	}
 
-	private void refreshNbPages(int nbLignes) {
+	public void refreshNbPages(int nbLignes) {
 		this.nbPages = deduceNbPages(this.size, nbLignes);
 	}
 	

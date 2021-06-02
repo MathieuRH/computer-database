@@ -52,7 +52,7 @@ public class CLIController {
 	
 	public ArrayList<ComputerDTOJsp> getListComputers(int limit, int offset) { 
 		try {
-			ArrayList<Computer> listComputers = computerService.getListComputers(limit, offset);
+			ArrayList<Computer> listComputers = computerService.getListComputers(limit, offset, "orderById");
 			return computerMapper.listToDTO(listComputers);
 		} catch (ConnectionException | QueryException e) {
 			CLI.writeMessage(e.getMessage());
