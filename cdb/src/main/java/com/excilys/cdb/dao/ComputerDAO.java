@@ -31,17 +31,17 @@ public class ComputerDAO {
 	private DBConnection dbConnection;
 	
 	private static final String LIST_COMPUTERS_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
-			+ "FROM computer C LEFT JOIN company Y on C.company_id = Y.id "
+			+ "FROM computer AS C LEFT JOIN company AS Y on C.company_id = Y.id "
 			+ "ORDER BY ";
 	private static final String LIST_COMPUTERS_BY_NAME = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
-			+ "FROM computer C LEFT JOIN company Y on C.company_id = Y.id "
+			+ "FROM computer AS C LEFT JOIN company AS Y on C.company_id = Y.id "
 			+ "WHERE C.name LIKE ? "
 			+ "LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPUTERS_QUERY = "SELECT COUNT(id) FROM computer;";
 	private static final String NUMBER_COMPUTERS_BY_NAME_QUERY = "SELECT COUNT(id) FROM computer "
 			+ "WHERE name LIKE ?;";
 	private static final String ONE_COMPUTER_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
-			+ "FROM computer C LEFT JOIN company Y on C.company_id = Y.id WHERE C.id=?;";
+			+ "FROM computer AS C LEFT JOIN company AS Y on C.company_id = Y.id WHERE C.id=?;";
 	private static final String CREATE_ONE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
 	private static final String UPDATE_ONE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
@@ -83,7 +83,6 @@ public class ComputerDAO {
 			statement = dbConnection.getConnection().prepareStatement(LIST_COMPUTERS_QUERY + orderByType + " LIMIT ? OFFSET ?;");
 			statement.setInt(1,limit);
 			statement.setInt(2,offset);
-			System.out.println(statement);
 			rs = statement.executeQuery();
 			listComputers = computerMapperSQL.getListComputers(rs);
 		} catch (SQLException e) {
@@ -143,7 +142,7 @@ public class ComputerDAO {
 		if (name != null) {
 			ResultSet rs = null;
 			PreparedStatement statement = null;
-			DBConnection.getInstance();
+			dbConnection = DBConnection.getInstance();
 			try {
 				statement = dbConnection.getConnection().prepareStatement(CREATE_ONE);
 				statement.setString(1, name);
@@ -248,8 +247,7 @@ public class ComputerDAO {
 					throw new QueryException();
 				} 
 			} catch (SQLException e) {
-				e.getMessage();
-				e.printStackTrace();
+				logger.error("SQL Exception : " + e);
 				throw new ConnectionException();
 			} 
 			finally {

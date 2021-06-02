@@ -11,6 +11,7 @@ import com.excilys.cdb.model.Page;
 import com.excilys.cdb.controller.CLIController;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
+import com.excilys.cdb.exceptions.EnumException;
 
 /**
  * Interaction class for the user
@@ -26,7 +27,9 @@ public class CLI {
 												"3 :  Show the details of one computer" + System.lineSeparator() +
 												"4 :  Create a computer" + System.lineSeparator() +
 												"5 :  Update a computer" + System.lineSeparator() +
-												"6 :  Delete a computer" ;
+												"6 :  Delete a computer" + System.lineSeparator() +
+												"7 :  Add a company" + System.lineSeparator() +
+												"8 :  Delete a company" ;
 //	private static final String LIST_PARAMETERS_MODIFICATION = System.lineSeparator() + "List of available actions : " + System.lineSeparator() +
 //																"1 :  Change name" + System.lineSeparator() +
 //																"2 :  Change introduction date" + System.lineSeparator() +
@@ -92,10 +95,16 @@ public class CLI {
 						case DELETE_COMPUTER:
 							deleteOneComputer();
 							break;
+						case ADD_COMPANY:
+							createOneCompany();
+							break;
+						case DELETE_COMPANY:
+							deleteOneCompany();
+							break;
 						default :System.out.println("Please enter a correct action...");
 					}
-				} catch (Exception e) {
-					logger.error("{} in {}", e.getMessage(), e.getStackTrace());
+				} catch (EnumException e) {
+					logger.error(e.getMessage());
 					System.out.println("Choice out of scope");
 				}
 			}
@@ -103,7 +112,6 @@ public class CLI {
 		System.out.println("Session ended.");
 		sc.close();
 	}
-
 
 
 	private void displayListComputers() {
@@ -285,8 +293,26 @@ public class CLI {
 		System.out.println("Please enter the computer id :");
 		try {
 			computer_id = Integer.parseInt(sc.nextLine());
-		} catch (NumberFormatException e){}
+		} catch (NumberFormatException e){
+			logger.error(e.getMessage());
+		}
 		cliController.deleteOne(computer_id);
+	}
+
+	private void createOneCompany() {
+		System.out.println("Please enter the company name :");
+		cliController.createOneCompany(sc.nextLine());
+	}
+	
+	private void deleteOneCompany() {
+		int company_id = 0;
+		System.out.println("Please enter the company id :");
+		try {
+			company_id = Integer.parseInt(sc.nextLine());
+		} catch (NumberFormatException e){
+			logger.error(e.getMessage());
+		}
+		cliController.deleteOneCompany(company_id);
 	}
 	
 }

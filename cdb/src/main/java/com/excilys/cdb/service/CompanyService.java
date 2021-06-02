@@ -43,4 +43,12 @@ public class CompanyService {
 	public ArrayList<Company> getListCompanies(int limit, int offset) throws ConnectionException, QueryException {
 		return companyDAO.getListCompanies(limit, offset);
 	}
+
+	public void deleteOne(int company_id) throws ConnectionException, QueryException {
+		companyDAO.deleteOne(company_id);
+	}
+
+	public void createOne(String name) throws ConnectionException, QueryException {
+		companyDAO.createOne(name);
+	}
 }

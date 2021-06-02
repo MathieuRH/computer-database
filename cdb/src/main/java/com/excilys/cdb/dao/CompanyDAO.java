@@ -1,5 +1,6 @@
 package com.excilys.cdb.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,6 +31,9 @@ public class CompanyDAO {
 	private static final String LIST_COMPANIES_QUERY = "SELECT id,name FROM company LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPANIES_QUERY = "SELECT COUNT(id) FROM company;";
 	private static final String GET_COMPANY = "SELECT id, name FROM company WHERE id=?;";
+	private static final String CREATE_ONE = "INSERT INTO company (name) VALUES (?);";
+	private static final String DELETE_ONE = "DELETE FROM company WHERE id=?;";
+	private static final String DELETE_LINKED_COMPUTERS = "DELETE FROM computer WHERE company_id=?;";
 	
 	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	
@@ -126,4 +130,64 @@ public class CompanyDAO {
 			logger.error("SQL Exception : " + e);
         }
     }
+
+	public void deleteOne(int company_id) throws ConnectionException, QueryException {
+		ResultSet rs = null;
+		PreparedStatement statement = null, statementBis = null;
+		dbConnection = DBConnection.getInstance();
+		Connection connection = null;
+		try {
+			connection = dbConnection.getConnection();
+		} catch (SQLException e) {
+			logger.error("SQL Exception : " + e);
+			throw new ConnectionException();
+		} finally {
+			try {
+				connection.setAutoCommit(false);
+				statement  = connection.prepareStatement(DELETE_LINKED_COMPUTERS);
+				statementBis = connection.prepareStatement(DELETE_ONE);
+				try {
+					statement.setInt(1, company_id);
+					statement.executeUpdate();
+					statementBis.setInt(1, company_id);
+					statementBis.executeUpdate();
+				} catch (SQLException e) {
+					logger.error("SQL Exception : " + e);
+					throw new QueryException();
+				} 
+				connection.commit();
+			} catch (SQLException e) {
+				try {
+					connection.rollback();
+				} catch (SQLException e1) {
+					logger.error("SQL Exception : " + e1);
+					throw new QueryException("Couldn't delete company");
+				}
+				logger.error("SQL Exception : " + e);
+				throw new ConnectionException();
+			}
+			finally {
+				closeSetStatement(rs, statement);
+				dbConnection.close();
+			}
+		}
+	}
+
+	public void createOne(String name) throws ConnectionException, QueryException {
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		dbConnection = DBConnection.getInstance();
+		try {
+			statement = dbConnection.getConnection().prepareStatement(CREATE_ONE);
+			statement.setString(1, name);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.error("SQL Exception : " + e);
+			throw new QueryException();
+		}
+		finally {
+			closeSetStatement(rs, statement);
+		}
+		dbConnection.close();
+	}
 }

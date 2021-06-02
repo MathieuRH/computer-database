@@ -61,7 +61,6 @@ public class DBConnection {
 				instance = new DBConnection();
 			}
 		} catch (SQLException e) {
-			System.out.println("Catch 1");
 			logger.error("SQL Exception : " + e);
 			throw new ConnectionException();
 		}

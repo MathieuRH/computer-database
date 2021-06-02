@@ -167,5 +167,21 @@ public class CLIController {
 			return new ArrayList<CompanyDTOJsp>();
 		} 
 	}
+
+	public void deleteOneCompany(int company_id) {
+		try {
+			companyService.deleteOne(company_id);
+		} catch (ConnectionException | QueryException e) {
+			CLI.writeMessage(e.getMessage());
+		}
+	}
+
+	public void createOneCompany(String name) {
+		try {
+			companyService.createOne(name);
+		} catch (ConnectionException | QueryException e) {
+			CLI.writeMessage(e.getMessage());
+		}
+	}
 	
 }

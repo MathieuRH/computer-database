@@ -1,5 +1,7 @@
 package com.excilys.cdb.ui;
 
+import com.excilys.cdb.exceptions.EnumException;
+
 public enum UpdateChoice {
 	
 	CHANGE_NAME(1), CHANGE_INTRODUCED(2), CHANGE_DISCONTINUED(3), CHANGE_COMPANY(4);
@@ -12,12 +14,12 @@ public enum UpdateChoice {
 	
 	public int getIndice() {return indice;}
     
-    public static UpdateChoice fromPropertyName(int i) throws Exception {
+    public static UpdateChoice fromPropertyName(int i) throws EnumException {
         for (UpdateChoice currentType : UpdateChoice.values()) {
             if (currentType.getIndice() == i) {
                 return currentType;
             }
         }
-        throw new Exception("Unmatched Type: " + i);
+        throw new EnumException("Unmatched Type: " + i);
     }
 }
