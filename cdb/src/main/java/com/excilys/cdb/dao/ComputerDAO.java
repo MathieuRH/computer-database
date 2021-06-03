@@ -31,17 +31,17 @@ public class ComputerDAO {
 	private DBConnection dbConnection;
 	
 	private static final String LIST_COMPUTERS_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
-			+ "FROM computer AS C LEFT JOIN company AS Y on C.company_id = Y.id "
+			+ "FROM computer AS C LEFT JOIN company AS Y ON C.company_id = Y.id "
 			+ "ORDER BY ";
 	private static final String LIST_COMPUTERS_BY_NAME = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
-			+ "FROM computer AS C LEFT JOIN company AS Y on C.company_id = Y.id "
+			+ "FROM computer AS C LEFT JOIN company AS Y ON C.company_id = Y.id "
 			+ "WHERE C.name LIKE ? "
 			+ "LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPUTERS_QUERY = "SELECT COUNT(id) FROM computer;";
 	private static final String NUMBER_COMPUTERS_BY_NAME_QUERY = "SELECT COUNT(id) FROM computer "
 			+ "WHERE name LIKE ?;";
 	private static final String ONE_COMPUTER_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
-			+ "FROM computer AS C LEFT JOIN company AS Y on C.company_id = Y.id WHERE C.id=?;";
+			+ "FROM computer AS C LEFT JOIN company AS Y ON C.company_id = Y.id WHERE C.id=?;";
 	private static final String CREATE_ONE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
 	private static final String UPDATE_ONE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
@@ -179,15 +179,19 @@ public class ComputerDAO {
 			if (computerDTO.getIntroduced()!=null) {
 				LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced());
 				statement.setDate(2, Date.valueOf(introduced));
-			} else {statement.setNull(2, 0);}
+			} else {statement.setNull(2, 0);
+			}
 			if (computerDTO.getDiscontinued()!=null) {
 				LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued());
 				statement.setDate(3, Date.valueOf(discontinued));
-			} else {statement.setNull(3, 0);}
-			int id_company = Integer.parseInt(computerDTO.getCompanyId());
-			if (id_company!=0) {
-				statement.setInt(4, id_company);
-			} else {statement.setNull(4, 0);}
+			} else {statement.setNull(3, 0);
+			}
+			if (computerDTO.getCompanyId()!=null) {
+				int id_company = Integer.parseInt(computerDTO.getCompanyId());
+				if (id_company!=0) {
+					statement.setInt(4, id_company);
+				} else {statement.setNull(4, 0);}
+			}
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
@@ -215,11 +219,14 @@ public class ComputerDAO {
 			if (computerDTO.getDiscontinued()!=null) {
 				LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued());
 				statement.setDate(3, Date.valueOf(discontinued));
-			} else {statement.setNull(3, 0);}
-			int id_company = Integer.parseInt(computerDTO.getCompanyId());
-			if (id_company!=0) {
-				statement.setInt(4, id_company);
-			} else {statement.setNull(4, 0);}
+			} else {statement.setNull(3, 0);
+			}
+			if (computerDTO.getCompanyId()!=null) {
+				int id_company = Integer.parseInt(computerDTO.getCompanyId());
+				if (id_company!=0) {
+					statement.setInt(4, id_company);
+				} else {statement.setNull(4, 0);}
+			}
 			statement.setInt(5, computer.getId());
 			statement.executeUpdate();
 		} catch (SQLException e) {

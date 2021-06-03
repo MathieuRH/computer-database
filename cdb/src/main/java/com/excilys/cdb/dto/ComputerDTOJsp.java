@@ -8,7 +8,6 @@ public class ComputerDTOJsp {
 	private String companyId;
 	private String companyName;
 	
-	//TODO : ComputerDTOBuilder
 	private ComputerDTOJsp(ComputerDTOJspBuilder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
@@ -19,12 +18,12 @@ public class ComputerDTOJsp {
 	}
 	
 	public static class ComputerDTOJspBuilder {
-		private String id;
-		private String name;
-		private String introduced;
-		private String discontinued;
-		private String companyId;
-		private String companyName;
+		private String id = "";
+		private String name = "";
+		private String introduced = "";
+		private String discontinued = "";
+		private String companyId = "";
+		private String companyName = "";
 		
 		public ComputerDTOJspBuilder(String name) {
 			this.name = name;

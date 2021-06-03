@@ -1,6 +1,5 @@
 package com.excilys.cdb.ui;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -30,11 +29,6 @@ public class CLI {
 												"6 :  Delete a computer" + System.lineSeparator() +
 												"7 :  Add a company" + System.lineSeparator() +
 												"8 :  Delete a company" ;
-//	private static final String LIST_PARAMETERS_MODIFICATION = System.lineSeparator() + "List of available actions : " + System.lineSeparator() +
-//																"1 :  Change name" + System.lineSeparator() +
-//																"2 :  Change introduction date" + System.lineSeparator() +
-//																"3 :  Change discontinuation date" + System.lineSeparator() +
-//																"4 :  Change company" ;
 	private static final String LIST_PAGE_ACTIONS = "p : previous / n : next / page_number ?" + System.lineSeparator() +
 													"0 :  Exit display";
 
@@ -89,9 +83,9 @@ public class CLI {
 						case CREATE_COMPUTER:
 							createOneComputer();
 							break;
-//						case UPDATE_COMPUTER:
-//							updateOneComputer();
-//							break;
+						case UPDATE_COMPUTER:
+							updateOneComputer();
+							break;
 						case DELETE_COMPUTER:
 							deleteOneComputer();
 							break;
@@ -208,85 +202,71 @@ public class CLI {
 	
 
 	private void createOneComputer() {
-		LocalDate introduced = null;
-		LocalDate discontinued = null;
-		int company_id = 0;
-		String immediate_answer = null;
+		String introduced = "";
+		String discontinued = "";
+		String company_id = "";
+		String immediate_answer = "";
 		System.out.println("Please enter the computer name :");
 		String name = sc.nextLine();
-		try {
-			System.out.println("Add an introduction date ? (y/n)");
-			immediate_answer = sc.nextLine();
-			if ("y".equals(immediate_answer)){
-				introduced = askDate();
-			}
-		} catch (Exception e){}
-		System.out.println("Add a discontinuation date ? (y/n)");
-		try {
-			immediate_answer = sc.nextLine();
-			if ("y".equals(immediate_answer)){
-				discontinued = askDate();
-			}
-		} catch (Exception e){}
-		System.out.println("Add a company id ? (y/n)");
-		try {
-			immediate_answer = sc.nextLine();
-			if ("y".equals(immediate_answer)){
-				System.out.println("Please enter the id :");
-				company_id = Integer.parseInt(sc.nextLine());
-			}
-		} catch (NumberFormatException e){}
-		if (!cliController.createOne(name, introduced, discontinued, company_id)) {
-			System.out.println("Sorry, can't process wrong dates");
+		System.out.println("Add an introduction date ? (y/n)");
+		immediate_answer = sc.nextLine();
+		if ("y".equals(immediate_answer)){
+			introduced = askDate();
 		}
+		System.out.println("Add a discontinuation date ? (y/n)");
+		immediate_answer = sc.nextLine();
+		if ("y".equals(immediate_answer)){
+			discontinued = askDate();
+		}
+		System.out.println("Add a company id ? (y/n)");
+		immediate_answer = sc.nextLine();
+		if ("y".equals(immediate_answer)){
+			System.out.println("Please enter the id :");
+			company_id = sc.nextLine();
+		}
+		ComputerDTOJsp computerDTO = new ComputerDTOJsp.ComputerDTOJspBuilder(name).introduced(introduced).discontinued(discontinued).companyId(company_id).build();
+		cliController.createOne(computerDTO);
 	}
 	
-	private LocalDate askDate() {
+	private String askDate() {
 		System.out.println("Year ? ");
-		int y = Integer.parseInt(sc.nextLine());
+		String y = sc.nextLine();
 		System.out.println("Month ? ");
-		int m = Integer.parseInt(sc.nextLine());
+		String m = sc.nextLine();
 		System.out.println("Day ? ");
-		int d = Integer.parseInt(sc.nextLine());
-		return LocalDate.of(y, m, d);
+		String d = sc.nextLine();
+		return y + "-" + m + "-" + d;
 	}
 
-//	private void updateOneComputer() {
-//		int computer_id = 0;
-//		int field = 0;
-//		Object value = null;
-//		System.out.println("Please enter the computer id :");
-//		try {
-//			computer_id = Integer.parseInt(sc.nextLine());
-//		} catch (NumberFormatException e){}
-//		System.out.println(LIST_PARAMETERS_MODIFICATION);
-//		System.out.println("What field is to be modified ? ");
-//		try {
-//			field = Integer.parseInt(sc.nextLine());
-//			try {
-//				switch (UpdateChoice.fromPropertyName(field)) {
-//					case CHANGE_NAME:
-//						System.out.println("New name ? ");
-//						value = sc.nextLine();
-//						break;
-//					case CHANGE_INTRODUCED:
-//					case CHANGE_DISCONTINUED:
-//						value = askDate();
-//						break;
-//					case CHANGE_COMPANY:
-//						System.out.println("New company ? ");
-//						value = Integer.parseInt(sc.nextLine());
-//						break;
-//				}
-//			} catch (Exception e) {
-//				logger.error("{} in {}", e.toString(), e.getStackTrace());
-//				System.out.println("Choice out of scope");
-//			}
-//		} catch (NumberFormatException e){}
-//		if (!cliController.updateOne(computer_id, field, value)) {
-//			System.out.println("Sorry, can't process wrong dates");
-//		}
-//	}
+	private void updateOneComputer() {
+		String id;
+		System.out.println("Please enter the computer id :");
+		id = sc.nextLine();
+		String introduced = "";
+		String discontinued = "";
+		String company_id = "";
+		String immediate_answer = "";
+		System.out.println("Please enter the computer name :");
+		String name = sc.nextLine();
+		System.out.println("Add an introduction date ? (y/n)");
+		immediate_answer = sc.nextLine();
+		if ("y".equals(immediate_answer)){
+			introduced = askDate();
+		}
+		System.out.println("Add a discontinuation date ? (y/n)");
+		immediate_answer = sc.nextLine();
+		if ("y".equals(immediate_answer)){
+			discontinued = askDate();
+		}
+		System.out.println("Add a company id ? (y/n)");
+		immediate_answer = sc.nextLine();
+		if ("y".equals(immediate_answer)){
+			System.out.println("Please enter the id :");
+			company_id = sc.nextLine();
+		}
+		ComputerDTOJsp computerDTO = new ComputerDTOJsp.ComputerDTOJspBuilder(id, name).introduced(introduced).discontinued(discontinued).companyId(company_id).build();
+		cliController.updateOne(computerDTO);
+	}
 
 	private void deleteOneComputer() {
 		int computer_id = 0;

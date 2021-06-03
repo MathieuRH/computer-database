@@ -1,12 +1,15 @@
 package com.excilys.cdb.controller;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
+import com.excilys.cdb.exceptions.InputException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.CompanyMapperServlet;
 import com.excilys.cdb.mapper.ComputerMapperServlet;
@@ -15,6 +18,7 @@ import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.ui.CLI;
+import com.excilys.cdb.verification.Verificator;
 
 public class CLIController {
 	
@@ -23,13 +27,17 @@ public class CLIController {
 	private CompanyService companyService;
 	private ComputerService computerService;
 	private ComputerMapperServlet computerMapper;
-	private CompanyMapperServlet companyMapperServlet;
+	private CompanyMapperServlet companyMapper;
+	private Verificator verificator;
+	
+	private static Logger logger = LoggerFactory.getLogger(CLIController.class);
 	
 	private CLIController() {
 		computerService = ComputerService.getInstance();
 		companyService = CompanyService.getInstance();
 		computerMapper = ComputerMapperServlet.getInstance();
-		companyMapperServlet = CompanyMapperServlet.getInstance();
+		companyMapper = CompanyMapperServlet.getInstance();
+		verificator = Verificator.getInstance();
 	}
 	
 	public static CLIController getInstance() {
@@ -45,7 +53,7 @@ public class CLIController {
 			Computer computer = computerService.getOneComputer(id_computer);
 			return computerMapper.toDTO(computer);
 		} catch (ConnectionException | QueryException | ComputerNotFoundException e) {
-			CLI.writeMessage(e.getMessage());
+			logger.error(e.getMessage());
 			return null;
 		}
 	}
@@ -55,13 +63,12 @@ public class CLIController {
 			ArrayList<Computer> listComputers = computerService.getListComputers(limit, offset, "orderById");
 			return computerMapper.listToDTO(listComputers);
 		} catch (ConnectionException | QueryException e) {
-			CLI.writeMessage(e.getMessage());
+			logger.error(e.getMessage());
 			return new ArrayList<ComputerDTOJsp>();
 		}
 	}
 	
 	public int getNumberComputers() {
-		//TODO : optional ??
 		try {
 			return computerService.getNumberComputers();
 		} catch (ConnectionException | QueryException e) {
@@ -69,83 +76,41 @@ public class CLIController {
 			return 0;
 		}
 	}
-
-	public boolean createOne(String name, LocalDate introduced, LocalDate discontinued, int company_id) {
-		boolean isCorrect = false;
-		if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)) && introduced.isBefore(LocalDate.of(2038,01,19)))) {
-			if (discontinued == null || (discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
-				try {
-					computerService.createOne(name, introduced, discontinued, company_id);
-					isCorrect = true;
-				} catch (ConnectionException | QueryException e) {
-					CLI.writeMessage(e.getMessage());
-				}
-			}
-		}
-		return isCorrect;
-	}
 	
-	public boolean createOne(ComputerDTOJsp computerDTO) {
-		boolean isCorrect = false;
-		LocalDate introduced = null;
-		LocalDate discontinued = null;
-		if (! "".equals(computerDTO.getIntroduced())) {
-			introduced = LocalDate.parse(computerDTO.getIntroduced());
-		} else {computerDTO.setIntroduced("");}
-		if (! "".equals(computerDTO.getDiscontinued())) {
-			discontinued = LocalDate.parse(computerDTO.getDiscontinued());
-		} else {computerDTO.setDiscontinued(null);}
-		if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)) && introduced.isBefore(LocalDate.of(2038,01,19)))) {
-			if (discontinued == null || (introduced != null && discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
-				try {
-					Computer computer = computerMapper.toComputer(computerDTO);
-					computerService.createOne(computer);
-					isCorrect = true;
-				} catch (ConnectionException | QueryException e) {
-					CLI.writeMessage(e.getMessage());
-				}
-			}
+	public void createOne(ComputerDTOJsp computerDTO) {
+		try {
+			verificator.verifyComputer(computerDTO);
+		} catch (InputException e) {
+			logger.error(e.getMessage());
 		}
-		return isCorrect;
+		Computer computer = computerMapper.toComputer(computerDTO);
+		try {
+			computerService.createOne(computer);
+		} catch (ConnectionException | QueryException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
-	/*
-	public boolean updateOne(int computer_id, int field, Object value) {
-		//TODO : Exception catched from service
-		boolean isCorrect = false;
+	public void updateOne(ComputerDTOJsp computerDTO) {
 		try {
-			if (field == 1 || field == 4) {
-				computerService.updateOne(computer_id, field, value);
-				isCorrect = true;
-			}
-			else if (field == 2){
-				LocalDate introduced = (LocalDate) value;
-				if (introduced == null || (introduced != null && introduced.isAfter(LocalDate.of(1970, 1, 1)) && introduced.isBefore(LocalDate.of(2038,01,19)))) {
-					computerService.updateOne(computer_id, field, value);
-					isCorrect = true;
-				}
-			}
-			else {
-				LocalDate introduced = getOneComputer(computer_id).getIntroducedDate();
-				LocalDate discontinued = (LocalDate) value;
-				if (discontinued == null || (introduced != null && discontinued.isAfter(introduced) && discontinued.isAfter(LocalDate.of(1970, 1, 1)) && discontinued.isBefore(LocalDate.of(2038,01,19)))) {
-					computerService.updateOne(computer_id, field, value);
-					isCorrect = true;
-				}
-			}
-		} catch (ConnectionException | QueryException e) {
-			CLI.writeMessage(e.getMessage());
+			verificator.verifyComputer(computerDTO);
+		} catch (InputException e) {
+			logger.error(e.getMessage());
 		}
-		return isCorrect;
+		Computer computer = computerMapper.toComputer(computerDTO);
+		try {
+			computerService.updateOne(computer);
+		} catch (ConnectionException | QueryException e) {
+			logger.error(e.getMessage());
+		}
 	}
-	*/
 
 
 	public void deleteOne(int computer_id) {
 		try {
 			computerService.deleteOne(computer_id);
 		} catch (ConnectionException | QueryException e) {
-			CLI.writeMessage(e.getMessage());
+			logger.error(e.getMessage());
 		}
 	}
 	
@@ -153,7 +118,7 @@ public class CLIController {
 		try {
 			return companyService.getNumberCompanies();
 		} catch (ConnectionException | QueryException e) {
-			CLI.writeMessage(e.getMessage());
+			logger.error(e.getMessage());
 			return 0;
 		}
 	}
@@ -161,9 +126,9 @@ public class CLIController {
 	public ArrayList<CompanyDTOJsp> getListCompanies(int limit, int offset) {
 		try {
 			ArrayList<Company> listCompanies = companyService.getListCompanies(limit, offset);
-			return companyMapperServlet.listCompaniesToDTO(listCompanies);
+			return companyMapper.listCompaniesToDTO(listCompanies);
 		} catch (ConnectionException | QueryException e) {
-			CLI.writeMessage(e.getMessage());
+			logger.error(e.getMessage());
 			return new ArrayList<CompanyDTOJsp>();
 		} 
 	}
@@ -172,7 +137,7 @@ public class CLIController {
 		try {
 			companyService.deleteOne(company_id);
 		} catch (ConnectionException | QueryException e) {
-			CLI.writeMessage(e.getMessage());
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -180,7 +145,7 @@ public class CLIController {
 		try {
 			companyService.createOne(name);
 		} catch (ConnectionException | QueryException e) {
-			CLI.writeMessage(e.getMessage());
+			logger.error(e.getMessage());
 		}
 	}
 	

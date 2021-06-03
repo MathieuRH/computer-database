@@ -2,6 +2,9 @@ package com.excilys.cdb.verification;
 
 import java.time.LocalDate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.CompanyFormatException;
 import com.excilys.cdb.exceptions.DateFormatException;
@@ -15,6 +18,8 @@ public class Verificator {
 	private static final String DATE_FORMAT_TYPE = "Date must be of format yyyy-mm-dd";
 	private static final String DATE_LIMITS = "Date must be between 1970-01-01 & 2038-01-19";
 	
+	private static Logger logger = LoggerFactory.getLogger(Verificator.class);
+	
 	private Verificator() {
 	}
 	
@@ -25,7 +30,6 @@ public class Verificator {
 		return instance;
 	}
 	
-	//TODO : Get the right exception
 	public void verifyComputer(ComputerDTOJsp computerDTO) throws InputException {
 		verifyName(computerDTO.getName());
 		verifyIntroduced(computerDTO.getIntroduced());
@@ -48,7 +52,7 @@ public class Verificator {
 					throw new DateFormatException(DATE_LIMITS);
 				}
 			} catch (Exception e) {
-				//TODO : Logger...
+				logger.error(e.getMessage());
 				throw new DateFormatException(DATE_FORMAT_TYPE);
 			}
 		}
@@ -66,7 +70,7 @@ public class Verificator {
 						throw new DateFormatException(DATE_LIMITS);
 					}
 			} catch (Exception e) {
-				//TODO : Logger...
+				logger.error(e.getMessage());
 				throw new DateFormatException(DATE_FORMAT_TYPE);
 			}
 		}
@@ -79,6 +83,7 @@ public class Verificator {
 				throw new CompanyFormatException("Company id must be positive");
 			}
 		} catch (NumberFormatException e) {
+			logger.error(e.getMessage());
 			throw new CompanyFormatException("Company id must be of integer type");
 		}
 		
