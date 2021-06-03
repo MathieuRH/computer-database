@@ -1,6 +1,7 @@
 package com.excilys.cdb.controller;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +51,12 @@ public class CLIController {
 	public ComputerDTOJsp getOneComputer(int id_computer) {
 		//TODO : Return optional ?
 		try {
-			Computer computer = computerService.getOneComputer(id_computer);
-			return computerMapper.toDTO(computer);
+			Optional<Computer> computer = computerService.getOneComputer(id_computer);
+			if (computer.isPresent()) {
+				return computerMapper.toDTO(computer.get());
+			} else {
+				throw new ComputerNotFoundException();
+			} 
 		} catch (ConnectionException | QueryException | ComputerNotFoundException e) {
 			logger.error(e.getMessage());
 			return null;

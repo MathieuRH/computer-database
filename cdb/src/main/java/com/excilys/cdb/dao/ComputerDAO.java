@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,8 +118,8 @@ public class ComputerDAO {
 		return listComputers;
 	}
 	
-	public Computer getOneComputer(int id_computer) throws ConnectionException, QueryException, ComputerNotFoundException {
-		Computer computer = null;
+	public Optional<Computer> getOneComputer(int id_computer) throws ConnectionException, QueryException, ComputerNotFoundException {
+		Optional<Computer> computer;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		dbConnection = DBConnection.getInstance();
@@ -129,6 +130,7 @@ public class ComputerDAO {
 			computer = computerMapperSQL.getOneComputer(rs);
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
+			computer = Optional.empty();
 		} 
 		finally {
 			closeSetStatement(rs, statement);

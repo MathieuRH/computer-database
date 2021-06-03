@@ -1,6 +1,7 @@
 package com.excilys.cdb.service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
@@ -29,7 +30,7 @@ public class ComputerService {
 		return instance;
 	}
 
-	public Computer getOneComputer(int id_computer) throws ConnectionException, QueryException, ComputerNotFoundException {
+	public Optional<Computer> getOneComputer(int id_computer) throws ConnectionException, QueryException, ComputerNotFoundException {
 		return computerDAO.getOneComputer(id_computer);
 	}
 	

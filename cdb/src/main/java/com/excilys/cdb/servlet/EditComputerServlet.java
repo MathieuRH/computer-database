@@ -2,6 +2,7 @@ package com.excilys.cdb.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -57,22 +58,25 @@ public class EditComputerServlet extends HttpServlet {
 		ComputerDTOJsp computerDTO = null;
 		try {
 			int id = Integer.parseInt(request.getParameter("computerId"));
-			Computer computer = computerService.getOneComputer(id);
-			computerDTO = computerMapper.toDTO(computer);
-			int nbCompanies = companyService.getNumberCompanies();
-			ArrayList<Company> listCompany;
-			listCompany = companyService.getListCompanies(nbCompanies, OFFSET_COMPANIES);
-			listCompanyDTO = companyMapper.listCompaniesToDTO(listCompany);
-
-			request.setAttribute("computerDTO", computerDTO);
-			request.setAttribute( "listCompanyDTO", listCompanyDTO );
+			Optional<Computer> computer = computerService.getOneComputer(id);
+			if (computer.isPresent()) {
+				computerDTO = computerMapper.toDTO(computer.get());
+				int nbCompanies = companyService.getNumberCompanies();
+				ArrayList<Company> listCompany;
+				listCompany = companyService.getListCompanies(nbCompanies, OFFSET_COMPANIES);
+				listCompanyDTO = companyMapper.listCompaniesToDTO(listCompany);
+	
+				request.setAttribute("computerDTO", computerDTO);
+				request.setAttribute( "listCompanyDTO", listCompanyDTO );
+				
+				this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
 			
-			this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
-			
-			
+			} else {
+				throw new ComputerNotFoundException();
+			}
 		} catch (NumberFormatException | ConnectionException | QueryException | ComputerNotFoundException e) {
 			logger.error(e.getMessage());
-			this.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward( request, response );
+			request.getRequestDispatcher(DASHBOARD_VIEW).forward(request,response);
 		}
 
 	}

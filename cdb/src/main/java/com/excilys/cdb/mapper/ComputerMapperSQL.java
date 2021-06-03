@@ -5,13 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.dto.ComputerDTOSQL;
 import com.excilys.cdb.dto.ComputerDTOSQL.ComputerDTOSQLBuilder;
-import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
@@ -64,12 +64,12 @@ public class ComputerMapperSQL {
 		return listComputers;
 	}
 	
-	public Computer getOneComputer(ResultSet rs) throws SQLException, ConnectionException, QueryException, ComputerNotFoundException {
+	public Optional<Computer> getOneComputer(ResultSet rs) throws SQLException, ConnectionException, QueryException {
 		try {
-			return getListComputers(rs).get(0);
+			return Optional.ofNullable(getListComputers(rs).get(0));
 		} catch (IndexOutOfBoundsException e) {
 			logger.error("Index exception : " + e);
-			throw new ComputerNotFoundException();
+			return Optional.empty();
 		}
 	}
 

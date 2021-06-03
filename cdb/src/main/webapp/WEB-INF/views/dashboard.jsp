@@ -52,13 +52,25 @@
                                     </a>
                             </span>
                         </th>
-                        <th><a id="orderByName" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByName"/></c:url>">Computer name</a></th>
-                        <th><a id="orderByIntroduced" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByIntroduced"/></c:url>">Introduced date</a></th>
-                        <th><a id="orderByDiscontinued" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByDiscontinued"/></c:url>">Discontinued date</a></th>
-                        <th><a id="orderByCompany" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByCompany"/></c:url>">Company</a></th>
+                        <th>Computer name
+                        	<a class="align-middle pull-right" id="orderByName" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByName"/></c:url>">
+                        	 <i class="fa fa-sort-down"></i></a>
+                        </th>
+                        <th>Introduced date
+	                        <a class="align-middle pull-right" id="orderByIntroduced" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByIntroduced"/></c:url>">
+	                        <i class="fa fa-sort-down"></i></a>
+	                    </th>
+                        <th>Discontinued date
+                        	<a class="align-middle pull-right" id="orderByDiscontinued" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByDiscontinued"/></c:url>">
+                        	<i class="fa fa-sort-down"></i></a>
+                        </th>
+                        <th>Company
+                        	<a class="align-middle pull-right" id="orderByCompany" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByCompany"/></c:url>">
+                        	<i class="fa fa-sort-down"></i></a>
+                        </th>
                     </tr>
                 </thead>
-                <!-- Browse attribute computers -->
+
                 <tbody id="results">
                <c:forEach items="${listComputersDTO}" var="computerDTO"> 
                     <tr>
@@ -80,11 +92,10 @@
 
 
     <footer class="navbar-fixed-bottom">
-     	<div class="pull-left" >
-        	<a class="btn btn-default" id="orderById" href="<c:url value="dashboard"> <c:param name="request_session" value="orderById"/></c:url>">Home</a>
-        </div>
-        
         <div class="container text-center">
+	     	<div class="btn-group btn-group-sm pull-left">
+	        	<a class="btn btn-default" id="orderById" href="<c:url value="dashboard"> <c:param name="request_session" value="orderById"/></c:url>">Home</a>
+	        </div>
             <ul class="pagination" ${page=page_session.page } ${page_max=page_session.nbPages }>
               <li>
                	<a href="<c:url value="dashboard"> <c:param name="page_request" value="${page-5>1 ? page-5 : 1}"/></c:url>" aria-label="Previous">

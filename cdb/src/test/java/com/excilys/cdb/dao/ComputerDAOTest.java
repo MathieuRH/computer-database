@@ -3,6 +3,7 @@ package com.excilys.cdb.dao;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -56,8 +57,12 @@ public class ComputerDAOTest {
 		try {
 			Company company1 = new Company(1,"Apple Inc.");
 			Computer comp1 = new Computer.ComputerBuilder(1, "MacBook Pro 15.4 inch").company(company1).build();
-			Computer getFirstComputer = computerDAO.getOneComputer(1);
-			assertEquals(comp1, getFirstComputer);
+			Optional<Computer> getFirstComputer = computerDAO.getOneComputer(1);
+			if (getFirstComputer.isPresent()) {
+				assertEquals(comp1, getFirstComputer.get());
+			} else {
+				throw new ComputerNotFoundException();
+			} 
 		} catch (ConnectionException | QueryException|ComputerNotFoundException e) {
 			fail("Failed to get number companies :" + e.getMessage());
 		}
