@@ -81,13 +81,13 @@
 
     <footer class="navbar-fixed-bottom">
      	<div class="pull-left" >
-        	<a class="btn btn-default" id="orderById" href="<c:url value="dashboard"> <c:param name="request_session" value="orderById"/></c:url>">Order by Id</a>
+        	<a class="btn btn-default" id="orderById" href="<c:url value="dashboard"> <c:param name="request_session" value="orderById"/></c:url>">Home</a>
         </div>
         
         <div class="container text-center">
-            <ul class="pagination">
-              <li ${page=page_session.page } ${page_max=page_session.nbPages }>
-               	<a href="<c:url value="dashboard"> <c:param name="page_request" value="${page>1 ? page-1 : page}"/></c:url>" aria-label="Previous">
+            <ul class="pagination" ${page=page_session.page } ${page_max=page_session.nbPages }>
+              <li>
+               	<a href="<c:url value="dashboard"> <c:param name="page_request" value="${page-5>1 ? page-5 : 1}"/></c:url>" aria-label="Previous">
                   <span aria-hidden="true">&laquo;</span>
                	</a>
               </li>
@@ -104,7 +104,7 @@
 	              <li><a href="<c:url value="dashboard"> <c:param name="page_request" value="${page_max}"/></c:url>">${page_max}</a></li>
               </c:if>
               <li>
-                <a href="<c:url value="dashboard"> <c:param name="page_request" value="${page<page_max ? page+1 : page}"/></c:url>" aria-label="Next">
+                <a href="<c:url value="dashboard"> <c:param name="page_request" value="${page+5<page_max ? page+5 : page_max}"/></c:url>" aria-label="Next">
                   <span aria-hidden="true">&raquo;</span>
                 </a>
            	  </li>

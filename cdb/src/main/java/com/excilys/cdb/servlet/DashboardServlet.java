@@ -23,9 +23,6 @@ import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.ComputerService;
 
-/**
- * Servlet implementation class DashboardServlet
- */
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -97,6 +94,7 @@ public class DashboardServlet extends HttpServlet {
 		this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
 	}
 
+	
 	private void getRequest(HttpServletRequest request, HttpServletResponse response) {
 		if (session.getAttribute(REQUEST_SESSION) == null) {
 			session.setAttribute(REQUEST_SESSION, "orderById");
@@ -106,15 +104,18 @@ public class DashboardServlet extends HttpServlet {
 			session.setAttribute(REQUEST_SESSION, queryRequest);
 		}
 		String nameRequestQuery = request.getParameter(QUERY_BY_NAME);
+		
 		if (nameRequestQuery != null && !"".equals(nameRequestQuery)) {
 			name_search = request.getParameter(QUERY_BY_NAME);
 			session.setAttribute(REQUEST_SESSION, "getByName");
 			session.setAttribute(REQUEST_NAME_SESSION, name_search);
 		}		
+		
 		query = (String) session.getAttribute(REQUEST_SESSION);
 		name_search = (String) session.getAttribute(REQUEST_NAME_SESSION);
 	}
 
+	
 	private void updatePageAttributes(HttpServletRequest request, HttpServletResponse response, int nbComputers) {
 		if (session.getAttribute(PAGE_SESSION) == null) {
 			pagination = new Page(FIRST_PAGE, DEFAULT_SIZE, nbComputers);
@@ -124,13 +125,7 @@ public class DashboardServlet extends HttpServlet {
 		String page_nb_comp_display = request.getParameter(PAGE_NB_COMPUTERS_DISPLAY);
 		pagination = (Page)session.getAttribute(PAGE_SESSION);
 		if (page_request != null) {
-			if ("last".equals(page_request)) {
-				pagination.setPage(pagination.getNbPages());
-				//TODO : sort last page pb
-				//System.out.println("check last");
-			} else {
-				pagination.setPage(Integer.parseInt(page_request));
-			}
+			pagination.setPage(Integer.parseInt(page_request));
 		}
 		if (page_nb_comp_display != null) {
 			pagination.setPage(1) ;
@@ -138,6 +133,7 @@ public class DashboardServlet extends HttpServlet {
 		}
 		pagination.refreshNbPages(nbComputers);
 	}
+	
 	
 	private void deleteComputers(String selectionToDelete) {
 		for (String idString:selectionToDelete.split(",")) {

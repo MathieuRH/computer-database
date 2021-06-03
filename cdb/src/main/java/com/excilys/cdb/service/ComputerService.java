@@ -1,6 +1,5 @@
 package com.excilys.cdb.service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.excilys.cdb.dao.ComputerDAO;
@@ -52,11 +51,6 @@ public class ComputerService {
 
 	public void setComputerDAO(ComputerDAO computerDAO) {
 		this.computerDAO = computerDAO;
-	}
-
-	//TODO : get rid of
-	public void createOne(String name, LocalDate introduced, LocalDate discontinued, int company_id) throws ConnectionException, QueryException {
-		computerDAO.createOne(name, introduced, discontinued, company_id);
 	}
 	
 	public void createOne(Computer computer) throws ConnectionException, QueryException {

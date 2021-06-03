@@ -137,36 +137,6 @@ public class ComputerDAO {
 		return computer;
 	}
 	
-	//TODO : get rid of
-	public void createOne(String name, LocalDate introduced, LocalDate discontinued, int id_company) throws ConnectionException, QueryException {
-		if (name != null) {
-			ResultSet rs = null;
-			PreparedStatement statement = null;
-			dbConnection = DBConnection.getInstance();
-			try {
-				statement = dbConnection.getConnection().prepareStatement(CREATE_ONE);
-				statement.setString(1, name);
-				if (introduced!=null) {
-					statement.setDate(2, Date.valueOf(introduced));
-				} else {statement.setNull(2, 0);}
-				if (discontinued!=null) {
-					statement.setDate(3, Date.valueOf(discontinued));
-				} else {statement.setNull(3, 0);}
-				if (id_company!=0) {
-					statement.setInt(4, id_company);
-				} else {statement.setNull(4, 0);}
-				statement.executeUpdate();
-			} catch (SQLException e) {
-				logger.error("SQL Exception : " + e);
-				throw new QueryException();
-			}
-			finally {
-				closeSetStatement(rs, statement);
-			}
-			dbConnection.close();
-		} else {System.out.println("Name can't be null.");}
-	}
-	
 	public void createOne(Computer computer) throws ConnectionException, QueryException {
 		ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
 		String name = computerDTO.getName();

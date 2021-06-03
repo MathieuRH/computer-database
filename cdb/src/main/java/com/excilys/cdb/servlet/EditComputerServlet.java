@@ -32,9 +32,7 @@ public class EditComputerServlet extends HttpServlet {
 	
 	private static final String VIEW = "/WEB-INF/views/editComputer.jsp";
 	private static final String DASHBOARD_VIEW = "dashboard";
-	private static final String WRONG_ENTRIES_MESSAGE = "Computer update failed";
 
-	private static final String PAGE_REQUEST = "page_request";
 	private static final int OFFSET_COMPANIES = 0;
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
@@ -61,14 +59,10 @@ public class EditComputerServlet extends HttpServlet {
 			int id = Integer.parseInt(request.getParameter("computerId"));
 			Computer computer = computerService.getOneComputer(id);
 			computerDTO = computerMapper.toDTO(computer);
-			try {
-				int nbCompanies = companyService.getNumberCompanies();
-				ArrayList<Company> listCompany;
-				listCompany = companyService.getListCompanies(nbCompanies, OFFSET_COMPANIES);
-				listCompanyDTO = companyMapper.listCompaniesToDTO(listCompany);
-			} catch (ConnectionException | QueryException e) {
-				logger.error(e.getMessage());
-			}
+			int nbCompanies = companyService.getNumberCompanies();
+			ArrayList<Company> listCompany;
+			listCompany = companyService.getListCompanies(nbCompanies, OFFSET_COMPANIES);
+			listCompanyDTO = companyMapper.listCompaniesToDTO(listCompany);
 
 			request.setAttribute("computerDTO", computerDTO);
 			request.setAttribute( "listCompanyDTO", listCompanyDTO );
@@ -78,9 +72,7 @@ public class EditComputerServlet extends HttpServlet {
 			
 		} catch (NumberFormatException | ConnectionException | QueryException | ComputerNotFoundException e) {
 			logger.error(e.getMessage());
-			e.printStackTrace();
-			//this.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward( request, response );
-			this.getServletContext().getRequestDispatcher(VIEW).forward( request, response );
+			this.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward( request, response );
 		}
 
 	}
@@ -103,23 +95,9 @@ public class EditComputerServlet extends HttpServlet {
 		try {
 			verificator.verifyComputer(computerDTO);
 			Computer computer = computerMapper.toComputer(computerDTO);
-			boolean success = false;
-			try {
-				computerService.updateOne(computer);
-				success = true;
-			} catch (ConnectionException | QueryException e) {
-				logger.error(e.getMessage());
-			}
-			
-			if (success) {
-				//TODO : go to computer page
-				request.setAttribute(PAGE_REQUEST, "last");
-				request.getRequestDispatcher(DASHBOARD_VIEW).forward(request,response);
-			} else {
-				logger.error(WRONG_ENTRIES_MESSAGE);
-				request.getRequestDispatcher(VIEW).forward(request,response);
-			}
-		} catch (InputException e) {
+			computerService.updateOne(computer);
+			request.getRequestDispatcher(DASHBOARD_VIEW).forward(request,response);
+		} catch (ConnectionException | QueryException | InputException e) {
 			logger.error(e.getMessage());
 			request.getRequestDispatcher(VIEW).forward(request,response);
 		}
