@@ -11,6 +11,8 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.dto.ComputerDTOSQL;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
@@ -19,15 +21,10 @@ import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.ComputerMapperSQL;
 import com.excilys.cdb.model.Computer;
 
-
-/**
- * Data access object for computers.
- * @author Mathieu_RH
- *
- */
+@Repository
 public class ComputerDAO {
-	
-	private static ComputerDAO instance;
+
+	@Autowired
 	private ComputerMapperSQL computerMapperSQL;
 	private DBConnection dbConnection;
 	
@@ -48,17 +45,6 @@ public class ComputerDAO {
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
-	
-	private ComputerDAO() {
-		computerMapperSQL = ComputerMapperSQL.getInstance();
-	}
-	
-	public static ComputerDAO getInstance() {
-		if (instance == null) {
-			instance = new ComputerDAO();
-		}
-		return instance;
-	}
 	
 	public ArrayList<Computer> getListComputers(int limit, int offset, String query) throws ConnectionException, QueryException { 
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
@@ -118,7 +104,7 @@ public class ComputerDAO {
 		return listComputers;
 	}
 	
-	public Optional<Computer> getOneComputer(int id_computer) throws ConnectionException, QueryException, ComputerNotFoundException {
+	public Optional<Computer> getOneComputer(int id_computer) throws ConnectionException, QueryException{
 		Optional<Computer> computer;
 		ResultSet rs = null;
 		PreparedStatement statement = null;

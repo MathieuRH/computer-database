@@ -2,31 +2,19 @@ package com.excilys.cdb.service;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.dao.CompanyDAO;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 
-/**
- * Service class for companies.
- * @author Mathieu_RH
- *
- */
+@Service
 public class CompanyService {
-	
-	private static CompanyService instance;
+
+	@Autowired
 	private CompanyDAO companyDAO;
-	
-	private CompanyService() {
-		companyDAO = CompanyDAO.getInstance();
-	}
-	
-	public static CompanyService getInstance() {
-		if (instance == null) {
-			instance = new CompanyService();
-		}
-		return instance;
-	}
 
 	public CompanyDAO getComputerDAO() {
 		return companyDAO;

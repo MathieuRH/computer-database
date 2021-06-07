@@ -4,27 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.model.Company;
 
-/**
- * Mapping class for companies
- * @author Mathieu_RH
- *	
- */
+@Component
 public class CompanyMapperSQL {
-	
-	private static CompanyMapperSQL instance;
-	
-	private CompanyMapperSQL() {
-		
-	}
-	
-	public static CompanyMapperSQL getInstance() {
-		if (instance == null) {
-			instance = new CompanyMapperSQL();
-		}
-		return instance;
-	}
 	
 	public ArrayList<Company> getListCompanies(ResultSet rs) throws SQLException {
 		ArrayList <Company> listCompanies = new ArrayList<Company>();

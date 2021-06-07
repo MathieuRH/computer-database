@@ -3,26 +3,16 @@ package com.excilys.cdb.mapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp.ComputerDTOJspBuilder;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Computer.ComputerBuilder;
 
+@Component
 public class ComputerMapperServlet {
-	
-	private static ComputerMapperServlet instance;
-	
-	private ComputerMapperServlet() {
-		
-	}
-	
-	public static ComputerMapperServlet getInstance() {
-		if (instance == null) {
-			instance = new ComputerMapperServlet();
-		}
-		return instance;
-	}
 	
 	public ComputerDTOJsp toDTO(Computer computer){
 		String id = "";

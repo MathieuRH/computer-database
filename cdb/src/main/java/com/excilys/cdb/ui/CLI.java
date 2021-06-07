@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.controller.CLIController;
@@ -12,11 +14,7 @@ import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.EnumException;
 
-/**
- * Interaction class for the user
- * @author Mathieu_RH
- *
- */
+@Component
 public class CLI {
 	
 	private static final String LIST_ACTIONS = System.lineSeparator() + "List of available actions : " + System.lineSeparator() +
@@ -33,22 +31,11 @@ public class CLI {
 													"0 :  Exit display";
 
 	private Scanner sc = new Scanner(System.in);
-	private static CLI instance;
+	@Autowired
 	private CLIController cliController;
 	private Page pagination;
 
 	private static Logger logger = LoggerFactory.getLogger(CLI.class);
-	
-	private CLI() {
-		cliController = CLIController.getInstance();
-	}
-	
-	public static CLI getInstance() {
-		if (instance==null) {
-			instance = new CLI();
-		}
-		return instance;
-	}
 	
 	public static void writeMessage(String message) {
 		System.out.println(message);

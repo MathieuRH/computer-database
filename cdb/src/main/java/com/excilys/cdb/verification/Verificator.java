@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.CompanyFormatException;
@@ -11,24 +12,13 @@ import com.excilys.cdb.exceptions.DateFormatException;
 import com.excilys.cdb.exceptions.InputException;
 import com.excilys.cdb.exceptions.NameFormatException;
 
+@Component
 public class Verificator {
-	
-	private static Verificator instance;
 	
 	private static final String DATE_FORMAT_TYPE = "Date must be of format yyyy-mm-dd";
 	private static final String DATE_LIMITS = "Date must be between 1970-01-01 & 2038-01-19";
 	
 	private static Logger logger = LoggerFactory.getLogger(Verificator.class);
-	
-	private Verificator() {
-	}
-	
-	public static Verificator getInstance() {
-		if (instance == null) {
-			instance = new Verificator();
-		}
-		return instance;
-	}
 	
 	public void verifyComputer(ComputerDTOJsp computerDTO) throws InputException {
 		verifyName(computerDTO.getName());

@@ -3,34 +3,22 @@ package com.excilys.cdb.service;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Computer;
 
-/**
- * Service class for computers.
- * @author Mathieu_RH
- *
- */
+@Service
 public class ComputerService {
 
-	private static ComputerService instance;
+	@Autowired
 	private ComputerDAO computerDAO;
-	
-	private ComputerService() {
-		computerDAO = ComputerDAO.getInstance();
-	}
-	
-	public static ComputerService getInstance() {
-		if (instance == null) {
-			instance = new ComputerService();
-		}
-		return instance;
-	}
 
-	public Optional<Computer> getOneComputer(int id_computer) throws ConnectionException, QueryException, ComputerNotFoundException {
+	public Optional<Computer> getOneComputer(int id_computer) throws ConnectionException, QueryException{
 		return computerDAO.getOneComputer(id_computer);
 	}
 	

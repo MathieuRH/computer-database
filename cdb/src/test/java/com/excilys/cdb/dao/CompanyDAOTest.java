@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -14,16 +15,15 @@ import com.excilys.cdb.model.Company;
 
 public class CompanyDAOTest {
 
+	@Autowired
 	CompanyDAO companyDAO;
 	
 	@Before
 	public void setUp() {
-		companyDAO = CompanyDAO.getInstance();
 	}
 	 
 	@After
 	   public void tearDown() {
-		companyDAO = null;
 	}
 	
 	@Test

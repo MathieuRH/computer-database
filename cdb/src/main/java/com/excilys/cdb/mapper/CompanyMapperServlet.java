@@ -2,22 +2,13 @@ package com.excilys.cdb.mapper;
 
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.model.Company;
 
+@Component
 public class CompanyMapperServlet {
-	
-	private static CompanyMapperServlet instance;
-	
-	private CompanyMapperServlet() {
-	}
-	
-	public static CompanyMapperServlet getInstance() {
-		if (instance == null) {
-			instance = new CompanyMapperServlet();
-		}
-		return instance;
-	}
 	
 	public CompanyDTOJsp companyToDTO(Company company){
 		String companyId = Integer.toString(company.getId());

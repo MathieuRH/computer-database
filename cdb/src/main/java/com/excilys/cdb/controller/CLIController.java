@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
@@ -21,35 +23,23 @@ import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.ui.CLI;
 import com.excilys.cdb.verification.Verificator;
 
+@Component
 public class CLIController {
-	
-	private static CLIController instance;
-	
+
+	@Autowired
 	private CompanyService companyService;
+	@Autowired
 	private ComputerService computerService;
+	@Autowired
 	private ComputerMapperServlet computerMapper;
+	@Autowired
 	private CompanyMapperServlet companyMapper;
+	@Autowired
 	private Verificator verificator;
 	
 	private static Logger logger = LoggerFactory.getLogger(CLIController.class);
 	
-	private CLIController() {
-		computerService = ComputerService.getInstance();
-		companyService = CompanyService.getInstance();
-		computerMapper = ComputerMapperServlet.getInstance();
-		companyMapper = CompanyMapperServlet.getInstance();
-		verificator = Verificator.getInstance();
-	}
-	
-	public static CLIController getInstance() {
-		if (instance == null) {
-			instance = new CLIController();
-		}
-		return instance;
-	}
-	
 	public ComputerDTOJsp getOneComputer(int id_computer) {
-		//TODO : Return optional ?
 		try {
 			Optional<Computer> computer = computerService.getOneComputer(id_computer);
 			if (computer.isPresent()) {

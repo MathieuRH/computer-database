@@ -7,8 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.ComputerDTOSQL;
 import com.excilys.cdb.dto.ComputerDTOSQL.ComputerDTOSQLBuilder;
@@ -18,26 +17,8 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Computer.ComputerBuilder;
 
-/**
- * Mapping class for computers
- * @author Mathieu_RH
- *	
- */
+@Component
 public class ComputerMapperSQL {
-
-	private static Logger logger = LoggerFactory.getLogger(ComputerMapperSQL.class);
-	private static ComputerMapperSQL instance;
-	
-	private ComputerMapperSQL() {
-	}
-	
-	public static ComputerMapperSQL getInstance() {
-		if (instance == null) {
-			instance = new ComputerMapperSQL();
-		}
-		return instance;
-	}
-	
 	
 	public ArrayList<Computer> getListComputers(ResultSet rs) throws SQLException, ConnectionException, QueryException {
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
@@ -68,7 +49,6 @@ public class ComputerMapperSQL {
 		try {
 			return Optional.ofNullable(getListComputers(rs).get(0));
 		} catch (IndexOutOfBoundsException e) {
-			logger.error("Index exception : " + e);
 			return Optional.empty();
 		}
 	}

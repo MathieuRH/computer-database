@@ -9,24 +9,20 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.CompanyMapperSQL;
 import com.excilys.cdb.model.Company;
 
-// import logger
-
-/**
- * Data access object for computers.
- * @author Mathieu_RH
- *
- */
+@Repository
 public class CompanyDAO {
 
-	private static CompanyDAO instance;
-	private DBConnection dbConnection;
+	@Autowired
 	private CompanyMapperSQL companyMapperSQL;
+	private DBConnection dbConnection ;
 	
 	private static final String LIST_COMPANIES_QUERY = "SELECT id,name FROM company LIMIT ? OFFSET ?;";
 	private static final String NUMBER_COMPANIES_QUERY = "SELECT COUNT(id) FROM company;";
@@ -36,17 +32,6 @@ public class CompanyDAO {
 	private static final String DELETE_LINKED_COMPUTERS = "DELETE FROM computer WHERE company_id=?;";
 	
 	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
-	
-	private CompanyDAO() {
-		companyMapperSQL = CompanyMapperSQL.getInstance();
-	}
-	
-	public static CompanyDAO getInstance(){
-		if (instance == null) {
-			instance = new CompanyDAO();
-		}
-		return instance;
-	}
 	
 	public ArrayList<Company> getListCompanies(int limit, int offset) throws ConnectionException, QueryException {
 		ArrayList<Company> listCompanies= new ArrayList<Company>();

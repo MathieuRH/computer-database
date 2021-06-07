@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.dto.CompanyDTOJsp;
@@ -29,6 +31,7 @@ import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.verification.Verificator;
 
 @WebServlet("/editComputer")
+@Controller
 public class EditComputerServlet extends HttpServlet {
 	
 	private static final String VIEW = "/WEB-INF/views/editComputer.jsp";
@@ -37,11 +40,16 @@ public class EditComputerServlet extends HttpServlet {
 	private static final int OFFSET_COMPANIES = 0;
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
-	private ComputerService computerService = ComputerService.getInstance();
-	private CompanyService companyService = CompanyService.getInstance();
-	private ComputerMapperServlet computerMapper = ComputerMapperServlet.getInstance();
-	private CompanyMapperServlet companyMapper = CompanyMapperServlet.getInstance();
-	private Verificator verificator = Verificator.getInstance();
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private CompanyService companyService;
+	@Autowired
+	private ComputerMapperServlet computerMapper;
+	@Autowired
+	private CompanyMapperServlet companyMapper;
+	@Autowired
+	private Verificator verificator;
 	
 	private static final long serialVersionUID = 1L;
 
@@ -106,5 +114,4 @@ public class EditComputerServlet extends HttpServlet {
 			request.getRequestDispatcher(VIEW).forward(request,response);
 		}
 	}
-	
 }

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.dto.ComputerDTOJsp;
@@ -24,6 +26,7 @@ import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.ComputerService;
 
 @WebServlet("/dashboard")
+@Controller
 public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String VIEW = "/WEB-INF/views/dashboard.jsp";
@@ -42,8 +45,10 @@ public class DashboardServlet extends HttpServlet {
 	private String name_search;
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
-	private ComputerService computerService = ComputerService.getInstance();
-	private ComputerMapperServlet computerMapper = ComputerMapperServlet.getInstance();
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private ComputerMapperServlet computerMapper;
 	
 	private HttpSession session;
 	
