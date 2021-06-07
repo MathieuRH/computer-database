@@ -10,20 +10,24 @@ public class Page {
 	private static final int DEFAULT_PAGE_NUMBER = 1;
 	private static final int DEFAULT_PAGE_SIZE = 10;
 	private static final int DEFAULT_NUMBER_PAGES = 1;
+	private static final String DEFAULT_SORT_ORDER = "ASC";
 	
 	private int page;
 	private int size;
 	private int nbPages;
+	private String sortOrder;
 	
 	public Page() {
 		this.page = DEFAULT_PAGE_NUMBER;
 		this.size = DEFAULT_PAGE_SIZE;
 		this.nbPages = DEFAULT_NUMBER_PAGES;
+		this.sortOrder = DEFAULT_SORT_ORDER;
 	}
 	
 	public Page(int page, int size) {
 		this.page = page;
 		this.size = size;
+		this.sortOrder = DEFAULT_SORT_ORDER;
 	}
 	
 	public Page(int nbLignes) {
@@ -60,6 +64,14 @@ public class Page {
 	public void refreshNbPages(int nbLignes) {
 		this.nbPages = deduceNbPages(this.size, nbLignes);
 	}
+
+	public void inverseSortOrder() {
+		if ("ASC".equals(sortOrder)) {
+			sortOrder = "DESC";
+		} else {
+			sortOrder = "ASC";
+		}
+	}
 	
 	
 	public int getNbPages() {
@@ -80,6 +92,14 @@ public class Page {
 
 	public int getSize() {
 		return size;
+	}
+	
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 
 	//Does not refresh nbPages

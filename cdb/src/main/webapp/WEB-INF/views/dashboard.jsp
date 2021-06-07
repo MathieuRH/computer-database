@@ -54,19 +54,19 @@
                         </th>
                         <th>Computer name
                         	<a class="align-middle pull-right" id="orderByName" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByName"/></c:url>">
-                        	 <i class="fa fa-sort-down"></i></a>
+                        	 <i class="fa fa-sort"></i></a>
                         </th>
                         <th>Introduced date
 	                        <a class="align-middle pull-right" id="orderByIntroduced" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByIntroduced"/></c:url>">
-	                        <i class="fa fa-sort-down"></i></a>
+	                        <i class="fa fa-sort"></i></a>
 	                    </th>
                         <th>Discontinued date
                         	<a class="align-middle pull-right" id="orderByDiscontinued" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByDiscontinued"/></c:url>">
-                        	<i class="fa fa-sort-down"></i></a>
+                        	<i class="fa fa-sort"></i></a>
                         </th>
                         <th>Company
                         	<a class="align-middle pull-right" id="orderByCompany" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByCompany"/></c:url>">
-                        	<i class="fa fa-sort-down"></i></a>
+                        	<i class="fa fa-sort"></i></a>
                         </th>
                     </tr>
                 </thead>

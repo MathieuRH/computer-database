@@ -99,15 +99,11 @@ public class CLI {
 		int nbComputers = cliController.getNumberComputers();
 		pagination = new Page(nbComputers);
 		ArrayList<ComputerDTOJsp> listDisplayComputers;
-		int limit = pagination.getSize();
-		int offset ;
 		
 		boolean keepDisplaying = true;
 		String immediate_answer;
 		while (keepDisplaying) {
-			offset = pagination.getOffset();
-			limit = (pagination.getPage() == pagination.getNbPages()) ? (nbComputers+1 % pagination.getSize()) : pagination.getSize();
-			listDisplayComputers = cliController.getListComputers(limit, offset);
+			listDisplayComputers = cliController.getListComputers(pagination);
 			displayListComputers(listDisplayComputers);
 			System.out.println("Page " + pagination.getPage() + "/" + pagination.getNbPages() + " | " + LIST_PAGE_ACTIONS);
 			immediate_answer = sc.nextLine();

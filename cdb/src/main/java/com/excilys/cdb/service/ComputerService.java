@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.dao.ComputerDAO;
-import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 
 @Service
 public class ComputerService {
@@ -22,8 +22,8 @@ public class ComputerService {
 		return computerDAO.getOneComputer(id_computer);
 	}
 	
-	public ArrayList<Computer> getListComputers(int limit, int offset, String query) throws ConnectionException, QueryException { 
-		return computerDAO.getListComputers(limit, offset, query);
+	public ArrayList<Computer> getListComputers(Page pagination, String query, String name) throws ConnectionException, QueryException { 
+		return computerDAO.getListComputers(pagination, query, name);
 	}
 	
 	public int getNumberComputers() throws ConnectionException, QueryException {
@@ -52,9 +52,5 @@ public class ComputerService {
 
 	public void deleteOne(int computer_id) throws ConnectionException, QueryException {
 		computerDAO.deleteOne(computer_id);
-	}
-
-	public ArrayList<Computer> getListByName(int limit, int offset, String name) throws ConnectionException, QueryException, ComputerNotFoundException {
-		return computerDAO.getListByName(limit, offset, name);
 	}
 }

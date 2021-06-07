@@ -16,6 +16,7 @@ import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 
 public class ComputerDAOTest {
 
@@ -47,7 +48,8 @@ public class ComputerDAOTest {
 		int nbComputers;
 		try {
 			nbComputers = computerDAO.getNumberComputers();
-			ArrayList<Computer> result = computerDAO.getListComputers(nbComputers, 0, "orderById");
+			Page pagination = new Page(nbComputers);
+			ArrayList<Computer> result = computerDAO.getListComputers(pagination, "orderById", "");
 			assertFalse(result.isEmpty());
 		} catch (ConnectionException | QueryException e) {
 			fail("Failed to get Company list :" + e.getMessage());

@@ -18,6 +18,7 @@ import com.excilys.cdb.mapper.CompanyMapperServlet;
 import com.excilys.cdb.mapper.ComputerMapperServlet;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.ui.CLI;
@@ -53,9 +54,9 @@ public class CLIController {
 		}
 	}
 	
-	public ArrayList<ComputerDTOJsp> getListComputers(int limit, int offset) { 
+	public ArrayList<ComputerDTOJsp> getListComputers(Page pagination) { 
 		try {
-			ArrayList<Computer> listComputers = computerService.getListComputers(limit, offset, "orderById");
+			ArrayList<Computer> listComputers = computerService.getListComputers(pagination, "orderById", "");
 			return computerMapper.listToDTO(listComputers);
 		} catch (ConnectionException | QueryException e) {
 			logger.error(e.getMessage());

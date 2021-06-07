@@ -15,11 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.dto.ComputerDTOSQL;
-import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.ComputerMapperSQL;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 
 @Repository
 public class ComputerDAO {
@@ -30,11 +30,8 @@ public class ComputerDAO {
 	
 	private static final String LIST_COMPUTERS_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
 			+ "FROM computer AS C LEFT JOIN company AS Y ON C.company_id = Y.id "
-			+ "ORDER BY ";
-	private static final String LIST_COMPUTERS_BY_NAME = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
-			+ "FROM computer AS C LEFT JOIN company AS Y ON C.company_id = Y.id "
 			+ "WHERE C.name LIKE ? "
-			+ "LIMIT ? OFFSET ?;";
+			+ "ORDER BY ";
 	private static final String NUMBER_COMPUTERS_QUERY = "SELECT COUNT(id) FROM computer;";
 	private static final String NUMBER_COMPUTERS_BY_NAME_QUERY = "SELECT COUNT(id) FROM computer "
 			+ "WHERE name LIKE ?;";
@@ -46,52 +43,31 @@ public class ComputerDAO {
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	
-	public ArrayList<Computer> getListComputers(int limit, int offset, String query) throws ConnectionException, QueryException { 
+	public ArrayList<Computer> getListComputers(Page pagination, String query, String name) throws ConnectionException, QueryException { 
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		dbConnection = DBConnection.getInstance();
 		try {
-			String orderByType = "C.id";
+			String orderByType = "C.id " + pagination.getSortOrder();
 			switch (query) {
 				case "orderByName":
-					orderByType = "C.name";
+					orderByType = "C.name " + pagination.getSortOrder();
 					break;
 				case "orderByIntroduced":
-					orderByType = "C.introduced IS NULL, C.introduced, C.name";
+					orderByType = "C.introduced IS NULL, C.introduced "+ pagination.getSortOrder() +", C.name ";
 					break;
 				case "orderByDiscontinued":
-					orderByType = "C.discontinued IS NULL, C.discontinued, C.introduced IS NULL, C.introduced, C.name";
+					orderByType = "C.discontinued IS NULL, C.discontinued "+ pagination.getSortOrder() +", C.introduced IS NULL, C.introduced, C.name";
 					break;
 				case "orderByCompany":
-					orderByType = "Y.name IS NULL, Y.name, C.name";
+					orderByType = "Y.name IS NULL, Y.name "+ pagination.getSortOrder() +", C.name";
 					break;
 			}
 			statement = dbConnection.getConnection().prepareStatement(LIST_COMPUTERS_QUERY + orderByType + " LIMIT ? OFFSET ?;");
-			statement.setInt(1,limit);
-			statement.setInt(2,offset);
-			rs = statement.executeQuery();
-			listComputers = computerMapperSQL.getListComputers(rs);
-		} catch (SQLException e) {
-			logger.error("SQL Exception : " + e);
-		}
-		finally {
-			closeSetStatement(rs, statement);
-		}
-		dbConnection.close();
-		return listComputers;
-	}
-
-	public ArrayList<Computer> getListByName(int limit, int offset, String name) throws ConnectionException, QueryException, ComputerNotFoundException {
-		ArrayList<Computer> listComputers = new ArrayList<Computer>();
-		ResultSet rs = null;
-		PreparedStatement statement = null;
-		dbConnection = DBConnection.getInstance();
-		try {
-			statement = dbConnection.getConnection().prepareStatement(LIST_COMPUTERS_BY_NAME);
 			statement.setString(1,"%" + name + "%");
-			statement.setInt(2,limit);
-			statement.setInt(3,offset);
+			statement.setInt(2,pagination.getSize());
+			statement.setInt(3,pagination.getOffset());
 			rs = statement.executeQuery();
 			listComputers = computerMapperSQL.getListComputers(rs);
 		} catch (SQLException e) {
