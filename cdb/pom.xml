@@ -12,6 +12,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <mysql.driver.version>8.0.24</mysql.driver.version>
     <slf4j.version>1.7.30</slf4j.version>
+    <org.springframework.version>5.3.7</org.springframework.version>
   </properties>
   
   <dependencies>
@@ -19,21 +20,21 @@
 	<dependency>
         <groupId>org.springframework</groupId>
 		<artifactId>spring-context</artifactId>
-        <version>5.3.7</version>
+        <version>${org.springframework.version}</version>
     </dependency>
-    <!-- <dependency>
+    
+     <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-web</artifactId>
-         <version>5.3.7</version>
-     </dependency> -->
+        <version>${org.springframework.version}</version>
+     </dependency>
      
-<!--      <dependency>
+<!--       <dependency>
 	    <groupId>org.springframework</groupId>
 		<artifactId>spring-webmvc</artifactId>
-		<version>5.3.7</version>
-	</dependency> -->
+		<version>${org.springframework.version}</version>
+	</dependency>  -->
     
-  <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 	<dependency>
 	    <groupId>javax.servlet</groupId>
 	    <artifactId>javax.servlet-api</artifactId>

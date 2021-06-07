@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 
+import com.excilys.cdb.config.springConfig;
 import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
@@ -56,6 +58,16 @@ public class EditComputerServlet extends HttpServlet {
     public EditComputerServlet() {
         super();
     }
+    
+    @Override
+	public void init() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(springConfig.class);
+		computerService = context.getBean(ComputerService.class);
+		computerMapper = context.getBean(ComputerMapperServlet.class);
+		companyService = context.getBean(CompanyService.class);
+		companyMapper = context.getBean(CompanyMapperServlet.class);
+		context.close();	
+	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.handleRequest(request, response);

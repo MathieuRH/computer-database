@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
-//import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
 
 @WebServlet("/index")
 @Controller
@@ -32,10 +30,4 @@ public class StarterServlet extends HttpServlet {
 	public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException{
 
 	}
-
-//	@Override
-//	public void init(ServletConfig config) throws ServletException {
-//		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
-//		super.init(config);
-//	}
 }

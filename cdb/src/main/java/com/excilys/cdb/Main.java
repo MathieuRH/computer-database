@@ -14,6 +14,6 @@ public class Main {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(springConfig.class);
 		dialogue = context.getBean(CLI.class);
 		dialogue.start();
-		
+		context.close();
 	}
 }
