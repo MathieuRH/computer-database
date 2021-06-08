@@ -9,8 +9,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.excilys.cdb.config.SpringTestConfig;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -18,10 +22,15 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
+@RunWith( SpringJUnit4ClassRunner.class) 
+@ContextConfiguration(classes = {SpringTestConfig.class})
 public class ComputerDAOTest {
-
+	
 	@Autowired
 	ComputerDAO computerDAO;
+
+	private final Company TEST_COMPANY= new Company(1,"Apple Inc.");
+	private final Computer TEST_COMPUTER = new Computer.ComputerBuilder(1, "MacBook Pro 15.4 inch").company(TEST_COMPANY).build();
 	
 	@Before
 	public void setUp() {
@@ -30,7 +39,7 @@ public class ComputerDAOTest {
 	@After
 	   public void tearDown() {
 	}
-
+	
 	@Test
 	public void testGetNbComputers() {
 		int nbComputers;
@@ -60,17 +69,14 @@ public class ComputerDAOTest {
 	@Test
 	public void testGetOneComputer() {
 		try {
-			Company company1 = new Company(1,"Apple Inc.");
-			Computer comp1 = new Computer.ComputerBuilder(1, "MacBook Pro 15.4 inch").company(company1).build();
 			Optional<Computer> getFirstComputer = computerDAO.getOneComputer(1);
 			if (getFirstComputer.isPresent()) {
-				assertEquals(comp1, getFirstComputer.get());
+				assertEquals(TEST_COMPUTER, getFirstComputer.get());
 			} else {
 				throw new ComputerNotFoundException();
 			} 
 		} catch (ConnectionException | QueryException|ComputerNotFoundException e) {
-			fail("Failed to get number companies :" + e.getMessage());
+			fail("Failed to get wanted company :" + e.getMessage());
 		}
 	}
-
 }

@@ -7,16 +7,24 @@ import java.util.ArrayList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.excilys.cdb.config.SpringTestConfig;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 
+@RunWith( SpringJUnit4ClassRunner.class) 
+@ContextConfiguration(classes = {SpringTestConfig.class})
 public class CompanyDAOTest {
 
 	@Autowired
 	CompanyDAO companyDAO;
+
+	private final Company TEST_COMPANY = new Company(1,"Apple Inc.");
 	
 	@Before
 	public void setUp() {
@@ -52,9 +60,8 @@ public class CompanyDAOTest {
 	@Test
 	public void testGetOneCompany() {
 		try {
-			Company company1 = new Company(1,"Apple Inc.");
 			Company getFirstCompany = companyDAO.getOneCompany(1);
-			assertEquals(company1, getFirstCompany);
+			assertEquals(TEST_COMPANY, getFirstCompany);
 		} catch (ConnectionException | QueryException e) {
 			fail("Failed to get number companies :" + e.getMessage());
 		}

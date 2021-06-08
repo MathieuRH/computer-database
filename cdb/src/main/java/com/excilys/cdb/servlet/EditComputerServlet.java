@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 
-import com.excilys.cdb.config.springConfig;
+import com.excilys.cdb.config.SpringConfig;
 import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
@@ -61,7 +61,7 @@ public class EditComputerServlet extends HttpServlet {
     
     @Override
 	public void init() {
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(springConfig.class);
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
 		computerService = context.getBean(ComputerService.class);
 		computerMapper = context.getBean(ComputerMapperServlet.class);
 		companyService = context.getBean(CompanyService.class);
