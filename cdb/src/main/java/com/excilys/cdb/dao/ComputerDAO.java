@@ -1,5 +1,6 @@
 package com.excilys.cdb.dao;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +27,7 @@ public class ComputerDAO {
 
 	@Autowired
 	private ComputerMapperSQL computerMapperSQL;
+	@Autowired
 	private DBConnection dbConnection;
 	
 	private static final String LIST_COMPUTERS_QUERY = "SELECT C.id,C.name,C.introduced,C.discontinued,Y.id,Y.name "
@@ -42,12 +44,12 @@ public class ComputerDAO {
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
+	private Connection connection;
 	
 	public ArrayList<Computer> getListComputers(Page pagination, String query, String name) throws ConnectionException, QueryException { 
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		dbConnection = DBConnection.getInstance();
 		try {
 			String orderByType = "C.id " + pagination.getSortOrder();
 			switch (query) {
@@ -64,19 +66,20 @@ public class ComputerDAO {
 					orderByType = "Y.name IS NULL, Y.name "+ pagination.getSortOrder() +", C.name";
 					break;
 			}
-			statement = dbConnection.getConnection().prepareStatement(LIST_COMPUTERS_QUERY + orderByType + " LIMIT ? OFFSET ?;");
+			connection = dbConnection.getConnection();
+			statement = connection.prepareStatement(LIST_COMPUTERS_QUERY + orderByType + " LIMIT ? OFFSET ?;");
 			statement.setString(1,"%" + name + "%");
 			statement.setInt(2,pagination.getSize());
 			statement.setInt(3,pagination.getOffset());
 			rs = statement.executeQuery();
 			listComputers = computerMapperSQL.getListComputers(rs);
+			connection.close();
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 		}
 		finally {
 			closeSetStatement(rs, statement);
 		}
-		dbConnection.close();
 		return listComputers;
 	}
 	
@@ -84,20 +87,20 @@ public class ComputerDAO {
 		Optional<Computer> computer;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		dbConnection = DBConnection.getInstance();
 		try {
-			statement = dbConnection.getConnection().prepareStatement(ONE_COMPUTER_QUERY);
+			connection = dbConnection.getConnection();
+			statement = connection.prepareStatement(ONE_COMPUTER_QUERY);
 			statement.setInt(1, id_computer);
 			rs = statement.executeQuery();
 			computer = computerMapperSQL.getOneComputer(rs);
+			connection.close();
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 			computer = Optional.empty();
 		} 
 		finally {
 			closeSetStatement(rs, statement);
-		}
-		dbConnection.close();
+		};
 		return computer;
 	}
 	
@@ -106,9 +109,9 @@ public class ComputerDAO {
 		String name = computerDTO.getName();
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		dbConnection = DBConnection.getInstance();
 		try {
-			statement = dbConnection.getConnection().prepareStatement(CREATE_ONE);
+			connection = dbConnection.getConnection();
+			statement = connection.prepareStatement(CREATE_ONE);
 			statement.setString(1, name);
 			if (computerDTO.getIntroduced()!=null) {
 				LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced());
@@ -127,6 +130,7 @@ public class ComputerDAO {
 				} else {statement.setNull(4, 0);}
 			}
 			statement.executeUpdate();
+			connection.close();
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 			throw new QueryException();
@@ -134,17 +138,16 @@ public class ComputerDAO {
 		finally {
 			closeSetStatement(rs, statement);
 		}
-		dbConnection.close();
 	}
 	
 	
 	public void updateOne(Computer computer) throws ConnectionException, QueryException {
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		dbConnection = DBConnection.getInstance();
 		ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
 		try {
-			statement = dbConnection.getConnection().prepareStatement(UPDATE_ONE);
+			connection = dbConnection.getConnection();
+			statement = connection.prepareStatement(UPDATE_ONE);
 			statement.setString(1, computer.getName());
 			if (computerDTO.getIntroduced()!=null) {
 				LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced());
@@ -163,6 +166,7 @@ public class ComputerDAO {
 			}
 			statement.setInt(5, computer.getId());
 			statement.executeUpdate();
+			connection.close();
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 			throw new QueryException();
@@ -170,7 +174,6 @@ public class ComputerDAO {
 		finally {
 			closeSetStatement(rs, statement);
 		}
-		dbConnection.close();
 	}
 	
 	public void deleteOne(int id_computer) throws ConnectionException, QueryException {
@@ -178,8 +181,8 @@ public class ComputerDAO {
 			ResultSet rs = null;
 			PreparedStatement statement = null;
 			try {
-				dbConnection = DBConnection.getInstance();
-				statement = dbConnection.getConnection().prepareStatement(DELETE_ONE);
+				connection = dbConnection.getConnection();
+				statement = connection.prepareStatement(DELETE_ONE);
 				try {
 					statement.setInt(1, id_computer);
 					statement.executeUpdate();
@@ -187,13 +190,13 @@ public class ComputerDAO {
 					logger.error("SQL Exception : " + e);
 					throw new QueryException();
 				} 
+				connection.close();
 			} catch (SQLException e) {
 				logger.error("SQL Exception : " + e);
 				throw new ConnectionException();
 			} 
 			finally {
 				closeSetStatement(rs, statement);
-				dbConnection.close();
 			}
 		}
 	}
@@ -203,18 +206,18 @@ public class ComputerDAO {
 		int nbComputers = 0;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		dbConnection = DBConnection.getInstance();
 		try {
-			statement = dbConnection.getConnection().prepareStatement(NUMBER_COMPUTERS_QUERY);
+			connection = dbConnection.getConnection();
+			statement = connection.prepareStatement(NUMBER_COMPUTERS_QUERY);
 			rs = statement.executeQuery();
 			nbComputers = getNumberComputers_processed(rs);
+			connection.close();
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 			throw new QueryException();
 		} 
 		finally {
 			closeSetStatement(rs, statement);
-			dbConnection.close();
 		}
 		return nbComputers;
 	}
@@ -223,19 +226,19 @@ public class ComputerDAO {
 		int nbComputers = 0;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		dbConnection = DBConnection.getInstance();
 		try {
-			statement = dbConnection.getConnection().prepareStatement(NUMBER_COMPUTERS_BY_NAME_QUERY);
+			connection = dbConnection.getConnection();
+			statement = connection.prepareStatement(NUMBER_COMPUTERS_BY_NAME_QUERY);
 			statement.setString(1,"%" + name + "%");
 			rs = statement.executeQuery();
 			nbComputers = getNumberComputers_processed(rs);
+			connection.close();
 		} catch (SQLException e) {
 			logger.error("SQL Exception : " + e);
 			throw new QueryException();
 		} 
 		finally {
 			closeSetStatement(rs, statement);
-			dbConnection.close();
 		}
 		return nbComputers;
 	}

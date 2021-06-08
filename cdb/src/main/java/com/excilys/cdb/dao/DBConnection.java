@@ -7,14 +7,14 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+@Repository
 public class DBConnection {
-
-	private static DBConnection instance;
 	
 	private static final String DATABASE_PROPERTIES_FILE_PATH = "/database.properties";
 	private static final String DATABASE_PROPERTY_NAME_DRIVER = "jdbc.driver";
@@ -49,18 +49,6 @@ public class DBConnection {
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
         ds = new HikariDataSource( config );
 	}
-	
-	public static DBConnection getInstance() throws ConnectionException {
-		try {
-			if (instance == null || ds.isClosed()){
-				instance = new DBConnection();
-			}
-		} catch (SQLException e) {
-			logger.error("SQL Exception : " + e);
-			throw new ConnectionException();
-		}
-		return instance;
-	}
 
 
 	public Connection getConnection() throws SQLException {
@@ -70,7 +58,7 @@ public class DBConnection {
 	public void close() {
       if (!ds.isClosed()) {
           ds.close();
-          instance = null;
+    	  logger.info("Connection closed.");
       }
 	}
 

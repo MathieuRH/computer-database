@@ -68,6 +68,7 @@ public class AddComputerServlet extends HttpServlet {
 		computerMapper = context.getBean(ComputerMapperServlet.class);
 		companyService = context.getBean(CompanyService.class);
 		companyMapper = context.getBean(CompanyMapperServlet.class);
+		verificator = context.getBean(Verificator.class);
 		context.close();	
 	}
 
