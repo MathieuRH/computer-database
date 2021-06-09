@@ -36,13 +36,8 @@ public class CompanyDAOTest {
 	
 	@Test
 	public void testGetNbCompanies() {
-		int nbCompanies;
-		try {
-			nbCompanies = companyDAO.getNumberCompanies();
-			assertNotEquals(nbCompanies, 0);
-		} catch (ConnectionException | QueryException e) {
-			fail("Failed to get number companies :" + e.getMessage());
-		}
+		int nbCompanies = companyDAO.getNumberCompanies();
+		assertNotEquals(nbCompanies, 0);
 	}
 
 	@Test

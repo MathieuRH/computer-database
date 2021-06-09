@@ -67,15 +67,16 @@ public class Verificator {
 	}
 
 	private void verifyCompany(String companyId) throws CompanyFormatException {
-		try {
-			int numCompany = Integer.parseInt(companyId);
-			if (numCompany<0) {
-				throw new CompanyFormatException("Company id must be positive");
+		if (!"".equals(companyId)){
+			try {
+				int numCompany = Integer.parseInt(companyId);
+				if (numCompany<0) {
+					throw new CompanyFormatException("Company id must be positive");
+				}
+			} catch (NumberFormatException e) {
+				logger.error(e.getMessage());
+				throw new CompanyFormatException("Company id must be of integer type");
 			}
-		} catch (NumberFormatException e) {
-			logger.error(e.getMessage());
-			throw new CompanyFormatException("Company id must be of integer type");
 		}
-		
 	}
 }

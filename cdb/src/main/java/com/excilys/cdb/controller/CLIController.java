@@ -76,13 +76,9 @@ public class CLIController {
 	public void createOne(ComputerDTOJsp computerDTO) {
 		try {
 			verificator.verifyComputer(computerDTO);
-		} catch (InputException e) {
-			logger.error(e.getMessage());
-		}
-		Computer computer = computerMapper.toComputer(computerDTO);
-		try {
+			Computer computer = computerMapper.toComputer(computerDTO);
 			computerService.createOne(computer);
-		} catch (ConnectionException | QueryException e) {
+		} catch (InputException | ConnectionException | QueryException e) {
 			logger.error(e.getMessage());
 		}
 	}
@@ -90,13 +86,9 @@ public class CLIController {
 	public void updateOne(ComputerDTOJsp computerDTO) {
 		try {
 			verificator.verifyComputer(computerDTO);
-		} catch (InputException e) {
-			logger.error(e.getMessage());
-		}
-		Computer computer = computerMapper.toComputer(computerDTO);
-		try {
+			Computer computer = computerMapper.toComputer(computerDTO);
 			computerService.updateOne(computer);
-		} catch (ConnectionException | QueryException e) {
+		} catch (InputException | ConnectionException | QueryException e) {
 			logger.error(e.getMessage());
 		}
 	}

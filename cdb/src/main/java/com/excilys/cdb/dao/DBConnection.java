@@ -7,12 +7,12 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-@Repository
+@Component
 public class DBConnection {
 	
 	private static final String DATABASE_PROPERTIES_FILE_PATH = "/database.properties";
@@ -52,6 +52,10 @@ public class DBConnection {
 
 	public Connection getConnection() throws SQLException {
 		return ds.getConnection();
+	}
+
+	public HikariDataSource getDataSource() {
+		return ds;
 	}
 	
 	public void close() {

@@ -50,8 +50,7 @@ public class ComputerDAOTest {
 			fail("Failed to get number companies :" + e.getMessage());
 		}
 	}
-	
-	@Ignore
+
 	@Test
 	public void testGetListComputers() {
 		int nbComputers;

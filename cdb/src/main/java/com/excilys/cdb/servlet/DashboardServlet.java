@@ -54,10 +54,6 @@ public class DashboardServlet extends HttpServlet {
 	private ComputerMapperServlet computerMapper;
 	
 	private HttpSession session;
-	
-    public DashboardServlet() {
-        super();
-    }
     
     @Override
 	public void init() {
