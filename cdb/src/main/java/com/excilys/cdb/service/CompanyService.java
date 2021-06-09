@@ -2,7 +2,6 @@ package com.excilys.cdb.service;
 
 import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.dao.CompanyDAO;
@@ -13,8 +12,11 @@ import com.excilys.cdb.model.Company;
 @Service
 public class CompanyService {
 
-	@Autowired
 	private CompanyDAO companyDAO;
+	
+	public CompanyService(CompanyDAO companyDAO) {
+		this.companyDAO=companyDAO;
+	}
 
 	public CompanyDAO getComputerDAO() {
 		return companyDAO;

@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.CompanyDTOJsp;
@@ -27,16 +26,19 @@ import com.excilys.cdb.verification.Verificator;
 @Component
 public class CLIController {
 
-	@Autowired
 	private CompanyService companyService;
-	@Autowired
 	private ComputerService computerService;
-	@Autowired
 	private ComputerMapperServlet computerMapper;
-	@Autowired
 	private CompanyMapperServlet companyMapper;
-	@Autowired
 	private Verificator verificator;
+	
+	public CLIController(CompanyService companyService, ComputerService computerService, ComputerMapperServlet computerMapper,CompanyMapperServlet companyMapper,Verificator verificator) {
+		this.companyService=companyService;
+		this.computerService=computerService;
+		this.computerMapper=computerMapper;
+		this.companyMapper=companyMapper;
+		this.verificator=verificator;
+	}
 	
 	private static Logger logger = LoggerFactory.getLogger(CLIController.class);
 	

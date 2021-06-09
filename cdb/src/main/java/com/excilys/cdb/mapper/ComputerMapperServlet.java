@@ -57,15 +57,15 @@ public class ComputerMapperServlet {
 			int id = Integer.parseInt(computerDTO.getId());
 			builder.id(id);
 		}
-		if (computerDTO.getIntroduced() != "") {
+		if (!"".equals(computerDTO.getIntroduced())) {
 			LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced()); 
 			builder.introducedDate(introduced);
 		}
-		if (computerDTO.getDiscontinued() != "") {
+		if (!"".equals(computerDTO.getDiscontinued())) {
 			LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued()); 
 			builder.discontinuedDate(discontinued);
 		}
-		if (computerDTO.getCompanyId() != "") {
+		if (!"".equals(computerDTO.getCompanyId())) {
 			Company company = new Company(Integer.parseInt(computerDTO.getCompanyId()), computerDTO.getCompanyName());
 			builder.company(company);
 		}

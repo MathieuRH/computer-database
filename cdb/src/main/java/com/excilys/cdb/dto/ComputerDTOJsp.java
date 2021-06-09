@@ -64,7 +64,7 @@ public class ComputerDTOJsp {
 		String dateIntro = ("".equals(introduced)) ? "NA" : introduced;
 		String dateDisc = ("".equals(discontinued)) ? "NA" : discontinued;
 		String printCompany = ("".equals(companyName)) ? "Company : NA" : companyName;
-		String res = "Computer n° " + id + 
+		String res = "Computer n°" + id + 
 				" : {" + name +
 				", introduction date: " + dateIntro +
 				", discard date: " + dateDisc +

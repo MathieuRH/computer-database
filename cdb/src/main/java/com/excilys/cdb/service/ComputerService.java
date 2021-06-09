@@ -3,7 +3,6 @@ package com.excilys.cdb.service;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.dao.ComputerDAO;
@@ -15,8 +14,11 @@ import com.excilys.cdb.model.Page;
 @Service
 public class ComputerService {
 
-	@Autowired
 	private ComputerDAO computerDAO;
+	
+	public ComputerService (ComputerDAO computerDAO) {
+		this.computerDAO=computerDAO;
+	}
 
 	public Optional<Computer> getOneComputer(int id_computer) throws ConnectionException, QueryException{
 		return computerDAO.getOneComputer(id_computer);

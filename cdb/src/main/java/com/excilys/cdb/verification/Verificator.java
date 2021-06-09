@@ -70,7 +70,7 @@ public class Verificator {
 		if (!"".equals(companyId)){
 			try {
 				int numCompany = Integer.parseInt(companyId);
-				if (numCompany<0) {
+				if (numCompany<=0) {
 					throw new CompanyFormatException("Company id must be positive");
 				}
 			} catch (NumberFormatException e) {
