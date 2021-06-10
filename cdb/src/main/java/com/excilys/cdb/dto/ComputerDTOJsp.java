@@ -1,12 +1,16 @@
 package com.excilys.cdb.dto;
 
 public class ComputerDTOJsp {
-	private String id;
-	private String name;
-	private String introduced;
-	private String discontinued;
-	private String companyId;
-	private String companyName;
+	private String id = "";
+	private String name = "";
+	private String introduced = "";
+	private String discontinued = "";
+	private String companyId = "";
+	private String companyName = "";
+	
+	public ComputerDTOJsp() {
+		
+	}
 	
 	private ComputerDTOJsp(ComputerDTOJspBuilder builder) {
 		this.id = builder.id;
@@ -24,6 +28,9 @@ public class ComputerDTOJsp {
 		private String discontinued = "";
 		private String companyId = "";
 		private String companyName = "";
+
+		public ComputerDTOJspBuilder() {
+		}
 		
 		public ComputerDTOJspBuilder(String name) {
 			this.name = name;
@@ -33,6 +40,7 @@ public class ComputerDTOJsp {
 			this.id = id;
 			this.name = name;
 		}
+
 		public ComputerDTOJspBuilder id(String id) {
 			this.id = id;
 			return this;

@@ -23,36 +23,37 @@
                     </div>
                     <h1>Edit Computer</h1>
 
-                    <form action="editComputer" id="editComputer" name="addComputerForm" method="POST">
-                        <input type="hidden" value="${computerDTO.id}" id="id" name="id"/> 
+                    <form:form modelAttribute="computerDTO" action="editComputer" id="editComputer" name="addComputerForm" method="POST">
+                        <form:input path="id" type="hidden" value="${computerDTO.id}" id="id" name="id"/> 
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" 
-                                	placeholder="Computer name" value="${computerDTO.name}" required>
+                                <form:input path="name" type="text" class="form-control" id="computerName" name="computerName" 
+                                	placeholder="Computer name" value="${computerDTO.name}"></form:input>
                             </div>
+                            
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" 
-                                placeholder="Introduced date"
-                            	<c:if test="${computerDTO.introduced!=null}">value="${computerDTO.introduced}"</c:if>>
+                                <form:input path="introduced" type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" 
+                                value='${computerDTO.introduced!=null?computerDTO.introduced:""}'/>
                            </div>
+                            
+                            
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" 
+                                <form:input path="discontinued" type="date" class="form-control" id="discontinued" name="discontinued" 
                                 placeholder="Discontinued date" 
-                                <c:if test="${computerDTO.discontinued!=null}">value="${computerDTO.discontinued}"</c:if>>
+                                value='${computerDTO.discontinued!=null?computerDTO.discontinued:""}'/>
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
-                                <select class="form-control" id="companyId" name="companyId" >
-                                	<option value=0>--</option>
+                                <form:select path="companyId" class="form-control" id="companyId" name="companyId" >
+                                	<option value="">--</option>
                                 	<c:forEach items="${listCompanyDTO}" var="companyDTO">
-                                    	<option value="${companyDTO.id}" <c:if 
-                                    	test="${companyDTO.id==computerDTO.companyId}">selected</c:if>>
+                                    	<option value="${companyDTO.id}" <c:if test="${companyDTO.id==computerDTO.companyId}">selected</c:if>>
                                     		${companyDTO.name}</option>
                                     </c:forEach>
-                                </select>
+                                </form:select>
                             </div>          
                         </fieldset>
                         <div class="actions pull-right">
@@ -60,7 +61,7 @@
                             or
                             <a href="dashboard" class="btn btn-default">Cancel</a>
                         </div>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>

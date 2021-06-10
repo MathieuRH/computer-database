@@ -1,7 +1,7 @@
 $(function() {
   $("form[name='addComputerForm']").validate({
     rules: {
-      computerName: "required",
+      name: "required",
 	  introduced: {
 		date : true, 
 	  },
@@ -11,7 +11,7 @@ $(function() {
 	  },
     },
     messages: {
-      computerName: "Name is required !",
+      name: "Name is required !",
 	  introduced: "Please enter a valid date",
 	  discontinued : {
 		date: "Please enter a valid date",

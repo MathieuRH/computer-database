@@ -1,27 +1,17 @@
 package com.excilys.cdb.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.excilys.cdb.config.SpringConfig;
 import com.excilys.cdb.controller.session.SessionVariables;
-import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ConnectionException;
@@ -40,10 +30,13 @@ import com.excilys.cdb.verification.Verificator;
 public class AddComputerController{
 	private static final String ADD_COMPUTER_VIEW = "addComputer";
 	private static final String DASHBOARD_VIEW = "dashboard";
+	private static final String ERROR = "500";
 
 	private static final int OFFSET_COMPANIES = 0;
+	private static final int DEFAULT_SIZE = 10;
+	private static final int FIRST_PAGE = 1;
 
-	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
+	private static Logger logger = LoggerFactory.getLogger(AddComputerController.class);
 
 	private ComputerService computerService;
 	private CompanyService companyService;
@@ -77,30 +70,27 @@ public class AddComputerController{
 		}
 
 		addComputerView.addObject("listCompanyDTO", listCompanyDTO );
-		
+		addComputerView.addObject("computerDTO", new ComputerDTOJsp());
+
 		return addComputerView;
 	}
 
     @PostMapping("addComputer")
-	protected String doPost(@RequestParam(required = false) String computerName, 
-			@RequestParam(required = false) String introduced,  
-			@RequestParam(required = false) String discontinued, 
-			@RequestParam(required = false) String companyId, 
-			@RequestParam(required = false) String companyName) {
-    	
-    	String id = "";
-		ComputerDTOJsp computerDTO = new ComputerDTOJsp.ComputerDTOJspBuilder(id, computerName).introduced(introduced)
-				.discontinued(discontinued).companyId(companyId).companyName(companyName).build();
-		
+	protected String doPost(@ModelAttribute("computerDTO") ComputerDTOJsp computerDTO, BindingResult result) {	
 		try {
 			verificator.verifyComputer(computerDTO);
 			Computer computer = computerMapper.toComputer(computerDTO);
 			computerService.createOne(computer);
+			if (sessionVariables.getPagination()==null) {
+				int nbComputers = computerService.getNumberComputersByName("");
+				sessionVariables.setPagination(new Page(FIRST_PAGE, DEFAULT_SIZE, nbComputers));
+			}
 			sessionVariables.getPagination().setPage(sessionVariables.getPagination().getNbPages());
 			return "redirect:"+DASHBOARD_VIEW;
 		} catch (InputException | ConnectionException | QueryException e) {
 			logger.error(e.getMessage());
-			return "redirect:"+ADD_COMPUTER_VIEW;
+			//TODO
+			return "redirect:"+ERROR;
 		}
 	}
 

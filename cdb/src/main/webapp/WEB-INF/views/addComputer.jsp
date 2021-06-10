@@ -20,28 +20,28 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Add Computer</h1>
-                    <form name="addComputerForm" id="addComputerForm" action="addComputer" method="POST">
+                    <form:form modelAttribute="computerDTO" name="addComputerForm" id="addComputerForm" action="addComputer" method="POST">
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" required>
+                                <form:input path="name" type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name"/>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date">
+                                <form:input path="introduced" type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date"/>
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date">
+                                <form:input path="discontinued" type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date"/>
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
-                                <select class="form-control" id="companyId" name="companyId" >
+                                <form:select path="companyId" class="form-control" id="companyId" name="companyId" >
                                 	<option value="">--</option>
                                 	<c:forEach items="${listCompanyDTO}" var="companyDTO">
                                     	<option value="${companyDTO.id}">${companyDTO.name}</option>
                                     </c:forEach>
-                                </select>
+                                </form:select>
                             </div> 
                         </fieldset>
                         <div class="actions pull-right">
@@ -49,7 +49,7 @@
                             or
                             <a href="dashboard" class="btn btn-default">Cancel</a>
                         </div>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>

@@ -1,30 +1,16 @@
 package com.excilys.cdb.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.excilys.cdb.config.SpringConfig;
 import com.excilys.cdb.controller.session.SessionVariables;
-import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
@@ -34,7 +20,6 @@ import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.ComputerService;
 
 @Controller
-@Scope(value="session")
 public class DashboardController {
 	
 	private static final String DASBOARD_VIEW = "dashboard";
@@ -44,7 +29,7 @@ public class DashboardController {
 
 	private SessionVariables sessionVariables;
 
-	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
+	private static Logger logger = LoggerFactory.getLogger(DashboardController.class);
 	private ComputerService computerService;
 	private ComputerMapperServlet computerMapper;
 	
