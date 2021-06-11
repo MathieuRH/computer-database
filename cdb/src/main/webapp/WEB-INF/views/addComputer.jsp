@@ -18,7 +18,7 @@
 	        </ul>
         </div>
     </header>
-
+<fmt:message key="label.name" var="nameLabel"/>
     <section id="main">
         <div class="container">
             <div class="row">
@@ -26,7 +26,7 @@
                     <h1><fmt:message key="label.addComputer"/></h1>
                     <form:form modelAttribute="computerDTO" name="addComputerForm" id="addComputerForm" action="addComputer" method="POST">
                         <fieldset>
-                            <div class="form-group" <%--  ${nameLabel=<fmt:message key="label.name"/>} --%>>
+                            <div class="form-group">
                                 <label for="computerName"><fmt:message key="label.name"/></label>
                                 <form:input path="name" type="text" class="form-control" id="computerName" name="computerName" placeholder="${nameLabel}"/>
                             </div>

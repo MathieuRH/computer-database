@@ -19,6 +19,8 @@
         </div>
     </header>
     
+    
+<fmt:message key="label.name" var="nameLabel"/>
     <section id="main">
         <div class="container">
             <div class="row">
@@ -34,7 +36,7 @@
                             <div class="form-group">
                                 <label for="computerName"><fmt:message key="label.name"/></label>
                                 <form:input path="name" type="text" class="form-control" id="computerName" name="computerName" 
-                                	placeholder="Computer name" value="${computerDTO.name}"></form:input>
+                                	placeholder="${nameLabel}" value="${computerDTO.name}"></form:input>
                             </div>
                             
                             <div class="form-group">
