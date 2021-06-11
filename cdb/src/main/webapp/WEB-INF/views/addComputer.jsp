@@ -11,7 +11,11 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard"> Application - Computer Database </a>
+            <a class="navbar-brand" href="dashboard"><fmt:message key="label.homeRef"/></a>
+	        <ul>
+		        <li><a href="?lang=en"><fmt:message key="label.lang.en" /></a></li>
+		        <li><a href="?lang=fr"><fmt:message key="label.lang.fr" /></a></li>
+	        </ul>
         </div>
     </header>
 
@@ -19,23 +23,23 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
-                    <h1>Add Computer</h1>
+                    <h1><fmt:message key="label.addComputer"/></h1>
                     <form:form modelAttribute="computerDTO" name="addComputerForm" id="addComputerForm" action="addComputer" method="POST">
                         <fieldset>
-                            <div class="form-group">
-                                <label for="computerName">Computer name</label>
-                                <form:input path="name" type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name"/>
+                            <div class="form-group" <%--  ${nameLabel=<fmt:message key="label.name"/>} --%>>
+                                <label for="computerName"><fmt:message key="label.name"/></label>
+                                <form:input path="name" type="text" class="form-control" id="computerName" name="computerName" placeholder="${nameLabel}"/>
                             </div>
                             <div class="form-group">
-                                <label for="introduced">Introduced date</label>
+                                <label for="introduced"><fmt:message key="label.introduced"/></label>
                                 <form:input path="introduced" type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date"/>
                             </div>
                             <div class="form-group">
-                                <label for="discontinued">Discontinued date</label>
+                                <label for="discontinued"><fmt:message key="label.discontinued"/></label>
                                 <form:input path="discontinued" type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date"/>
                             </div>
                             <div class="form-group">
-                                <label for="companyId">Company</label>
+                                <label for="companyId"><fmt:message key="label.company"/></label>
                                 <form:select path="companyId" class="form-control" id="companyId" name="companyId" >
                                 	<option value="">--</option>
                                 	<c:forEach items="${listCompanyDTO}" var="companyDTO">
@@ -45,9 +49,9 @@
                             </div> 
                         </fieldset>
                         <div class="actions pull-right">
-                            <input type="submit" value="Add" class="btn btn-primary">
-                            or
-                            <a href="dashboard" class="btn btn-default">Cancel</a>
+                            <input type="submit" value="<fmt:message key="label.add"/>" class="btn btn-primary">
+                            <fmt:message key="label.or"/>
+                            <a href="dashboard" class="btn btn-default"><fmt:message key="label.cancel"/></a>
                         </div>
                     </form:form>
                 </div>

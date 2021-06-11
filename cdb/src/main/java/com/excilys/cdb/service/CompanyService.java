@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.dao.CompanyDAO;
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 
@@ -26,19 +25,19 @@ public class CompanyService {
 		this.companyDAO = companyDAO;
 	}
 
-	public int getNumberCompanies() throws ConnectionException, QueryException {
+	public int getNumberCompanies() throws QueryException {
 		return companyDAO.getNumberCompanies();
 	}
 
-	public ArrayList<Company> getListCompanies(int limit, int offset) throws ConnectionException, QueryException {
+	public ArrayList<Company> getListCompanies(int limit, int offset) throws QueryException {
 		return companyDAO.getListCompanies(limit, offset);
 	}
 
-	public void deleteOne(int company_id) throws ConnectionException, QueryException {
+	public void deleteOne(int company_id) throws QueryException {
 		companyDAO.deleteOne(company_id);
 	}
 
-	public void createOne(String name) throws ConnectionException, QueryException {
+	public void createOne(String name) throws QueryException {
 		companyDAO.createOne(name);
 	}
 }

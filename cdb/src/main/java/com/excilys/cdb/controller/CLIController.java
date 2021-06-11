@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.InputException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.CompanyMapperServlet;
@@ -50,7 +49,7 @@ public class CLIController {
 			} else {
 				throw new ComputerNotFoundException();
 			} 
-		} catch (ConnectionException | QueryException | ComputerNotFoundException e) {
+		} catch (QueryException | ComputerNotFoundException e) {
 			logger.error(e.getMessage());
 			return null;
 		}
@@ -60,7 +59,7 @@ public class CLIController {
 		try {
 			ArrayList<Computer> listComputers = computerService.getListComputers(pagination, "orderById", "");
 			return computerMapper.listToDTO(listComputers);
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			logger.error(e.getMessage());
 			return new ArrayList<ComputerDTOJsp>();
 		}
@@ -69,7 +68,7 @@ public class CLIController {
 	public int getNumberComputers() {
 		try {
 			return computerService.getNumberComputers();
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			CLI.writeMessage(e.getMessage());
 			return 0;
 		}
@@ -80,7 +79,7 @@ public class CLIController {
 			verificator.verifyComputer(computerDTO);
 			Computer computer = computerMapper.toComputer(computerDTO);
 			computerService.createOne(computer);
-		} catch (InputException | ConnectionException | QueryException e) {
+		} catch (InputException | QueryException e) {
 			logger.error(e.getMessage());
 		}
 	}
@@ -90,7 +89,7 @@ public class CLIController {
 			verificator.verifyComputer(computerDTO);
 			Computer computer = computerMapper.toComputer(computerDTO);
 			computerService.updateOne(computer);
-		} catch (InputException | ConnectionException | QueryException e) {
+		} catch (InputException | QueryException e) {
 			logger.error(e.getMessage());
 		}
 	}
@@ -99,7 +98,7 @@ public class CLIController {
 	public void deleteOne(int computer_id) {
 		try {
 			computerService.deleteOne(computer_id);
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			logger.error(e.getMessage());
 		}
 	}
@@ -107,7 +106,7 @@ public class CLIController {
 	public int getNumberCompanies() {
 		try {
 			return companyService.getNumberCompanies();
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			logger.error(e.getMessage());
 			return 0;
 		}
@@ -117,7 +116,7 @@ public class CLIController {
 		try {
 			ArrayList<Company> listCompanies = companyService.getListCompanies(limit, offset);
 			return companyMapper.listCompaniesToDTO(listCompanies);
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			logger.error(e.getMessage());
 			return new ArrayList<CompanyDTOJsp>();
 		} 
@@ -126,7 +125,7 @@ public class CLIController {
 	public void deleteOneCompany(int company_id) {
 		try {
 			companyService.deleteOne(company_id);
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			logger.error(e.getMessage());
 		}
 	}
@@ -134,7 +133,7 @@ public class CLIController {
 	public void createOneCompany(String name) {
 		try {
 			companyService.createOne(name);
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			logger.error(e.getMessage());
 		}
 	}

@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +19,6 @@ import com.excilys.cdb.controller.session.SessionVariables;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.InputException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.CompanyMapperServlet;
@@ -60,7 +61,7 @@ public class EditComputerController {
     }
     
     @GetMapping("editComputer")
-	protected ModelAndView doGet(@RequestParam(required = false) String computerId) {
+	protected ModelAndView doGet(@RequestParam(required = true) String computerId) {
     	ModelAndView editComputerView = new ModelAndView(EDIT_COMPUTER_VIEW);
     	
     	ArrayList<CompanyDTOJsp> listCompanyDTO = new ArrayList<>();
@@ -77,7 +78,7 @@ public class EditComputerController {
 			} else {
 				throw new ComputerNotFoundException();
 			}
-		} catch (NumberFormatException | ConnectionException | QueryException | ComputerNotFoundException e) {
+		} catch (NumberFormatException | QueryException | ComputerNotFoundException e) {
 			logger.error(e.getMessage());
 		}
 
@@ -88,7 +89,7 @@ public class EditComputerController {
 	
     @PostMapping("editComputer")
 	protected String doPost(@ModelAttribute("computerDTO") ComputerDTOJsp computerDTO, BindingResult result) {	
-    		try {
+		try {
 			verificator.verifyComputer(computerDTO);
 			Computer computer = computerMapper.toComputer(computerDTO);
 			computerService.updateOne(computer);
@@ -98,10 +99,17 @@ public class EditComputerController {
 			}
 			sessionVariables.getPagination().setPage(sessionVariables.getPagination().getNbPages());
 			return "redirect:"+DASHBOARD_VIEW;
-		} catch (InputException | ConnectionException | QueryException e) {
+		} catch (InputException | QueryException e) {
 			logger.error(e.getMessage());
 			return "redirect:"+ERROR;
 		}
 	}
+    
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public String handleMissingParams(MissingServletRequestParameterException ex) {
+        String name = ex.getParameterName();
+        logger.error(name + " parameter is missing");
+        return "redirect:"+ERROR;
+    }
 
 }

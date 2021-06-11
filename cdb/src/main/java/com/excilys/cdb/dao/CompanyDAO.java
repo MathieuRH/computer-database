@@ -4,12 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 import com.zaxxer.hikari.HikariDataSource;
@@ -32,29 +32,49 @@ public class CompanyDAO {
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
-	public ArrayList<Company> getListCompanies(int limit, int offset) throws ConnectionException, QueryException {
+	public ArrayList<Company> getListCompanies(int limit, int offset) throws QueryException {
 		ArrayList<Company> listCompanies= new ArrayList<Company>();
-		listCompanies = (ArrayList<Company>) jdbcTemplate.query(LIST_COMPANIES_QUERY, new CompanyMP(), limit, offset);
+		try {
+			listCompanies = (ArrayList<Company>) jdbcTemplate.query(LIST_COMPANIES_QUERY, new CompanyMP(), limit, offset);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 		return listCompanies;
 	}
 	
-	public Company getOneCompany(int company_id) throws ConnectionException, QueryException {
-		return (Company) jdbcTemplate.query(GET_COMPANY, new CompanyMP(), company_id);
+	public Company getOneCompany(int company_id) throws QueryException {
+		try {
+			return (Company) jdbcTemplate.query(GET_COMPANY, new CompanyMP(), company_id);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 	}
 	
-	public int getNumberCompanies() {
-		return jdbcTemplate.queryForObject(NUMBER_COMPANIES_QUERY, Integer.class);
+	public int getNumberCompanies() throws QueryException {
+		try {
+			return jdbcTemplate.queryForObject(NUMBER_COMPANIES_QUERY, Integer.class);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 	}
 
 	@Transactional
-	public void deleteOne(int company_id) throws ConnectionException, QueryException {
-		jdbcTemplate.update(DELETE_LINKED_COMPUTERS, company_id);
-		jdbcTemplate.update(DELETE_ONE, company_id);
+	public void deleteOne(int company_id) throws QueryException {
+		try {
+			jdbcTemplate.update(DELETE_LINKED_COMPUTERS, company_id);
+			jdbcTemplate.update(DELETE_ONE, company_id);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 	}
 
 	@Transactional
-	public void createOne(String name) {
-		jdbcTemplate.update(CREATE_ONE, name);
+	public void createOne(String name) throws QueryException {
+		try {
+			jdbcTemplate.update(CREATE_ONE, name);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 	}
 
 	

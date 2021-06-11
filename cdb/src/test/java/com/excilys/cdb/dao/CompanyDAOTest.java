@@ -13,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.excilys.cdb.config.SpringTestConfig;
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 
@@ -36,8 +35,13 @@ public class CompanyDAOTest {
 	
 	@Test
 	public void testGetNbCompanies() {
-		int nbCompanies = companyDAO.getNumberCompanies();
-		assertNotEquals(nbCompanies, 0);
+		int nbCompanies;
+		try {
+			nbCompanies = companyDAO.getNumberCompanies();
+			assertNotEquals(nbCompanies, 0);
+		} catch (QueryException e) {
+			fail("Failed to get nb companies :" + e.getMessage());
+		}
 	}
 
 	@Test
@@ -47,7 +51,7 @@ public class CompanyDAOTest {
 			nbCompanies = companyDAO.getNumberCompanies();
 			ArrayList<Company> result = companyDAO.getListCompanies(nbCompanies, 0);
 			assertFalse(result.isEmpty());
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			fail("Failed to get Company list :" + e.getMessage());
 		}
 	}
@@ -57,7 +61,7 @@ public class CompanyDAOTest {
 		try {
 			Company getFirstCompany = companyDAO.getOneCompany(1);
 			assertEquals(TEST_COMPANY, getFirstCompany);
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			fail("Failed to get number companies :" + e.getMessage());
 		}
 	}

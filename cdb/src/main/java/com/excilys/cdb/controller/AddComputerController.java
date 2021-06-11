@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.excilys.cdb.controller.session.SessionVariables;
 import com.excilys.cdb.dto.CompanyDTOJsp;
 import com.excilys.cdb.dto.ComputerDTOJsp;
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.InputException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.CompanyMapperServlet;
@@ -65,7 +64,7 @@ public class AddComputerController{
 			ArrayList<Company> listCompany;
 			listCompany = companyService.getListCompanies(nbCompanies, OFFSET_COMPANIES);
 			listCompanyDTO = companyMapper.listCompaniesToDTO(listCompany);
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			logger.error(e.getMessage());
 		}
 
@@ -87,7 +86,7 @@ public class AddComputerController{
 			}
 			sessionVariables.getPagination().setPage(sessionVariables.getPagination().getNbPages());
 			return "redirect:"+DASHBOARD_VIEW;
-		} catch (InputException | ConnectionException | QueryException e) {
+		} catch (InputException | QueryException e) {
 			logger.error(e.getMessage());
 			//TODO
 			return "redirect:"+ERROR;

@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.dao.ComputerDAO;
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -20,19 +19,19 @@ public class ComputerService {
 		this.computerDAO=computerDAO;
 	}
 
-	public Optional<Computer> getOneComputer(int id_computer) throws ConnectionException, QueryException{
+	public Optional<Computer> getOneComputer(int id_computer) throws QueryException{
 		return computerDAO.getOneComputer(id_computer);
 	}
 	
-	public ArrayList<Computer> getListComputers(Page pagination, String query, String name) throws ConnectionException, QueryException { 
+	public ArrayList<Computer> getListComputers(Page pagination, String query, String name) throws QueryException { 
 		return computerDAO.getListComputers(pagination, query, name);
 	}
 	
-	public int getNumberComputers() throws ConnectionException, QueryException {
+	public int getNumberComputers() throws QueryException {
 		return computerDAO.getNumberComputers();
 	}
 
-	public int getNumberComputersByName(String name) throws ConnectionException, QueryException {
+	public int getNumberComputersByName(String name) throws QueryException {
 		return computerDAO.getNumberComputersByName(name);
 	}
 	
@@ -44,15 +43,15 @@ public class ComputerService {
 		this.computerDAO = computerDAO;
 	}
 	
-	public void createOne(Computer computer) throws ConnectionException, QueryException {
+	public void createOne(Computer computer) throws QueryException {
 		computerDAO.createOne(computer);
 	}
 
-	public void updateOne(Computer computer) throws ConnectionException, QueryException {
+	public void updateOne(Computer computer) throws QueryException {
 		computerDAO.updateOne(computer);
 	}
 
-	public void deleteOne(int computer_id) throws ConnectionException, QueryException {
+	public void deleteOne(int computer_id) throws QueryException {
 		computerDAO.deleteOne(computer_id);
 	}
 }

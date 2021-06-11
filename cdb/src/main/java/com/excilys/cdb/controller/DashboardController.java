@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.excilys.cdb.controller.session.SessionVariables;
 import com.excilys.cdb.dto.ComputerDTOJsp;
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.ComputerMapperServlet;
 import com.excilys.cdb.model.Computer;
@@ -75,7 +74,7 @@ public class DashboardController {
 			nbComputers = computerService.getNumberComputersByName(sessionVariables.getName_search());
 			updatePageAttributes(nbComputers, page_request, page_nb_comp, request_session);
 			listComputers = computerService.getListComputers(sessionVariables.getPagination(), sessionVariables.getQuery(), sessionVariables.getName_search());
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			logger.error(e.getMessage());
 		}
 		ArrayList<ComputerDTOJsp> listComputersDTO = computerMapper.listToDTO(listComputers);
@@ -132,7 +131,7 @@ public class DashboardController {
 			try {
 				idComputer = Integer.parseInt(idString);
 				computerService.deleteOne(idComputer);
-			} catch (NumberFormatException | ConnectionException | QueryException e) {
+			} catch (NumberFormatException | QueryException e) {
 				logger.error(e.getMessage());
 			}
 		}

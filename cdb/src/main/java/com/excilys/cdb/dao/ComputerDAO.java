@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -14,7 +15,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.dto.ComputerDTOSQL;
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.mapper.ComputerMapperSQL;
 import com.excilys.cdb.model.Company;
@@ -53,7 +53,7 @@ public class ComputerDAO {
 		namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	}
 	
-	public ArrayList<Computer> getListComputers(Page pagination, String query, String name) throws ConnectionException, QueryException { 
+	public ArrayList<Computer> getListComputers(Page pagination, String query, String name) throws QueryException { 
 		ArrayList<Computer> listComputers = new ArrayList<Computer>();
 		String orderByType = "C.id " + pagination.getSortOrder();
 		switch (query) {
@@ -74,40 +74,70 @@ public class ComputerDAO {
 		String nameSearch = "%" + name + "%";
 		int limit = pagination.getSize();
 		int offset = pagination.getOffset();
-		listComputers = (ArrayList<Computer>) jdbcTemplate.query(specific_query, new ComputerMP(), nameSearch, limit, offset);
+		try {
+			listComputers = (ArrayList<Computer>) jdbcTemplate.query(specific_query, new ComputerMP(), nameSearch, limit, offset);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 		return listComputers;
 	}
 	
-	public Optional<Computer> getOneComputer(int id_computer) throws ConnectionException, QueryException{
-		return Optional.ofNullable(jdbcTemplate.queryForObject(ONE_COMPUTER_QUERY, new ComputerMP(), id_computer));
+	public Optional<Computer> getOneComputer(int id_computer) throws QueryException{
+		Optional<Computer> computer = Optional.empty();
+		try {
+				computer = Optional.ofNullable(jdbcTemplate.queryForObject(ONE_COMPUTER_QUERY, new ComputerMP(), id_computer));
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
+		return computer;
 	}
 
 	
-	public int getNumberComputers() throws ConnectionException, QueryException {
-		return jdbcTemplate.queryForObject(NUMBER_COMPUTERS_QUERY, Integer.class);
+	public int getNumberComputers() throws QueryException {
+		try {
+			return jdbcTemplate.queryForObject(NUMBER_COMPUTERS_QUERY, Integer.class);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 	}
 
-	public int getNumberComputersByName(String name) throws ConnectionException, QueryException {
-		String nameSearch = "%" + name + "%";
-		return jdbcTemplate.queryForObject(NUMBER_COMPUTERS_BY_NAME_QUERY, Integer.class, nameSearch);	
+	public int getNumberComputersByName(String name) throws QueryException {
+		try {
+			String nameSearch = "%" + name + "%";
+			return jdbcTemplate.queryForObject(NUMBER_COMPUTERS_BY_NAME_QUERY, Integer.class, nameSearch);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}	
 	}
 	
 	
-	public void createOne(Computer computer) throws ConnectionException, QueryException {
-		ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
-		SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(computerDTO);
-		namedParameterJdbcTemplate.update(CREATE_ONE, namedParameters);
+	public void createOne(Computer computer) throws QueryException {
+		try {
+			ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
+			SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(computerDTO);
+			namedParameterJdbcTemplate.update(CREATE_ONE, namedParameters);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 	}
 	
 	
-	public void updateOne(Computer computer) throws ConnectionException, QueryException {
+	public void updateOne(Computer computer) throws QueryException {
+		try {
 		ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
 		SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(computerDTO);
 		namedParameterJdbcTemplate.update(UPDATE_ONE, namedParameters);
+	} catch (DataAccessException e) {
+		throw new QueryException();
+	}
 	}
 	
-	public void deleteOne(int id_computer) throws ConnectionException, QueryException {
+	public void deleteOne(int id_computer) throws QueryException {
+		try {
 		jdbcTemplate.update(DELETE_ONE, id_computer);
+	} catch (DataAccessException e) {
+		throw new QueryException();
+	}
 	}
 
     

@@ -16,7 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.excilys.cdb.config.SpringTestConfig;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
-import com.excilys.cdb.exceptions.ConnectionException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
@@ -46,7 +45,7 @@ public class ComputerDAOTest {
 		try {
 			nbComputers = computerDAO.getNumberComputers();
 			assertNotEquals(nbComputers, 0);
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			fail("Failed to get number companies :" + e.getMessage());
 		}
 	}
@@ -59,7 +58,7 @@ public class ComputerDAOTest {
 			Page pagination = new Page(nbComputers);
 			ArrayList<Computer> result = computerDAO.getListComputers(pagination, "orderById", "");
 			assertFalse(result.isEmpty());
-		} catch (ConnectionException | QueryException e) {
+		} catch (QueryException e) {
 			fail("Failed to get Company list :" + e.getMessage());
 		}
 	}
@@ -74,7 +73,7 @@ public class ComputerDAOTest {
 			} else {
 				throw new ComputerNotFoundException();
 			} 
-		} catch (ConnectionException | QueryException|ComputerNotFoundException e) {
+		} catch (QueryException|ComputerNotFoundException e) {
 			fail("Failed to get wanted company :" + e.getMessage());
 		}
 	}

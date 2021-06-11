@@ -13,25 +13,29 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard"> Application - Computer Database </a>
+            <a class="navbar-brand" href="dashboard"><fmt:message key="label.homeRef"/></a>
+	        <ul>
+		        <li><a href="?lang=en"><fmt:message key="label.lang.en" /></a></li>
+		        <li><a href="?lang=fr"><fmt:message key="label.lang.fr" /></a></li>
+	        </ul>
         </div>
     </header>
 
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                ${nbComputers} Computers found
+                ${nbComputers} <fmt:message key="label.foundComputers"/>
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
                     <form id="searchForm" action=dashboard method="GET" class="form-inline">
-                        <input type="search" id="searchbox" name="computer_name_request" class="form-control" placeholder="Search name" />
-                        <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
+                        <input type="search" id="searchbox" name="computer_name_request" class="form-control" placeholder="<fmt:message key="label.nameSearch"/>" />
+                        <input type="submit" id="searchsubmit" value="<fmt:message key="label.nameFilter"/>" class="btn btn-primary" />
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a>
-                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-success" id="addComputer" href="addComputer"><fmt:message key="label.addComputer"/></a>
+                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><fmt:message key="label.edit"/></a>
 		        </div>
             </div> 
         </div>
@@ -52,19 +56,19 @@
                                     </a>
                             </span>
                         </th>
-                        <th>Computer name
+                        <th><fmt:message key="label.name"/>
                         	<a class="align-middle pull-right" id="orderByName" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByName"/></c:url>">
                         	 <i class="fa fa-sort"></i></a>
                         </th>
-                        <th>Introduced date
+                        <th><fmt:message key="label.introduced"/>
 	                        <a class="align-middle pull-right" id="orderByIntroduced" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByIntroduced"/></c:url>">
 	                        <i class="fa fa-sort"></i></a>
 	                    </th>
-                        <th>Discontinued date
+                        <th><fmt:message key="label.discontinued"/>
                         	<a class="align-middle pull-right" id="orderByDiscontinued" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByDiscontinued"/></c:url>">
                         	<i class="fa fa-sort"></i></a>
                         </th>
-                        <th>Company
+                        <th><fmt:message key="label.company"/>
                         	<a class="align-middle pull-right" id="orderByCompany" href="<c:url value="dashboard"> <c:param name="request_session" value="orderByCompany"/></c:url>">
                         	<i class="fa fa-sort"></i></a>
                         </th>
@@ -94,7 +98,8 @@
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
 	     	<div class="btn-group btn-group-sm pull-left">
-	        	<a class="btn btn-default" id="orderById" href="<c:url value="dashboard"> <c:param name="request_session" value="orderById"/></c:url>">Home</a>
+	        	<a class="btn btn-default" id="orderById" href="<c:url value="dashboard"> 
+	        		<c:param name="request_session" value="orderById"/></c:url>"><fmt:message key="label.home"/></a>
 	        </div>
             <ul class="pagination" ${page=page_session.page } ${page_max=page_session.nbPages }>
               <li>
