@@ -14,6 +14,11 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.Locale;
 
+import javax.sql.DataSource;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -71,11 +76,10 @@ public class SpringConfig implements WebMvcConfigurer{
 	    localeChangeInterceptor.setParamName("lang");
 	    registry.addInterceptor(localeChangeInterceptor);
 	}
-	
-	//TODO
-//	@Bean
-//	public DataSource getDataSource() {
-//		return new HikariDataSource(new HikariConfig("/config/hikariConfig.properties"));
-//	}
+
+	@Bean
+	public DataSource getDataSource() {
+		return new HikariDataSource(new HikariConfig("/hikariConfig.properties"));
+	}
 	
 }

@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,7 +23,6 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.model.Computer.ComputerBuilder;
-import com.zaxxer.hikari.HikariDataSource;
 
 @Repository
 public class ComputerDAO {
@@ -42,13 +43,11 @@ public class ComputerDAO {
 	private static final String UPDATE_ONE = "UPDATE computer SET name=:name, introduced=:introduced, discontinued=:discontinued, company_id=:companyId WHERE id=:id;";
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
 
-	private HikariDataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
-	public ComputerDAO(DBConnection dbConnection, ComputerMapperSQL computerMapperSQL) {
+	public ComputerDAO(DataSource dataSource, ComputerMapperSQL computerMapperSQL) {
 		this.computerMapperSQL=computerMapperSQL;
-		dataSource = dbConnection.getDataSource();
 		jdbcTemplate = new JdbcTemplate(dataSource);
 		namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	}
@@ -124,20 +123,20 @@ public class ComputerDAO {
 	
 	public void updateOne(Computer computer) throws QueryException {
 		try {
-		ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
-		SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(computerDTO);
-		namedParameterJdbcTemplate.update(UPDATE_ONE, namedParameters);
-	} catch (DataAccessException e) {
-		throw new QueryException();
-	}
+			ComputerDTOSQL computerDTO = computerMapperSQL.toComputerDTO(computer);
+			SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(computerDTO);
+			namedParameterJdbcTemplate.update(UPDATE_ONE, namedParameters);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 	}
 	
 	public void deleteOne(int id_computer) throws QueryException {
 		try {
-		jdbcTemplate.update(DELETE_ONE, id_computer);
-	} catch (DataAccessException e) {
-		throw new QueryException();
-	}
+			jdbcTemplate.update(DELETE_ONE, id_computer);
+		} catch (DataAccessException e) {
+			throw new QueryException();
+		}
 	}
 
     

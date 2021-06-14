@@ -64,7 +64,7 @@
                             </div>          
                         </fieldset>
                         <div class="actions pull-right">
-                            <input type="submit" value="<fmt:message key="label.add"/>" class="btn btn-primary">
+                            <input type="submit" value="<fmt:message key="label.save"/>" class="btn btn-primary">
                             <fmt:message key="label.or"/>
                             <a href="dashboard" class="btn btn-default"><fmt:message key="label.cancel"/></a>
                         </div>

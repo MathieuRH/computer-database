@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
-import com.zaxxer.hikari.HikariDataSource;
 
 @Repository
 public class CompanyDAO {
@@ -24,11 +25,9 @@ public class CompanyDAO {
 	private static final String DELETE_ONE = "DELETE FROM company WHERE id=?;";
 	private static final String DELETE_LINKED_COMPUTERS = "DELETE FROM computer WHERE company_id=?;";
 	
-	private HikariDataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
 	
-	public CompanyDAO(DBConnection dbConnection) {
-		dataSource = dbConnection.getDataSource();
+	public CompanyDAO(DataSource dataSource) {
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
