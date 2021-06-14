@@ -106,7 +106,7 @@ public class ComputerDAO {
 			return jdbcTemplate.queryForObject(NUMBER_COMPUTERS_BY_NAME_QUERY, Integer.class, nameSearch);
 		} catch (DataAccessException e) {
 			throw new QueryException();
-		}	
+		}
 	}
 	
 	

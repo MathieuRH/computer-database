@@ -79,7 +79,7 @@ public class SpringConfig implements WebMvcConfigurer{
 
 	@Bean
 	public DataSource getDataSource() {
-		return new HikariDataSource(new HikariConfig("/hikariConfig.properties"));
+		return new HikariDataSource(new HikariConfig("/database/hikariConfig.properties"));
 	}
 	
 }

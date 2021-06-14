@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.excilys.cdb.config.SpringTestConfig;
+import com.excilys.cdb.config.SpringConfig;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
@@ -22,7 +22,7 @@ import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
 @RunWith( SpringJUnit4ClassRunner.class) 
-@ContextConfiguration(classes = {SpringTestConfig.class})
+@ContextConfiguration(classes = SpringConfig.class)
 public class ComputerDAOTest {
 	
 	@Autowired

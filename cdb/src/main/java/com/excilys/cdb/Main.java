@@ -2,7 +2,7 @@ package com.excilys.cdb;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.excilys.cdb.config.SpringConfig;
+import com.excilys.cdb.config.SpringCLIConfig;
 import com.excilys.cdb.ui.CLI;
 
 public class Main {
@@ -11,7 +11,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringCLIConfig.class);
 		dialogue = context.getBean(CLI.class);
 		dialogue.start();
 		context.close();

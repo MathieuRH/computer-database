@@ -17,7 +17,7 @@ import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
 
 @RunWith( SpringJUnit4ClassRunner.class) 
-@ContextConfiguration(classes = {SpringTestConfig.class})
+@ContextConfiguration(classes = SpringTestConfig.class)
 public class CompanyDAOTest {
 
 	@Autowired
@@ -60,6 +60,7 @@ public class CompanyDAOTest {
 	public void testGetOneCompany() {
 		try {
 			Company getFirstCompany = companyDAO.getOneCompany(1);
+			System.out.println(getFirstCompany);
 			assertEquals(TEST_COMPANY, getFirstCompany);
 		} catch (QueryException e) {
 			fail("Failed to get number companies :" + e.getMessage());

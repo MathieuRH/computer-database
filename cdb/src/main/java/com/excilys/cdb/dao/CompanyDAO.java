@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.cdb.exceptions.QueryException;
+import com.excilys.cdb.mapper.ComputerMapperSQL;
 import com.excilys.cdb.model.Company;
 
 @Repository
@@ -28,7 +29,7 @@ public class CompanyDAO {
 	private JdbcTemplate jdbcTemplate;
 	
 	public CompanyDAO(DataSource dataSource) {
-		jdbcTemplate = new JdbcTemplate(dataSource);
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
 	public ArrayList<Company> getListCompanies(int limit, int offset) throws QueryException {
