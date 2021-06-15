@@ -1,20 +1,33 @@
 package com.excilys.cdb.dto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="computer")
 public class ComputerDTOSQL {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id;
 	private String name;
 	private String introduced;
 	private String discontinued;
-	private String companyId;
-	private String companyName;
+	@ManyToOne
+	@JoinColumn(name = "company_id", nullable = true)
+	private CompanyDTOSQL companyDTOSQL;
 	
 	private ComputerDTOSQL(ComputerDTOSQLBuilder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
 		this.introduced = builder.introduced;
 		this.discontinued = builder.discontinued;
-		this.companyId = builder.companyId;
-		this.companyName = builder.companyName;
+		this.companyDTOSQL = new CompanyDTOSQL(builder.companyId, builder.companyName);
 	}
 	
 	public static class ComputerDTOSQLBuilder {
@@ -63,6 +76,7 @@ public class ComputerDTOSQL {
 	public String toString() {
 		String dateIntro = ("".equals(introduced)) ? "NA" : introduced;
 		String dateDisc = ("".equals(discontinued)) ? "NA" : discontinued;
+		String companyName = companyDTOSQL.getName();
 		String printCompany = ("".equals(companyName)) ? "Company : NA" : companyName;
 		String res = "Computer n° " + id + 
 				" : {" + name +
@@ -88,12 +102,12 @@ public class ComputerDTOSQL {
 		return discontinued;
 	}
 
-	public String getCompanyId() {
-		return companyId;
+	public CompanyDTOSQL getCompanyDTOSQL() {
+		return companyDTOSQL;
 	}
 
-	public String getCompanyName() {
-		return companyName;
+	public void setCompanyDTOSQL(CompanyDTOSQL companyDTOSQL) {
+		this.companyDTOSQL = companyDTOSQL;
 	}
 	
 }

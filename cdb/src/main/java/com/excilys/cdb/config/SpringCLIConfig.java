@@ -1,13 +1,21 @@
 package com.excilys.cdb.config;
 
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
+@EnableTransactionManagement
 @ComponentScan(basePackages = {
 		"com.excilys.cdb.service", 
 		"com.excilys.cdb.dao", 
@@ -17,10 +25,27 @@ import com.zaxxer.hikari.HikariDataSource;
 		"com.excilys.cdb.controller", 
 		"com.excilys.cdb.controller.session"})
 public class SpringCLIConfig {
+
+	@Bean
+	public DataSource getDataSource() {
+		return new HikariDataSource(new HikariConfig("/database/hikariConfig.properties"));
+	}
 	
 	@Bean
-    public HikariDataSource getDataSource() {
-        return new HikariDataSource(new HikariConfig("/database/hikariConfig.properties"));
-    }
+	public LocalSessionFactoryBean getSessionFactory() {
+		LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
+		factoryBean.setDataSource(getDataSource());
+		factoryBean.setPackagesToScan("com.excilys.cdb.dto");
+		factoryBean.setHibernateProperties(
+				(Properties) new Properties().setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect"));
+		return factoryBean;
+	}
+
+	@Bean
+	public HibernateTransactionManager getTransactionManager() {
+		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+		transactionManager.setSessionFactory(getSessionFactory().getObject());
+		return transactionManager;
+	}
 	
 }

@@ -38,7 +38,8 @@ public class ComputerDAOTest {
 	@After
 	   public void tearDown() {
 	}
-	
+
+	@Ignore
 	@Test
 	public void testGetNbComputers() {
 		int nbComputers;
@@ -50,6 +51,7 @@ public class ComputerDAOTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testGetListComputers() {
 		int nbComputers;

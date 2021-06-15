@@ -2,6 +2,9 @@ package com.excilys.cdb.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -13,6 +16,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -23,6 +27,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+
+@EnableTransactionManagement
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = {
@@ -80,6 +86,23 @@ public class SpringConfig implements WebMvcConfigurer{
 	@Bean
 	public DataSource getDataSource() {
 		return new HikariDataSource(new HikariConfig("/database/hikariConfig.properties"));
+	}
+	
+	@Bean
+	public LocalSessionFactoryBean getSessionFactory() {
+		LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
+		factoryBean.setDataSource(getDataSource());
+		factoryBean.setPackagesToScan("com.excilys.cdb.dto");
+		factoryBean.setHibernateProperties(
+				(Properties) new Properties().setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect"));
+		return factoryBean;
+	}
+
+	@Bean
+	public HibernateTransactionManager getTransactionManager() {
+		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+		transactionManager.setSessionFactory(getSessionFactory().getObject());
+		return transactionManager;
 	}
 	
 }
