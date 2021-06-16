@@ -1,7 +1,5 @@
 package com.excilys.cdb.config;
 
-import java.util.Properties;
-
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -36,8 +34,6 @@ public class SpringCLIConfig {
 		LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
 		factoryBean.setDataSource(getDataSource());
 		factoryBean.setPackagesToScan("com.excilys.cdb.dto");
-		factoryBean.setHibernateProperties(
-				(Properties) new Properties().setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect"));
 		return factoryBean;
 	}
 

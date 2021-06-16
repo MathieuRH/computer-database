@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.ComputerDTOSQL;
 import com.excilys.cdb.dto.ComputerDTOSQL.ComputerDTOSQLBuilder;
+import com.excilys.cdb.dto.ComputerDTOFromDB;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Computer.ComputerBuilder;
@@ -37,12 +38,13 @@ public class ComputerMapperSQL {
 		if (computer.getCompany() != null) {
 			Company company = computer.getCompany();
 			builder.companyId(Integer.toString(company.getId()));
-			builder.companyName(company.getName());
 		}
 		return builder.build();
 	}
+
 	
-	public ArrayList<Computer> toListComputers(List<ComputerDTOSQL> listComputersDTO) {
+	
+	public ArrayList<Computer> DBtoListComputers(List<ComputerDTOFromDB> listComputersDTO) {
 		ArrayList<Computer>  listComputers= new ArrayList<Computer>();
 		listComputers = (ArrayList<Computer>) listComputersDTO.stream()
 				.map(c -> toComputer(c))
@@ -51,22 +53,22 @@ public class ComputerMapperSQL {
 		return listComputers;
 	}
 
-	public Computer toComputer(ComputerDTOSQL computerDTO) {
+	public Computer toComputer(ComputerDTOFromDB computerDTO) {
 		String name = computerDTO.getName();
 		ComputerBuilder builder = new Computer.ComputerBuilder(name);
 		if (!"".equals(computerDTO.getId())) {
 			int id = Integer.parseInt(computerDTO.getId());
 			builder.id(id);
 		}
-		if (!"".equals(computerDTO.getIntroduced())) {
-			LocalDate introduced = LocalDate.parse(computerDTO.getIntroduced()); 
+		if (computerDTO.getIntroduced() != null) {
+			LocalDate introduced = computerDTO.getIntroduced().toLocalDate(); 
 			builder.introducedDate(introduced);
 		}
-		if (!"".equals(computerDTO.getDiscontinued())) {
-			LocalDate discontinued = LocalDate.parse(computerDTO.getDiscontinued()); 
+		if (computerDTO.getDiscontinued() != null) {
+			LocalDate discontinued = computerDTO.getDiscontinued().toLocalDate(); 
 			builder.discontinuedDate(discontinued);
 		}
-		if (!"".equals(computerDTO.getCompanyDTOSQL().getId())) {
+		if (computerDTO.getCompanyDTOSQL() != null) {
 			Company company = companyMapper.toCompany(computerDTO.getCompanyDTOSQL());
 			builder.company(company);
 		}

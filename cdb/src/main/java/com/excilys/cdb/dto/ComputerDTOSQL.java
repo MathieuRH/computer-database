@@ -1,11 +1,10 @@
 package com.excilys.cdb.dto;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,16 +17,19 @@ public class ComputerDTOSQL {
 	private String name;
 	private String introduced;
 	private String discontinued;
-	@ManyToOne
-	@JoinColumn(name = "company_id", nullable = true)
-	private CompanyDTOSQL companyDTOSQL;
+	
+	@Column(name = "company_id")
+	private String companyId;
+	
+	public ComputerDTOSQL() {
+	}
 	
 	private ComputerDTOSQL(ComputerDTOSQLBuilder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
 		this.introduced = builder.introduced;
 		this.discontinued = builder.discontinued;
-		this.companyDTOSQL = new CompanyDTOSQL(builder.companyId, builder.companyName);
+		this.companyId = builder.companyId;
 	}
 	
 	public static class ComputerDTOSQLBuilder {
@@ -36,7 +38,6 @@ public class ComputerDTOSQL {
 		private String introduced;
 		private String discontinued;
 		private String companyId;
-		private String companyName;
 		
 		public ComputerDTOSQLBuilder(String name) {
 			this.name = name;
@@ -62,10 +63,6 @@ public class ComputerDTOSQL {
 			this.companyId = companyId;
 			return this;
 		}
-		public ComputerDTOSQLBuilder companyName(String companyName) {
-			this.companyName = companyName;
-			return this;
-		}
 		
 		public ComputerDTOSQL build() {
 			return new ComputerDTOSQL(this);
@@ -76,8 +73,7 @@ public class ComputerDTOSQL {
 	public String toString() {
 		String dateIntro = ("".equals(introduced)) ? "NA" : introduced;
 		String dateDisc = ("".equals(discontinued)) ? "NA" : discontinued;
-		String companyName = companyDTOSQL.getName();
-		String printCompany = ("".equals(companyName)) ? "Company : NA" : companyName;
+		String printCompany = ("".equals(companyId)) ? "Company : NA" : "Company n° : "+companyId;
 		String res = "Computer n° " + id + 
 				" : {" + name +
 				", introduction date: " + dateIntro +
@@ -102,12 +98,12 @@ public class ComputerDTOSQL {
 		return discontinued;
 	}
 
-	public CompanyDTOSQL getCompanyDTOSQL() {
-		return companyDTOSQL;
+	public String getCompanyId() {
+		return companyId;
 	}
 
-	public void setCompanyDTOSQL(CompanyDTOSQL companyDTOSQL) {
-		this.companyDTOSQL = companyDTOSQL;
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 	
 }
