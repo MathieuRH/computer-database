@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,19 +20,10 @@ import com.excilys.cdb.model.Company;
 public class CompanyDAOTest {
 
 	@Autowired
-	CompanyDAO companyDAO;
+	private CompanyDAO companyDAO;
 
 	private final Company TEST_COMPANY = new Company(1,"Apple Inc.");
-	
-	@Before
-	public void setUp() {
-	}
-	 
-	@After
-	   public void tearDown() {
-	}
 
-	@Ignore
 	@Test
 	public void testGetNbCompanies() {
 		int nbCompanies;

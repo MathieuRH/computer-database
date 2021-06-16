@@ -31,7 +31,7 @@ public class ComputerDAO {
 			+ "WHERE name LIKE :name";
 	private static final String ONE_COMPUTER_QUERY = "FROM ComputerDTOFromDB C LEFT JOIN FETCH C.companyDTOSQL Y "
 			+ "WHERE C.id=:id";
-	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
+	private static final String DELETE_ONE = "DELETE FROM ComputerDTOFromDB WHERE id=:id";
 
 	private SessionFactory sessionFactory;
 	private ComputerMapperSQL computerMapper;
@@ -130,7 +130,6 @@ public class ComputerDAO {
 			Session session = sessionFactory.getCurrentSession();
 			
 			ComputerDTOSQL computerDTO = computerMapper.toComputerDTO(computer);
-			System.out.println(computerDTO.getCompanyId());
 			session.saveOrUpdate(computerDTO);
 		} catch (HibernateException e) {
 			throw new QueryException();

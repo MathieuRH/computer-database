@@ -5,8 +5,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.excilys.cdb.config.SpringConfig;
+import com.excilys.cdb.config.SpringTestConfig;
 import com.excilys.cdb.exceptions.ComputerNotFoundException;
 import com.excilys.cdb.exceptions.QueryException;
 import com.excilys.cdb.model.Company;
@@ -22,23 +20,15 @@ import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
 @RunWith( SpringJUnit4ClassRunner.class) 
-@ContextConfiguration(classes = SpringConfig.class)
+@ContextConfiguration(classes = SpringTestConfig.class)
 public class ComputerDAOTest {
 	
 	@Autowired
-	ComputerDAO computerDAO;
+	private ComputerDAO computerDAO;
 
 	private final Company TEST_COMPANY= new Company(1,"Apple Inc.");
 	private final Computer TEST_COMPUTER = new Computer.ComputerBuilder(1, "MacBook Pro 15.4 inch").company(TEST_COMPANY).build();
 	
-	@Before
-	public void setUp() {
-	}
-	 
-	@After
-	   public void tearDown() {
-	}
-
 	@Ignore
 	@Test
 	public void testGetNbComputers() {
