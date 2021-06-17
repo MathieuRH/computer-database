@@ -1,0 +1,7 @@
+com/excilys/cdb/controller/DashboardController.class
+com/excilys/cdb/controller/AddComputerController.class
+com/excilys/cdb/config/SpringConfig.class
+com/excilys/cdb/controller/EditComputerController.class
+com/excilys/cdb/controller/ErrorController.class
+com/excilys/cdb/config/WebInitializer.class
+com/excilys/cdb/controller/session/SessionVariables.class

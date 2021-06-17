@@ -1,6 +1,9 @@
 # Properties file
 hikariConfig.properties
 
+# Maven project config
+.project
+
 # Compiled class file
 *.class
 
