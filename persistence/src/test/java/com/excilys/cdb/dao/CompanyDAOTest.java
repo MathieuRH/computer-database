@@ -1,15 +1,12 @@
-package com.excilys.cdb;
+package com.excilys.cdb.dao;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-{
-    /**
+public class CompanyDAOTest {
+	
+	/**
      * Rigorous Test :-)
      */
     @Test
@@ -17,4 +14,6 @@ public class AppTest
     {
         assertTrue( true );
     }
+	
+
 }

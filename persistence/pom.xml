@@ -28,6 +28,13 @@
       <artifactId>binding</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+         
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql.driver.version}</version>
+    </dependency>
   </dependencies>
 
   <build>

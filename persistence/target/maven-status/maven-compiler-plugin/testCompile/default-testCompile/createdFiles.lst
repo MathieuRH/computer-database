@@ -1,1 +1,2 @@
-com/excilys/cdb/AppTest.class
+com/excilys/cdb/config/SpringTestConfig.class
+com/excilys/cdb/dao/CompanyDAOTest.class

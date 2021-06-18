@@ -1,1 +1,2 @@
-/home/excilys/Documents/sujetCDB/cdb/persistence/src/test/java/com/excilys/cdb/AppTest.java
+/home/excilys/Documents/sujetCDB/cdb/persistence/src/test/java/com/excilys/cdb/dao/CompanyDAOTest.java
+/home/excilys/Documents/sujetCDB/cdb/persistence/src/test/java/com/excilys/cdb/config/SpringTestConfig.java
