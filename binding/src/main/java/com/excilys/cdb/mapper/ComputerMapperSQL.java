@@ -41,7 +41,6 @@ public class ComputerMapperSQL {
 		}
 		return builder.build();
 	}
-
 	
 	
 	public ArrayList<Computer> DBtoListComputers(List<ComputerDTOFromDB> listComputersDTO) {

@@ -50,13 +50,13 @@ public class ComputerDAO {
 				orderByType = "C.name " + pagination.getSortOrder();
 				break;
 			case "orderByIntroduced":
-				orderByType = "C.introduced IS NULL, C.introduced "+ pagination.getSortOrder() +", C.name ";
+				orderByType = "C.introduced "+ pagination.getSortOrder() +" NULLS LAST, C.introduced "+ pagination.getSortOrder() +", C.name ";
 				break;
 			case "orderByDiscontinued":
-				orderByType = "C.discontinued IS NULL, C.discontinued "+ pagination.getSortOrder() +", C.introduced IS NULL, C.introduced, C.name";
+				orderByType = "C.discontinued "+ pagination.getSortOrder() +" NULLS LAST, C.discontinued "+ pagination.getSortOrder() +", C.introduced NULLS LAST, C.introduced, C.name";
 				break;
 			case "orderByCompany":
-				orderByType = "Y.name IS NULL, Y.name "+ pagination.getSortOrder() +", C.name";
+				orderByType = "Y.name "+ pagination.getSortOrder() +" NULLS LAST, Y.name "+ pagination.getSortOrder() +", C.name";
 				break;
 		}
 		String specific_query = LIST_COMPUTERS_QUERY + orderByType;

@@ -32,6 +32,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = {
+		"com.excilys.cdb.config", 
 		"com.excilys.cdb.service", 
 		"com.excilys.cdb.dao", 
 		"com.excilys.cdb.dto", 
@@ -105,5 +106,4 @@ public class SpringConfig implements WebMvcConfigurer{
 		transactionManager.setSessionFactory(getSessionFactory().getObject());
 		return transactionManager;
 	}
-	
 }

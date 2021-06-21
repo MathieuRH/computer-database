@@ -2,12 +2,6 @@ package com.excilys.cdb.model;
 
 import java.time.LocalDate;
 
-/**
- * Computer definition.
- * Only name is mandatory for a creation.
- * @author Mathieu_RH
- *
- */
 public class Computer {
 	
 	private final int id;

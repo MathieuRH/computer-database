@@ -18,6 +18,7 @@
     <mysql.driver.version>8.0.24</mysql.driver.version>
     <slf4j.version>1.7.30</slf4j.version>
     <org.springframework.version>5.3.7</org.springframework.version>
+	<spring-security.version>5.5.0</spring-security.version>
     <hibernate-core.version>5.5.0.Final</hibernate-core.version>
   </properties>
   
