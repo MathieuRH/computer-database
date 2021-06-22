@@ -4,6 +4,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import com.excilys.cdb.model.User;
 public class UserDAO {
 
 	private static final String GET_USER = "FROM UserDTOSQL WHERE id=:id";
+	private static final String GET_USER_BY_NAME = "FROM UserDTOSQL WHERE username=:username";
 	
 	private SessionFactory sessionFactory;
 	private UserMapperSQL userMapper;
@@ -33,15 +35,37 @@ public class UserDAO {
 		try {
 			Session session = sessionFactory.getCurrentSession(); 
 			Query<UserDTOSQL> query=session.createQuery(GET_USER, UserDTOSQL.class);
-			query.setParameter("id", idUser);
+			query.setParameter("id", Integer.toString(idUser));
 			UserDTOSQL userDTO = query.getSingleResult();
 			return userMapper.toUser(userDTO);
 		} catch (HibernateException e) {
 			throw new QueryException();
 		}
 	}
+
+	public User getUserByUsername(String username) throws UsernameNotFoundException {
+		try {
+			Session session = sessionFactory.getCurrentSession(); 
+			Query<UserDTOSQL> query=session.createQuery(GET_USER_BY_NAME, UserDTOSQL.class);
+			query.setParameter("username", username);
+			UserDTOSQL userDTO = query.getSingleResult();
+			return userMapper.toUser(userDTO);
+		} catch (HibernateException e) {
+			throw new UsernameNotFoundException(username);
+		}
+	}
+
+	public void update(User user) throws QueryException {
+		try {
+			Session session = sessionFactory.getCurrentSession(); 
+			UserDTOSQL userDTO = userMapper.toUserDTO(user);
+			session.saveOrUpdate(userDTO);
+		} catch (HibernateException e) {
+			throw new QueryException();
+		}
+	}
 	
-	public void createOne(User user) throws QueryException {
+	public void create(User user) throws QueryException {
 		try {
 			Session session = sessionFactory.getCurrentSession(); 
 			UserDTOSQL userDTO = userMapper.toUserDTO(user);

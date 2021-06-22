@@ -1,7 +1,14 @@
 package com.excilys.cdb.model;
 
-public class User {
-	
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+public class User{
+
 	private final int id;
 	private final String username;
 	private final String password;
@@ -14,16 +21,6 @@ public class User {
 		this.password = builder.password;
 		this.email = builder.email;
 		this.role = builder.role;
-	}
-	
-	@Override
-	public String toString() {
-		String res = "User n°" + id +
-				" : {" + username +
-				", password: " + password +
-				", email: " + email +
-				", role: " + role + "}";
-		return res;
 	}
 	
 	public static class UserBuilder{
@@ -61,25 +58,15 @@ public class User {
 			return new User(this);
 		}
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getRole() {
-		return role;
+	
+	@Override
+	public String toString() {
+		String res = "User n°" + id +
+				" : {" + username +
+				", password: " + password +
+				", email: " + email +
+				", role: " + role + "}";
+		return res;
 	}
 
 	@Override
@@ -127,6 +114,32 @@ public class User {
 			return false;
 		return true;
 	}
-	
+
+
+	public int getId() {
+		return id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+        list.add(new SimpleGrantedAuthority(this.role));
+        return list;
+	}
 	
 }

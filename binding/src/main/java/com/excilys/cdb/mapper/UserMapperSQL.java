@@ -18,10 +18,10 @@ public class UserMapperSQL {
 			builder.password(userDTO.getPassword());
 		}
 		if (! "".equals(userDTO.getEmail())) {
-			builder.password(userDTO.getEmail());
+			builder.email(userDTO.getEmail());
 		}
 		if (! "".equals(userDTO.getRole())) {
-			builder.password(userDTO.getRole());
+			builder.role(userDTO.getRole());
 		}
 		return builder.build();
 	}
@@ -34,10 +34,10 @@ public class UserMapperSQL {
 			builder.password(user.getPassword());
 		}
 		if (! "".equals(user.getEmail())) {
-			builder.password(user.getEmail());
+			builder.email(user.getEmail());
 		}
 		if (! "".equals(user.getRole())) {
-			builder.password(user.getRole());
+			builder.role(user.getRole());
 		}
 		return builder.build();
 	}

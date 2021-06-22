@@ -1,5 +1,6 @@
 package com.excilys.cdb.dto;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,10 +14,18 @@ public class UserDTOSQL {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id;
+	@Column(name="username")
 	private String username;
+	@Column(name="password")
 	private String password;
+	@Column(name="email")
 	private String email;
+	@Column(name="role")
 	private String role;
+	
+	public UserDTOSQL() {
+		
+	}
 	
 	private UserDTOSQL(UserDTOBuilder builder) {
 		this.id = builder.id;
