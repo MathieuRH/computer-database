@@ -1,4 +1,5 @@
 <%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +16,11 @@
         <div class="container">
               <a class="navbar-brand" href="dashboard"><fmt:message key="label.homeRef"/></a>
 			  <ul class="nav navbar-nav navbar-right">
+			  	<li>
+				    <sec:authorize access='hasRole("ADMIN")'>
+						  <a class="btn" id="adminPage" href="adminPage"><fmt:message key="label.adminPage"/></a>
+					</sec:authorize>
+				</li>
 		        <li class="dropdown">
 		        	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 		        			<fmt:message key="label.changeLang" /><span class="caret"></span></a>
@@ -41,10 +47,12 @@
                         <input type="submit" id="searchsubmit" value="<fmt:message key="label.nameFilter"/>" class="btn btn-primary" />
                     </form>
                 </div>
-                <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer"><fmt:message key="label.addComputer"/></a>
-                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><fmt:message key="label.edit"/></a>
-		        </div>
+                <sec:authorize access='hasRole("ADMIN")'>
+	                <div class="pull-right">
+	                    <a class="btn btn-success" id="addComputer" href="addComputer"><fmt:message key="label.addComputer"/></a>
+	                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><fmt:message key="label.edit"/></a>
+			        </div>
+		        </sec:authorize>
             </div> 
         </div>
 
@@ -84,7 +92,7 @@
                 </thead>
 
                 <tbody id="results">
-               <c:forEach items="${listComputersDTO}" var="computerDTO"> 
+               <c:forEach items="${listComputersDTO}" var="computerDTO">
                     <tr>
                         <td class="editMode">
                             <input type="checkbox" name="cb" class="cb" value="${computerDTO.id}">
@@ -135,7 +143,7 @@
 	        </ul>
 		            
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
-	        	<form action=dashboard method=POST>
+	        	<form action=dashboard method=GET>
 		            <button type="submit" name="page_nb_comp" value=1 class="btn btn-default">1</button>
 		            <button type="submit" name="page_nb_comp" value=10 class="btn btn-default" >10</button>
 		            <button type="submit" name="page_nb_comp" value=100 class="btn btn-default">100</button>

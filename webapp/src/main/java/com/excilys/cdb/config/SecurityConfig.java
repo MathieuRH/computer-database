@@ -43,9 +43,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().mvcMatchers("/login").permitAll()
-				.mvcMatchers("/addComputer", "/editComputer").hasRole("admin")
-				.mvcMatchers("/", "/dashboard").authenticated()
-				.and().formLogin().defaultSuccessUrl("/dashboard", false)
-				.and().logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
+			.mvcMatchers("/addComputer", "/editComputer", "/adminPage").hasRole("ADMIN")
+			.anyRequest().authenticated()
+			.and().formLogin().defaultSuccessUrl("/dashboard", true)
+			.and().logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
+		http.csrf().disable();
 	} 
 }

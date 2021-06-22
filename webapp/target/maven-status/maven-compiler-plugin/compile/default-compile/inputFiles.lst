@@ -1,7 +1,10 @@
 /home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/controller/AddComputerController.java
 /home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/controller/EditComputerController.java
 /home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/config/SpringConfig.java
+/home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/controller/AdminPageController.java
 /home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/controller/ErrorController.java
+/home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/config/SecurityInitializer.java
+/home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/config/SecurityConfig.java
 /home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/config/WebInitializer.java
 /home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/controller/session/SessionVariables.java
 /home/excilys/Documents/sujetCDB/cdb/webapp/src/main/java/com/excilys/cdb/controller/DashboardController.java

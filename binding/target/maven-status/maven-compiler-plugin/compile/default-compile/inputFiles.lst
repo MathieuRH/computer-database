@@ -1,5 +1,6 @@
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/exceptions/EnumException.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/mapper/CompanyMapperSQL.java
+/home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/dto/UserDetailsImpl.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/mapper/ComputerMapperSQL.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/mapper/CompanyMapperServlet.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/dto/ComputerDTOJsp.java
@@ -8,6 +9,8 @@
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/mapper/ComputerMapperServlet.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/verification/Verificator.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/exceptions/CompanyFormatException.java
+/home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/mapper/UserMapperSQL.java
+/home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/dto/UserDTOSQL.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/exceptions/ComputerNotFoundException.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/dto/ComputerDTOSQL.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/exceptions/NameFormatException.java

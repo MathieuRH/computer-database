@@ -1,5 +1,9 @@
 package com.excilys.cdb.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.UserDTOSQL;
@@ -40,6 +44,24 @@ public class UserMapperSQL {
 			builder.role(user.getRole());
 		}
 		return builder.build();
+	}
+	
+	public ArrayList<User> toListUsers(List<UserDTOSQL> listUsersDTO) {
+		ArrayList<User>  listUsers= new ArrayList<User>();
+		listUsers = (ArrayList<User>) listUsersDTO.stream()
+				.map(u -> toUser(u))
+				.collect(Collectors.toList());
+		
+		return listUsers;
+	}
+
+	public ArrayList<UserDTOSQL> listToDTO(List<User> listUsers) {
+		ArrayList<UserDTOSQL>  listUsersDTO= new ArrayList<UserDTOSQL>();
+		listUsersDTO = (ArrayList<UserDTOSQL>) listUsers.stream()
+				.map(u -> toUserDTO(u))
+				.collect(Collectors.toList());
+		
+		return listUsersDTO;
 	}
 
 }

@@ -1,5 +1,8 @@
 package com.excilys.cdb.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,9 +20,12 @@ import com.excilys.cdb.model.User;
 @Repository
 @Transactional
 public class UserDAO {
-
+	
 	private static final String GET_USER = "FROM UserDTOSQL WHERE id=:id";
 	private static final String GET_USER_BY_NAME = "FROM UserDTOSQL WHERE username=:username";
+	private static final String NUMBER_USERS_QUERY = "SELECT COUNT(id) FROM UserDTOSQL";
+	private static final String LIST_USERS_QUERY = "FROM UserDTOSQL";
+	private static final String DELETE_ONE = "DELETE FROM UserDTOSQL WHERE id=:id";
 	
 	private SessionFactory sessionFactory;
 	private UserMapperSQL userMapper;
@@ -55,11 +61,25 @@ public class UserDAO {
 		}
 	}
 
-	public void update(User user) throws QueryException {
+	public int getNumberUsers() throws QueryException {
 		try {
 			Session session = sessionFactory.getCurrentSession(); 
-			UserDTOSQL userDTO = userMapper.toUserDTO(user);
-			session.saveOrUpdate(userDTO);
+			return session.createQuery(NUMBER_USERS_QUERY, Long.class).uniqueResult().intValue();
+		} catch (HibernateException e) {
+			throw new QueryException();
+		}
+	}
+
+	public ArrayList<User> getListUsers() throws QueryException {
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			ArrayList<User> listUsers= new ArrayList<User>();
+			List<UserDTOSQL> listUsersDTO = new ArrayList<>();
+			Query<UserDTOSQL> query = session.createQuery(LIST_USERS_QUERY, UserDTOSQL.class);
+			listUsersDTO = query.list();
+			
+			listUsers =userMapper.toListUsers(listUsersDTO);
+			return listUsers;
 		} catch (HibernateException e) {
 			throw new QueryException();
 		}
@@ -71,6 +91,27 @@ public class UserDAO {
 			UserDTOSQL userDTO = userMapper.toUserDTO(user);
 			userDTO.setPassword(encoder.encode(userDTO.getPassword()));
 			session.save(userDTO);
+		} catch (HibernateException e) {
+			throw new QueryException();
+		}
+	}
+
+	public void update(User user) throws QueryException {
+		try {
+			Session session = sessionFactory.getCurrentSession(); 
+			UserDTOSQL userDTO = userMapper.toUserDTO(user);
+			session.saveOrUpdate(userDTO);
+		} catch (HibernateException e) {
+			throw new QueryException();
+		}
+	}
+	
+	public void delete(int idUser) throws QueryException {
+		try {
+			Session session = sessionFactory.getCurrentSession(); 
+			Query<?> query=session.createQuery(DELETE_ONE);
+			query.setParameter("id", Integer.toString(idUser));
+			query.executeUpdate();
 		} catch (HibernateException e) {
 			throw new QueryException();
 		}
