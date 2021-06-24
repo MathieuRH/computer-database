@@ -43,8 +43,8 @@ public class ComputerService {
 		this.computerDAO = computerDAO;
 	}
 	
-	public void createOne(Computer computer) throws QueryException {
-		computerDAO.createOne(computer);
+	public int createOne(Computer computer) throws QueryException {
+		return computerDAO.createOne(computer);
 	}
 
 	public void updateOne(Computer computer) throws QueryException {

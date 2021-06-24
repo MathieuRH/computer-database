@@ -22,6 +22,9 @@ public class CompanyMapperSQL {
 	}
 
 	public Company toCompany(CompanyDTOSQL companyDTO) {
+		if (companyDTO==null) {
+			return null;
+		}
 		int companyId = Integer.parseInt(companyDTO.getId());
 		String companyName = companyDTO.getName();
 		Company company = new Company(companyId, companyName);

@@ -53,6 +53,9 @@ public class ComputerMapperSQL {
 	}
 
 	public Computer toComputer(ComputerDTOFromDB computerDTO) {
+		if (computerDTO==null) {
+			return null;
+		}
 		String name = computerDTO.getName();
 		ComputerBuilder builder = new Computer.ComputerBuilder(name);
 		if (!"".equals(computerDTO.getId())) {

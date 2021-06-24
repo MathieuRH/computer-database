@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().mvcMatchers("/login").permitAll()
+		http.authorizeRequests().mvcMatchers("/login", "/api/**").permitAll()
 			.mvcMatchers("/addComputer", "/editComputer", "/adminPage").hasRole("ADMIN")
 			.anyRequest().authenticated()
 			.and().formLogin().defaultSuccessUrl("/dashboard", true)

@@ -88,9 +88,7 @@ public class AddComputerController{
 			return "redirect:"+DASHBOARD_VIEW;
 		} catch (InputException | QueryException e) {
 			logger.error(e.getMessage());
-			//TODO
 			return "redirect:"+ERROR;
 		}
 	}
-
 }

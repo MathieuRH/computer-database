@@ -39,6 +39,7 @@ import org.springframework.context.annotation.ComponentScan;
 		"com.excilys.cdb.mapper", 
 		"com.excilys.cdb.verification", 
 		"com.excilys.cdb.ui", 
+		"com.excilys.cdb.api",
 		"com.excilys.cdb.controller", 
 		"com.excilys.cdb.controller.session"})
 public class SpringConfig implements WebMvcConfigurer{

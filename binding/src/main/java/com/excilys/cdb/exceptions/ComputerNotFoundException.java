@@ -12,4 +12,8 @@ public class ComputerNotFoundException extends Exception {
 	public ComputerNotFoundException(String message) {
 		super(message);
 	}
+
+	public ComputerNotFoundException(int id) {
+		super(MESSAGE + " : " + Integer.toString(id));
+	}
 }

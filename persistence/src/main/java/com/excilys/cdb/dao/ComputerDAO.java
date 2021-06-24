@@ -84,7 +84,7 @@ public class ComputerDAO {
 			Session session = sessionFactory.getCurrentSession(); 
 			Query<ComputerDTOFromDB> query=session.createQuery(ONE_COMPUTER_QUERY, ComputerDTOFromDB.class);
 			query.setParameter("id", Integer.toString(id_computer));
-			ComputerDTOFromDB computerDTO = query.getSingleResult();
+			ComputerDTOFromDB computerDTO = query.uniqueResult();
 			return Optional.ofNullable(computerMapper.toComputer(computerDTO));
 		} catch (HibernateException e) {
 			throw new QueryException();
@@ -114,11 +114,11 @@ public class ComputerDAO {
 	}
 	
 	
-	public void createOne(Computer computer) throws QueryException {
+	public int createOne(Computer computer) throws QueryException {
 		try {
 			Session session = sessionFactory.getCurrentSession(); 
 			ComputerDTOSQL computerDTO = computerMapper.toComputerDTO(computer);
-			session.save(computerDTO);
+			return Integer.parseInt((String) session.save(computerDTO));
 		} catch (HibernateException e) {
 			throw new QueryException();
 		}

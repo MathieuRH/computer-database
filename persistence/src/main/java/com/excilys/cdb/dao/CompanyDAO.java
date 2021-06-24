@@ -2,6 +2,7 @@ package com.excilys.cdb.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -50,13 +51,13 @@ public class CompanyDAO {
 		}
 	}
 	
-	public Company getOneCompany(int company_id) throws QueryException {
+	public Optional<Company> getOneCompany(int company_id) throws QueryException {
 		try {
 			Session session = sessionFactory.getCurrentSession(); 
 			Query<CompanyDTOSQL> query=session.createQuery(GET_COMPANY, CompanyDTOSQL.class);
-			query.setParameter("id", company_id);
-			CompanyDTOSQL companyDTO = query.getSingleResult();
-			return companyMapper.toCompany(companyDTO);
+			query.setParameter("id", Integer.toString(company_id));
+			CompanyDTOSQL companyDTO = query.uniqueResult();
+			return Optional.ofNullable(companyMapper.toCompany(companyDTO));
 		} catch (HibernateException e) {
 			throw new QueryException();
 		}

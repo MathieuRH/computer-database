@@ -20,6 +20,7 @@
     <org.springframework.version>5.3.7</org.springframework.version>
 	<spring-security.version>5.5.0</spring-security.version>
     <hibernate-core.version>5.5.0.Final</hibernate-core.version>
+	<jackson.version>2.12.3</jackson.version>
   </properties>
   
   
