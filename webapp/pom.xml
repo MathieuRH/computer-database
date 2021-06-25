@@ -49,6 +49,12 @@
 		<artifactId>jackson-databind</artifactId>
 		<version>${jackson.version}</version>
 	</dependency>
+	
+    <dependency>
+    	<groupId>io.jsonwebtoken</groupId>
+    	<artifactId>jjwt</artifactId>
+    	<version>${jwt-version}</version>
+    </dependency>
   </dependencies>
 
   <build>

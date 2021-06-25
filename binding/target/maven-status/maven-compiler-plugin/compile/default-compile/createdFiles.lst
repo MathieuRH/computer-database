@@ -3,6 +3,7 @@ com/excilys/cdb/verification/Verificator.class
 com/excilys/cdb/exceptions/EnumException.class
 com/excilys/cdb/mapper/UserMapperSQL.class
 com/excilys/cdb/exceptions/CompanyFormatException.class
+com/excilys/cdb/exceptions/CompanyNotFoundException.class
 com/excilys/cdb/dto/ComputerDTOSQL.class
 com/excilys/cdb/dto/CompanyDTOJsp.class
 com/excilys/cdb/mapper/ComputerMapperSQL.class

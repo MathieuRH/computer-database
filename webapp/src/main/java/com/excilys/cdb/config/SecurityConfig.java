@@ -1,52 +1,55 @@
 package com.excilys.cdb.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.excilys.cdb.service.UserDetailServiceImpl;
+import com.excilys.cdb.util.JwtRequestFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	@Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailServiceImpl();
-    }
+	@Autowired
+	private UserDetailServiceImpl myUserDetailsService;
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	
+	@Override
 	@Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authenticationProvider());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().mvcMatchers("/login", "/api/**").permitAll()
-			.mvcMatchers("/addComputer", "/editComputer", "/adminPage").hasRole("ADMIN")
+		http.csrf().disable();
+		http.authorizeRequests().mvcMatchers("/login", "/authenticate").permitAll()
+			.mvcMatchers("/addComputer", "/editComputer", "/delete", "/adminPage").hasRole("ADMIN")
 			.anyRequest().authenticated()
+			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().formLogin().defaultSuccessUrl("/dashboard", true)
 			.and().logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
-		http.csrf().disable();
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	} 
 }

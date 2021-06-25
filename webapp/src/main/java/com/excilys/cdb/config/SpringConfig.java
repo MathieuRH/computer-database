@@ -33,6 +33,7 @@ import org.springframework.context.annotation.ComponentScan;
 @Configuration
 @ComponentScan(basePackages = {
 		"com.excilys.cdb.config", 
+		"com.excilys.cdb.util", 
 		"com.excilys.cdb.service", 
 		"com.excilys.cdb.dao", 
 		"com.excilys.cdb.dto", 

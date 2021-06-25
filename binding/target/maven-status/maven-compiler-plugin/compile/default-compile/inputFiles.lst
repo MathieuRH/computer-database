@@ -16,5 +16,6 @@
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/exceptions/NameFormatException.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/dto/ComputerDTOFromDB.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/dto/CompanyDTOJsp.java
+/home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/exceptions/CompanyNotFoundException.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/dto/CompanyDTOSQL.java
 /home/excilys/Documents/sujetCDB/cdb/binding/src/main/java/com/excilys/cdb/exceptions/QueryException.java

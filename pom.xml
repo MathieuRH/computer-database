@@ -21,6 +21,7 @@
 	<spring-security.version>5.5.0</spring-security.version>
     <hibernate-core.version>5.5.0.Final</hibernate-core.version>
 	<jackson.version>2.12.3</jackson.version>
+	<jwt-version>0.9.1</jwt-version>
   </properties>
   
   
@@ -46,7 +47,11 @@
       <version>1.4.194</version>
       <scope>test</scope>
     </dependency>
-    
+    <dependency>
+    	<groupId>io.jsonwebtoken</groupId>
+    	<artifactId>jjwt</artifactId>
+    	<version>${jwt-version}</version>
+    </dependency>
   </dependencies>
               
   <build>

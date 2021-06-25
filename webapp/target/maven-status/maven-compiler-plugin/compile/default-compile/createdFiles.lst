@@ -1,10 +1,16 @@
+com/excilys/cdb/api/ComputerRestController.class
 com/excilys/cdb/controller/DashboardController.class
 com/excilys/cdb/config/SpringConfig.class
 com/excilys/cdb/controller/EditComputerController.class
 com/excilys/cdb/controller/AdminPageController.class
 com/excilys/cdb/controller/session/SessionVariables.class
 com/excilys/cdb/controller/AddComputerController.class
+com/excilys/cdb/api/IdentificationRestController.class
 com/excilys/cdb/controller/ErrorController.class
+com/excilys/cdb/util/JwtRequestFilter.class
 com/excilys/cdb/config/WebInitializer.class
+com/excilys/cdb/api/CompanyRestController.class
 com/excilys/cdb/config/SecurityInitializer.class
+com/excilys/cdb/util/UtilJwt.class
 com/excilys/cdb/config/SecurityConfig.class
+com/excilys/cdb/controller/LoginController.class
